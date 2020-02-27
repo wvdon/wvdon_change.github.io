@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    }
+  };
+</script>
+
+  <meta name="description" content="文本特征提取参考机器学习算法往往无法直接处理文本数据，需要把文本数据转换为数值型数据One-HotOne-Hot方法很简单，但是它的问题也很明显： 没有考虑单词之间的相对位置，任意两个词之间都是孤立的； 如果文档中有很多词，词向量会有很多列，但是只有一个列的值是1；">
+<meta name="keywords" content="nlp,特征处理">
+<meta property="og:type" content="article">
+<meta property="og:title" content="文本特征处理">
+<meta property="og:url" content="http://wvdon.com/2020/02/27/文本特征提取/index.html">
+<meta property="og:site_name" content="吴卫东のBlog">
+<meta property="og:description" content="文本特征提取参考机器学习算法往往无法直接处理文本数据，需要把文本数据转换为数值型数据One-HotOne-Hot方法很简单，但是它的问题也很明显： 没有考虑单词之间的相对位置，任意两个词之间都是孤立的； 如果文档中有很多词，词向量会有很多列，但是只有一个列的值是1；">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://img2018.cnblogs.com/blog/628084/201903/628084-20190322180339455-653606013.png">
+<meta property="og:updated_time" content="2020-02-27T12:10:26.516Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="文本特征处理">
+<meta name="twitter:description" content="文本特征提取参考机器学习算法往往无法直接处理文本数据，需要把文本数据转换为数值型数据One-HotOne-Hot方法很简单，但是它的问题也很明显： 没有考虑单词之间的相对位置，任意两个词之间都是孤立的； 如果文档中有很多词，词向量会有很多列，但是只有一个列的值是1；">
+<meta name="twitter:image" content="https://img2018.cnblogs.com/blog/628084/201903/628084-20190322180339455-653606013.png">
+  <link rel="alternate" href="/atom.xml" title="吴卫东のBlog" type="application/atom+xml">
+  <link rel="canonical" href="http://wvdon.com/2020/02/27/文本特征提取/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>文本特征处理 | 吴卫东のBlog</title>
+  <meta name="generator" content="Hexo 3.9.0">
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript>
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+  <div class="container use-motion">
+    <div class="headband"></div>
+	 <a href="https://github.com/wvdon" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">吴卫东のBlog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">我究竟拿时间换了什么</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-machinelearnig">
+      
+    
+
+    <a href="/machineLearning" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>machineLearnig</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-main">
+      
+    
+
+    <a href="/Main" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br>Main</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-leetcode">
+      
+    
+
+    <a href="/leetCode" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>leetCode</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tools">
+      
+    
+
+    <a href="/tools/" rel="section"><i class="menu-item-icon fa fa-fw fa-wrench"></i> <br>tools</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>Search</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Searching..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://wvdon.com/2020/02/27/文本特征提取/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wedong Wu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴卫东のBlog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">文本特征处理
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2020-02-27 15:50:39 / Modified: 20:10:26" itemprop="dateCreated datePublished" datetime="2020-02-27T15:50:39+08:00">2020-02-27</time>
+            </span>
+          
+            
+
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/machineLearning/" itemprop="url" rel="index"><span itemprop="name">machineLearning</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+        
+      
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2020/02/27/文本特征提取/#comments" itemprop="discussionUrl"><span class="post-comments-count valine-comment-count" data-xid="/2020/02/27/文本特征提取/" itemprop="commentCount"></span></a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h1 id="文本特征提取"><a href="#文本特征提取" class="headerlink" title="文本特征提取"></a>文本特征提取</h1><p><a href="https://www.cnblogs.com/ljhdo/p/10578047.html" target="_blank" rel="noopener">参考</a></p><p>机器学习算法往往无法直接处理文本数据，需要把文本数据转换为数值型数据</p><h3 id="One-Hot"><a href="#One-Hot" class="headerlink" title="One-Hot"></a>One-Hot</h3><p>One-Hot方法很简单，但是它的问题也很明显：</p><ul>
+<li>没有考虑单词之间的相对位置，任意两个词之间都是孤立的；</li>
+<li>如果文档中有很多词，词向量会有很多列，但是只有一个列的值是1；</li>
+</ul><a id="more"></a>
+
+
+
+<p><strong>One-Hot表示的应用</strong></p>
+<p>sklearn使用词袋（Bag of Words）和TF-IDF模型来表示文本数据，这两个模型都是One-Hot表示的应用，其中，词袋模型对应的就是文档向量。</p>
+<h3 id="词袋模型"><a href="#词袋模型" class="headerlink" title="词袋模型"></a>词袋模型</h3><p>词袋模型（BoW）是用于文本表示的最简单的方法， BoW把文本转换为文档中单词出现次数的矩阵，该模型只关注文档中是否出现给定的单词和单词出现频率，而舍弃文本的结构、单词出现的顺序和位置。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">CountVectorizer(input=’content’, encoding=’utf<span class="number">-8</span>’, decode_error=’strict’, strip_accents=<span class="literal">None</span>, </span><br><span class="line">                lowercase=<span class="literal">True</span>,    preprocessor=<span class="literal">None</span>, tokenizer=<span class="literal">None</span>, stop_words=<span class="literal">None</span>, </span><br><span class="line">                token_pattern=’(?u)\b\w\w+\b’, ngram_range=(1, 1), analyzer=’word’, </span><br><span class="line">                max_df=<span class="number">1.0</span>, min_df=<span class="number">1</span>, max_features=<span class="literal">None</span>, vocabulary=<span class="literal">None</span>, binary=<span class="literal">False</span>, </span><br><span class="line">                dtype=&lt;<span class="class"><span class="keyword">class</span> ‘<span class="title">numpy</span>.<span class="title">int64</span>’&gt;)</span></span><br></pre></td></tr></table></figure>
+
+<p>常用参数注释:</p>
+<ul>
+<li>input：默认值是content，表示输入的是顺序的字符文本</li>
+<li>decode_error：默认为strict，遇到不能解码的字符将报UnicodeDecodeError错误，设为ignore将会忽略解码错误</li>
+<li>lowercase：默认值是True，在分词（Tokenize）之前把文本中的所有字符转换为小写。</li>
+<li>preprocessor：预处理器，在分词之前对文本进行预处理，默认值是None</li>
+<li>tokenizer：分词器，把文本字符串拆分成各个单词（token），默认值是None</li>
+<li>analyzer：用于预处理和分词，可设置为string类型，如’word’, ‘char’, ‘char_wb’，默认值是word</li>
+<li>stop_words：停用词表，如果值是english，使用内置的英语停用词列表；如果是一个列表，那么使用该列表作为停用词，设为None且max_df∈[0.7, 1.0)将自动根据当前的语料库建立停用词表</li>
+<li>ngram_range：tuple（min_n，max_n），表示ngram模型的范围</li>
+<li>max_df：可以设置为范围在[0.0 1.0]的浮点数，也可以设置为没有范围限制的整数，默认为1.0。这个参数的作用是作为一个阈值，当构造语料库的词汇表时，如果某个词的document frequence大于max_df，这个词不会被当作关键词。如果这个参数是float，则表示词出现的次数与语料库文档数的百分比，如果是int，则表示词出现的次数。如果参数中已经给定了vocabulary，则这个参数无效</li>
+<li>min_df：类似于max_df，不同之处在于如果某个词的document frequence小于min_df，则这个词不会被当作关键词</li>
+<li>max_features：对所有关键词的term frequency进行降序排序，只取前max_features个作为关键词集</li>
+<li>vocabulary：默认为None，自动从输入文档中构建关键词集，也可以是一个字典或可迭代对象。</li>
+<li>binary：默认为False，一个关键词在一篇文档中可能出现n次；如果binary=True，非零的n将全部置为1，这对需要布尔值输入的离散概率模型的有用的</li>
+<li><strong>dtype</strong> ：用于设置fit_transform() 或 transform()函数返回的矩阵元素的数据类型</li>
+</ul>
+<p>模型的属性和方法：</p>
+<ul>
+<li>vocabulary_：词汇表，字典类型</li>
+<li>get_feature_names()：所有文本的词汇，列表型</li>
+<li>stop_words_：停用词列表</li>
+</ul>
+<p>模型的主要方法：</p>
+<ul>
+<li>fit(raw_document)：拟合模型，对文本分词，并构建词汇表等</li>
+<li>transform(raw_documents)：把文档转换为文档-词矩阵</li>
+<li>fit_transform(raw_documents)：拟合文档，并返回该文档的文档-词矩阵</li>
+</ul>
+<h3 id="TF-IDF"><a href="#TF-IDF" class="headerlink" title="TF-IDF"></a>TF-IDF</h3><p>TF-IDF模型用于对特征信息量进行缩放，当一个词在特定的文档中经常出现，而在其他文档中出现的频次很低，那么给予该词较高的权重；当一次词在多个文档中出现的频次都很高，那么给予该词较低的权重。如果一次单词在特定的文档中出现的频次很高，而在其他文档中出现的频次很低，那么这个单词很可能是该文档独有的词，能够很好地描述该文档。</p>
+<p><strong>1，TF-IDF模型计算原理</strong></p>
+<p>TF（ Term Frequency）是词频，表示每个单词在文档中的数量（频数），TF依赖于BoW模型的输出。</p>
+<p>IDF（Inverse Document Frequency）是逆文档频率，代表一个单词的普遍成都，当一个词越普遍（即有大量文档包含这个词）时，其IDF值越低；反之，则IDF值越高。IDF是包含该单词的文档数量和文档总数的对数缩放比例</p>
+<p><img src="https://img2018.cnblogs.com/blog/628084/201903/628084-20190322180339455-653606013.png" alt="img"></p>
+<p>TF-IDF（术语频率 - 逆文档频率）模型是TF和IDF相乘的结果：TF-IDF=TF*IDF。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">TfidfVectorizer(input=’content’, encoding=’utf<span class="number">-8</span>’, decode_error=’strict’, strip_accents=<span class="literal">None</span>, </span><br><span class="line">                lowercase=<span class="literal">True</span>,    preprocessor=<span class="literal">None</span>, tokenizer=<span class="literal">None</span>, stop_words=<span class="literal">None</span>, </span><br><span class="line">                token_pattern=’(?u)\b\w\w+\b’, ngram_range=(1, 1), analyzer=’word’, </span><br><span class="line">                max_df=<span class="number">1.0</span>, min_df=<span class="number">1</span>, max_features=<span class="literal">None</span>, vocabulary=<span class="literal">None</span>, binary=<span class="literal">False</span>, </span><br><span class="line">                dtype=dtype=&lt;class ‘numpy.float64’&gt;, </span><br><span class="line">                norm=’l2’, use_idf=<span class="literal">True</span>, smooth_idf=<span class="literal">True</span>, sublinear_tf=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
+
+<p>大部分参数和CountVectorizer相同，TfidfVectorizer独有的参数注释：</p>
+<ul>
+<li>norm=’l2’：每个输出行具备单位规范，当引用’l2’范式时，所有向量元素的平方和为1；当应用l2范数时，两个向量之间的余弦相似度是它们的点积。 *’l1’：向量元素的绝对值之和为1。</li>
+<li>use_idf=True：启用IDF来重新加权</li>
+<li>smooth_idf=True：平滑idf权重，向文档-词频矩阵的所有位置加1，就像存在一个额外的文档，只包含词汇表中的每个术语一次，目的是为了防止零分裂。</li>
+<li>sublinear_tf=False：应用次线性tf缩放，默认值是False</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+        
+      
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>Wedong Wu</li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="http://wvdon.com/2020/02/27/文本特征提取/" title="文本特征处理">http://wvdon.com/2020/02/27/文本特征提取/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.</li>
+</ul>
+</div>
+
+      
+		<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+</div>
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/nlp/" rel="tag"># nlp</a>
+            
+              <a href="/tags/特征处理/" rel="tag"># 特征处理</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/10/24/machineLearning/machineLearning/2019-10-24-第二章-：k-近邻算法/" rel="next" title="第二章 ：k-近邻算法">
+                  <i class="fa fa-chevron-left"></i> 第二章 ：k-近邻算法
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="comments"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc" data-target="post-toc-wrap">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#文本特征提取"><span class="nav-text">文本特征提取</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#One-Hot"><span class="nav-text">One-Hot</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#词袋模型"><span class="nav-text">词袋模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#TF-IDF"><span class="nav-text">TF-IDF</span></a></li></ol></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/uploads/avatar.gif"
+      alt="Wedong Wu">
+  <p class="site-author-name" itemprop="name">Wedong Wu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">categories</span>
+        
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">19</span>
+        <span class="site-state-item-name">tags</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/wvdon" title="GitHub &rarr; https://github.com/wvdon" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:mail@wvdon.com" title="E-Mail &rarr; mailto:mail@wvdon.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://blog.csdn.net/wedon_t/?ref=toolbar" title="CSDN &rarr; https://blog.csdn.net/wedon_t/?ref=toolbar" rel="noopener" target="_blank"><i class="fa fa-fw fa-copyright"></i>CSDN</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://space.bilibili.com/303911459" title="Bilibili &rarr; https://space.bilibili.com/303911459" rel="noopener" target="_blank"><i class="fa fa-fw fa-youtube"></i>Bilibili</a>
+      </span>
+    
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://liuchuo.net" title="http://liuchuo.net" rel="noopener" target="_blank">柳婼のBlog</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://cyc2018.github.io/CS-Notes/#/" title="https://cyc2018.github.io/CS-Notes/#/" rel="noopener" target="_blank">CS-Notes</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://www.draw.io/" title="https://www.draw.io/" rel="noopener" target="_blank">Draw.io</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://ailearning.apachecn.org/#/" title="https://ailearning.apachecn.org/#/" rel="noopener" target="_blank">ApacheCN</a>
+        </li>
+      
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Powered By Wedong Wu</span>
+</div>
+  <div class="powered-by"><a>豫ICP备18006395号-1</a></div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info"></div>
+<span id="busuanzi_container_site_uv">
+  本站访问次数：<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+</span>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="Total Visitors">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="Total Views">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.3.0"></script><script src="/js/motion.js?v=7.3.0"></script>
+<script src="/js/schemes/pisces.js?v=7.3.0"></script>
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.3.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+    
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: true,
+    notify: true,
+    appId: 'KQU7yEE1PiNFHAyF8jwKYTkM-gzGzoHsz',
+    appKey: 'NmcJxL2vR7P6ipHDQtHJPpM6',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname
+  });
+}, window.Valine);
+</script>
+
+</body>
+</html>
