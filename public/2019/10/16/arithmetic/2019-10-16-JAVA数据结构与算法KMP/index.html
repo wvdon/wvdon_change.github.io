@@ -63,7 +63,7 @@
 <meta property="og:description" content="JAVA数据结构与算法：字符串匹配之KMP">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http://web.wvdon.com/arithmetic/1571297220130.png">
-<meta property="og:updated_time" content="2019-10-17T09:30:28.185Z">
+<meta property="og:updated_time" content="2020-03-22T11:13:25.468Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="字符串匹配:KMP">
 <meta name="twitter:description" content="JAVA数据结构与算法：字符串匹配之KMP">
@@ -333,7 +333,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2019-10-17 17:30:28" itemprop="dateModified" datetime="2019-10-17T17:30:28+08:00">2019-10-17</time>
+                <time title="Modified: 2020-03-22 19:13:25" itemprop="dateModified" datetime="2020-03-22T19:13:25+08:00">2020-03-22</time>
               </span>
             
           
@@ -386,7 +386,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>​    KMP算法是一种改进的<a href="https://baike.baidu.com/item/字符串匹配" target="_blank" rel="noopener">字符串匹配</a>算法，由D.E.Knuth，J.H.Morris和V.R.Pratt提出的，因此人们称它为<a href="https://baike.baidu.com/item/克努特" target="_blank" rel="noopener">克努特</a>—<a href="https://baike.baidu.com/item/莫里斯" target="_blank" rel="noopener">莫里斯</a>—<a href="https://baike.baidu.com/item/普拉特" target="_blank" rel="noopener">普拉特</a>操作（简称KMP算法）。KMP算法的核心是利用匹配失败后的信息，尽量减少模式串与主串的匹配次数以达到快速匹配的目的。具体实现就是通过一个next()函数实现，函数本身包含了模式串的局部匹配信息。KMP算法的<a href="https://baike.baidu.com/item/时间复杂度" target="_blank" rel="noopener">时间复杂度</a>O(m+n)。</p>
+        <h2 id="摘要"><a href="#摘要" class="headerlink" title="摘要"></a>摘要</h2><p>​    KMP算法是一种改进的<a href="https://baike.baidu.com/item/字符串匹配" target="_blank" rel="noopener">字符串匹配</a>算法，由D.E.Knuth，J.H.Morris和V.R.Pratt提出的，因此人们称它为<a href="https://baike.baidu.com/item/克努特" target="_blank" rel="noopener">克努特</a>—<a href="https://baike.baidu.com/item/莫里斯" target="_blank" rel="noopener">莫里斯</a>—<a href="https://baike.baidu.com/item/普拉特" target="_blank" rel="noopener">普拉特</a>操作（简称KMP算法）。KMP算法的核心是利用匹配失败后的信息，尽量减少模式串与主串的匹配次数以达到快速匹配的目的。具体实现就是通过一个next()函数实现，函数本身包含了模式串的局部匹配信息。KMP算法的<a href="https://baike.baidu.com/item/时间复杂度" target="_blank" rel="noopener">时间复杂度</a>O(m+n)。</p><a id="more"></a>
 <h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><p>​    字符串的匹配是对字符串的基本操作，最直接的方式是进行全遍历搜索的回溯法，但是其复杂度较高，而随着人们对于匹配效率的追求与匹配优化，其匹配的复杂度逐渐降低。<br>​    在这个过程中最重要的当属于KMP了，他将原有的算法复杂度降低到了O(n+m) 其中n,m是指两个字符串的长度。</p>
 <h2 id="详解"><a href="#详解" class="headerlink" title="详解"></a>详解</h2><h3 id="最直接的回溯法"><a href="#最直接的回溯法" class="headerlink" title="最直接的回溯法"></a>最直接的回溯法</h3><p>​    从字符串左边开始匹配，如果遇到相同的sc与j同事进行+1，直到全部遍历完p的时候进行返回下标，如果匹配过程有不一样的sc进行回溯到i。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Match_kmp</span> </span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">        System.out.println(indexOf(<span class="string">"aaavbvdd"</span>,<span class="string">"vbv"</span>));</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">int</span> <span class="title">indexOf</span><span class="params">(String s,String p)</span></span>&#123;</span><br><span class="line">        <span class="keyword">int</span> i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">int</span> sc = i;</span><br><span class="line">        <span class="keyword">int</span> j = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span> (sc&lt;s.length())&#123;</span><br><span class="line">            <span class="keyword">if</span>(s.charAt(sc)==p.charAt(j))&#123;</span><br><span class="line">                j++;</span><br><span class="line">                sc++;</span><br><span class="line">                <span class="keyword">if</span>(j==p.length())&#123;</span><br><span class="line">                    <span class="keyword">return</span> i;</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;<span class="keyword">else</span></span><br><span class="line">            &#123;</span><br><span class="line">                i++;</span><br><span class="line">                sc=i;</span><br><span class="line">                j=<span class="number">0</span>;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> -<span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -464,8 +464,8 @@
           <div class="post-nav">
             <div class="post-nav-next post-nav-item">
               
-                <a href="/2019/09/27/Hexo的使用笔记/" rel="next" title="Hexo:使用记录">
-                  <i class="fa fa-chevron-left"></i> Hexo:使用记录
+                <a href="/2019/10/16/arithmetic/arithmetic/" rel="next" title="Java数据结构与算法">
+                  <i class="fa fa-chevron-left"></i> Java数据结构与算法
                 </a>
               
             </div>
@@ -474,8 +474,8 @@
 
             <div class="post-nav-prev post-nav-item">
               
-                <a href="/2019/10/16/arithmetic/arithmetic/" rel="prev" title="Java数据结构与算法">
-                  Java数据结构与算法 <i class="fa fa-chevron-right"></i>
+                <a href="/2019/10/18/linux/2019-10-18-Linux/" rel="prev" title="Linux">
+                  Linux <i class="fa fa-chevron-right"></i>
                 </a>
               
             </div>

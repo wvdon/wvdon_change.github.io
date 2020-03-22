@@ -54,23 +54,23 @@
   };
 </script>
 
-  <meta name="description" content="[TOC] 前言： Kaggle数据挖掘竞赛：使用随机森林预测泰坦尼克号生存情况  数据来源kaggle 1 数据预处理1.1 读入数据1234import pandas as pddata_train = pd.read_csv(r&apos;train.csv&apos;)data_test = pd.read_csv(r&apos;test.csv&apos;)data_train.head()        .dataframe">
+  <meta name="description" content="[TOC]前言： Kaggle数据挖掘竞赛：使用随机森林预测泰坦尼克号生存情况 数据来源kaggle1 数据预处理1.1 读入数据1234import pandas as pddata_train = pd.read_csv(r&apos;train.csv&apos;)data_test = pd.read_csv(r&apos;test.csv&apos;)data_train.head()">
 <meta name="keywords" content="随机森林,kaggle,数据挖掘">
 <meta property="og:type" content="article">
 <meta property="og:title" content="数据挖掘：Python使用随机森林预测泰坦尼克号生存">
 <meta property="og:url" content="http://wvdon.com/2019/09/09/machineLearning/titanc/index.html">
 <meta property="og:site_name" content="吴卫东のBlog">
-<meta property="og:description" content="[TOC] 前言： Kaggle数据挖掘竞赛：使用随机森林预测泰坦尼克号生存情况  数据来源kaggle 1 数据预处理1.1 读入数据1234import pandas as pddata_train = pd.read_csv(r&apos;train.csv&apos;)data_test = pd.read_csv(r&apos;test.csv&apos;)data_train.head()        .dataframe">
+<meta property="og:description" content="[TOC]前言： Kaggle数据挖掘竞赛：使用随机森林预测泰坦尼克号生存情况 数据来源kaggle1 数据预处理1.1 读入数据1234import pandas as pddata_train = pd.read_csv(r&apos;train.csv&apos;)data_test = pd.read_csv(r&apos;test.csv&apos;)data_train.head()">
 <meta property="og:locale" content="en">
 <meta property="og:image" content="http://web.wvdon.com/md/output_35_1.png">
 <meta property="og:image" content="http://web.wvdon.com/md/output_38_1.png">
 <meta property="og:image" content="http://web.wvdon.com/md/output_41_1.png">
 <meta property="og:image" content="http://web.wvdon.com/md/output_43_1.png">
 <meta property="og:image" content="http://web.wvdon.com/md/output_44_1.png">
-<meta property="og:updated_time" content="2020-03-22T10:59:48.778Z">
+<meta property="og:updated_time" content="2020-03-22T11:13:25.481Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="数据挖掘：Python使用随机森林预测泰坦尼克号生存">
-<meta name="twitter:description" content="[TOC] 前言： Kaggle数据挖掘竞赛：使用随机森林预测泰坦尼克号生存情况  数据来源kaggle 1 数据预处理1.1 读入数据1234import pandas as pddata_train = pd.read_csv(r&apos;train.csv&apos;)data_test = pd.read_csv(r&apos;test.csv&apos;)data_train.head()        .dataframe">
+<meta name="twitter:description" content="[TOC]前言： Kaggle数据挖掘竞赛：使用随机森林预测泰坦尼克号生存情况 数据来源kaggle1 数据预处理1.1 读入数据1234import pandas as pddata_train = pd.read_csv(r&apos;train.csv&apos;)data_test = pd.read_csv(r&apos;test.csv&apos;)data_train.head()">
 <meta name="twitter:image" content="http://web.wvdon.com/md/output_35_1.png">
   <link rel="alternate" href="/atom.xml" title="吴卫东のBlog" type="application/atom+xml">
   <link rel="canonical" href="http://wvdon.com/2019/09/09/machineLearning/titanc/">
@@ -337,7 +337,7 @@
                   <i class="fa fa-calendar-check-o"></i>
                 </span>
                 <span class="post-meta-item-text">Edited on</span>
-                <time title="Modified: 2020-03-22 18:59:48" itemprop="dateModified" datetime="2020-03-22T18:59:48+08:00">2020-03-22</time>
+                <time title="Modified: 2020-03-22 19:13:25" itemprop="dateModified" datetime="2020-03-22T19:13:25+08:00">2020-03-22</time>
               </span>
             
           
@@ -388,12 +388,12 @@
     <div class="post-body" itemprop="articleBody">
 
       
-        <p>[TOC]</p>
-<h2 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h2><ul>
+        <p>[TOC]</p><h2 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h2><ul>
 <li>Kaggle数据挖掘竞赛：使用随机森林预测泰坦尼克号生存情况</li>
-</ul>
-<p>数据来源kaggle</p>
-<h2 id="1-数据预处理"><a href="#1-数据预处理" class="headerlink" title="1 数据预处理"></a>1 数据预处理</h2><h3 id="1-1-读入数据"><a href="#1-1-读入数据" class="headerlink" title="1.1 读入数据"></a>1.1 读入数据</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line">data_train = pd.read_csv(<span class="string">r'train.csv'</span>)</span><br><span class="line">data_test = pd.read_csv(<span class="string">r'test.csv'</span>)</span><br><span class="line">data_train.head()</span><br></pre></td></tr></table></figure>
+</ul><p>数据来源kaggle</p><h2 id="1-数据预处理"><a href="#1-数据预处理" class="headerlink" title="1 数据预处理"></a>1 数据预处理</h2><h3 id="1-1-读入数据"><a href="#1-1-读入数据" class="headerlink" title="1.1 读入数据"></a>1.1 读入数据</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line">data_train = pd.read_csv(<span class="string">r'train.csv'</span>)</span><br><span class="line">data_test = pd.read_csv(<span class="string">r'test.csv'</span>)</span><br><span class="line">data_train.head()</span><br></pre></td></tr></table></figure><a id="more"></a>
+
+
+
 
 <div>
 <style scoped>
@@ -1874,7 +1874,7 @@ RandomForestClassifier(bootstrap=True, class_weight=None, criterion=&apos;entrop
 
             <div class="post-nav-prev post-nav-item">
               
-                <a href="/2019/09/27/2019-09-27-题目/" rel="prev" title="Photoshop 记录">
+                <a href="/2019/09/27/Photoshop 记录/" rel="prev" title="Photoshop 记录">
                   Photoshop 记录 <i class="fa fa-chevron-right"></i>
                 </a>
               
