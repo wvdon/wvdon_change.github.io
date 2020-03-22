@@ -1,1 +1,0 @@
-this my blog ,it depends on Hexo Next。
