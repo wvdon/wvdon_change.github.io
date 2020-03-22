@@ -1,0 +1,2317 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    }
+  };
+</script>
+
+  <meta name="description" content="[TOC] 前言： Kaggle数据挖掘竞赛：使用随机森林预测泰坦尼克号生存情况  数据来源kaggle 1 数据预处理1.1 读入数据1234import pandas as pddata_train = pd.read_csv(r&apos;train.csv&apos;)data_test = pd.read_csv(r&apos;test.csv&apos;)data_train.head()        .dataframe">
+<meta name="keywords" content="随机森林,kaggle,数据挖掘">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据挖掘：Python使用随机森林预测泰坦尼克号生存">
+<meta property="og:url" content="http://wvdon.com/2019/09/09/machineLearning/titanc/index.html">
+<meta property="og:site_name" content="吴卫东のBlog">
+<meta property="og:description" content="[TOC] 前言： Kaggle数据挖掘竞赛：使用随机森林预测泰坦尼克号生存情况  数据来源kaggle 1 数据预处理1.1 读入数据1234import pandas as pddata_train = pd.read_csv(r&apos;train.csv&apos;)data_test = pd.read_csv(r&apos;test.csv&apos;)data_train.head()        .dataframe">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="http://web.wvdon.com/md/output_35_1.png">
+<meta property="og:image" content="http://web.wvdon.com/md/output_38_1.png">
+<meta property="og:image" content="http://web.wvdon.com/md/output_41_1.png">
+<meta property="og:image" content="http://web.wvdon.com/md/output_43_1.png">
+<meta property="og:image" content="http://web.wvdon.com/md/output_44_1.png">
+<meta property="og:updated_time" content="2020-03-22T10:59:48.778Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="数据挖掘：Python使用随机森林预测泰坦尼克号生存">
+<meta name="twitter:description" content="[TOC] 前言： Kaggle数据挖掘竞赛：使用随机森林预测泰坦尼克号生存情况  数据来源kaggle 1 数据预处理1.1 读入数据1234import pandas as pddata_train = pd.read_csv(r&apos;train.csv&apos;)data_test = pd.read_csv(r&apos;test.csv&apos;)data_train.head()        .dataframe">
+<meta name="twitter:image" content="http://web.wvdon.com/md/output_35_1.png">
+  <link rel="alternate" href="/atom.xml" title="吴卫东のBlog" type="application/atom+xml">
+  <link rel="canonical" href="http://wvdon.com/2019/09/09/machineLearning/titanc/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>数据挖掘：Python使用随机森林预测泰坦尼克号生存 | 吴卫东のBlog</title>
+  <meta name="generator" content="Hexo 3.9.0">
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+	 <a href="https://github.com/wvdon" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">吴卫东のBlog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">我究竟拿时间换了什么</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-machinelearnig">
+      
+    
+
+    <a href="/machineLearning" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>machineLearnig</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-main">
+      
+    
+
+    <a href="/Main" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br>Main</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-leetcode">
+      
+    
+
+    <a href="/leetCode" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>leetCode</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tools">
+      
+    
+
+    <a href="/tools/" rel="section"><i class="menu-item-icon fa fa-fw fa-wrench"></i> <br>tools</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>Search</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Searching..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://wvdon.com/2019/09/09/machineLearning/titanc/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wedong Wu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴卫东のBlog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">数据挖掘：Python使用随机森林预测泰坦尼克号生存
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-09-09 12:20:00" itemprop="dateCreated datePublished" datetime="2019-09-09T12:20:00+08:00">2019-09-09</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2020-03-22 18:59:48" itemprop="dateModified" datetime="2020-03-22T18:59:48+08:00">2020-03-22</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/数据挖掘/" itemprop="url" rel="index"><span itemprop="name">数据挖掘</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+        
+      
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2019/09/09/machineLearning/titanc/#comments" itemprop="discussionUrl"><span class="post-comments-count valine-comment-count" data-xid="/2019/09/09/machineLearning/titanc/" itemprop="commentCount"></span></a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <p>[TOC]</p>
+<h2 id="前言："><a href="#前言：" class="headerlink" title="前言："></a>前言：</h2><ul>
+<li>Kaggle数据挖掘竞赛：使用随机森林预测泰坦尼克号生存情况</li>
+</ul>
+<p>数据来源kaggle</p>
+<h2 id="1-数据预处理"><a href="#1-数据预处理" class="headerlink" title="1 数据预处理"></a>1 数据预处理</h2><h3 id="1-1-读入数据"><a href="#1-1-读入数据" class="headerlink" title="1.1 读入数据"></a>1.1 读入数据</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line">data_train = pd.read_csv(<span class="string">r'train.csv'</span>)</span><br><span class="line">data_test = pd.read_csv(<span class="string">r'test.csv'</span>)</span><br><span class="line">data_train.head()</span><br></pre></td></tr></table></figure>
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}</code></pre><p></style><p></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>PassengerId</th>
+      <th>Survived</th>
+      <th>Pclass</th>
+      <th>Name</th>
+      <th>Sex</th>
+      <th>Age</th>
+      <th>SibSp</th>
+      <th>Parch</th>
+      <th>Ticket</th>
+      <th>Fare</th>
+      <th>Cabin</th>
+      <th>Embarked</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>3</td>
+      <td>Braund, Mr. Owen Harris</td>
+      <td>male</td>
+      <td>22.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>A/5 21171</td>
+      <td>7.2500</td>
+      <td>NaN</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Cumings, Mrs. John Bradley (Florence Briggs Th...</td>
+      <td>female</td>
+      <td>38.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>PC 17599</td>
+      <td>71.2833</td>
+      <td>C85</td>
+      <td>C</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>3</td>
+      <td>1</td>
+      <td>3</td>
+      <td>Heikkinen, Miss. Laina</td>
+      <td>female</td>
+      <td>26.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>STON/O2. 3101282</td>
+      <td>7.9250</td>
+      <td>NaN</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>4</td>
+      <td>1</td>
+      <td>1</td>
+      <td>Futrelle, Mrs. Jacques Heath (Lily May Peel)</td>
+      <td>female</td>
+      <td>35.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>113803</td>
+      <td>53.1000</td>
+      <td>C123</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>5</td>
+      <td>0</td>
+      <td>3</td>
+      <td>Allen, Mr. William Henry</td>
+      <td>male</td>
+      <td>35.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>373450</td>
+      <td>8.0500</td>
+      <td>NaN</td>
+      <td>S</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<h3 id="1-2-训练集与数据集"><a href="#1-2-训练集与数据集" class="headerlink" title="1.2 训练集与数据集"></a>1.2 训练集与数据集</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data_test.head()</span><br></pre></td></tr></table></figure>
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}</code></pre><p></style><p></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>PassengerId</th>
+      <th>Pclass</th>
+      <th>Name</th>
+      <th>Sex</th>
+      <th>Age</th>
+      <th>SibSp</th>
+      <th>Parch</th>
+      <th>Ticket</th>
+      <th>Fare</th>
+      <th>Cabin</th>
+      <th>Embarked</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>892</td>
+      <td>3</td>
+      <td>Kelly, Mr. James</td>
+      <td>male</td>
+      <td>34.5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>330911</td>
+      <td>7.8292</td>
+      <td>NaN</td>
+      <td>Q</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>893</td>
+      <td>3</td>
+      <td>Wilkes, Mrs. James (Ellen Needs)</td>
+      <td>female</td>
+      <td>47.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>363272</td>
+      <td>7.0000</td>
+      <td>NaN</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>894</td>
+      <td>2</td>
+      <td>Myles, Mr. Thomas Francis</td>
+      <td>male</td>
+      <td>62.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>240276</td>
+      <td>9.6875</td>
+      <td>NaN</td>
+      <td>Q</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>895</td>
+      <td>3</td>
+      <td>Wirz, Mr. Albert</td>
+      <td>male</td>
+      <td>27.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>315154</td>
+      <td>8.6625</td>
+      <td>NaN</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>896</td>
+      <td>3</td>
+      <td>Hirvonen, Mrs. Alexander (Helga E Lindqvist)</td>
+      <td>female</td>
+      <td>22.0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>3101298</td>
+      <td>12.2875</td>
+      <td>NaN</td>
+      <td>S</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<h3 id="1-2-1-查看数据完整性"><a href="#1-2-1-查看数据完整性" class="headerlink" title="1.2.1 查看数据完整性"></a>1.2.1 查看数据完整性</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data_train.info()</span><br></pre></td></tr></table></figure>
+
+<pre><code>&lt;class &apos;pandas.core.frame.DataFrame&apos;&gt;
+RangeIndex: 891 entries, 0 to 890
+Data columns (total 12 columns):
+PassengerId    891 non-null int64
+Survived       891 non-null int64
+Pclass         891 non-null int64
+Name           891 non-null object
+Sex            891 non-null object
+Age            714 non-null float64
+SibSp          891 non-null int64
+Parch          891 non-null int64
+Ticket         891 non-null object
+Fare           891 non-null float64
+Cabin          204 non-null object
+Embarked       889 non-null object
+dtypes: float64(2), int64(5), object(5)
+memory usage: 83.7+ KB</code></pre><p>总共有891组数据，其中age是714条，Cabin是204条，共计12个变量</p>
+<blockquote>
+<p>乘客ID，存活情况，船票级别，乘客姓名，性别，年龄，船上的兄弟姐妹以及配偶的人数，船上的父母以及子女的人数，船票编号，船票费用，所在船舱，登船的港口</p>
+</blockquote>
+<h3 id="1-2-2-查看训练数据描述信息"><a href="#1-2-2-查看训练数据描述信息" class="headerlink" title="1.2.2 查看训练数据描述信息"></a>1.2.2 查看训练数据描述信息</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data_train.describe()</span><br></pre></td></tr></table></figure>
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}</code></pre><p></style><p></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>PassengerId</th>
+      <th>Survived</th>
+      <th>Pclass</th>
+      <th>Age</th>
+      <th>SibSp</th>
+      <th>Parch</th>
+      <th>Fare</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>count</td>
+      <td>891.000000</td>
+      <td>891.000000</td>
+      <td>891.000000</td>
+      <td>714.000000</td>
+      <td>891.000000</td>
+      <td>891.000000</td>
+      <td>891.000000</td>
+    </tr>
+    <tr>
+      <td>mean</td>
+      <td>446.000000</td>
+      <td>0.383838</td>
+      <td>2.308642</td>
+      <td>29.699118</td>
+      <td>0.523008</td>
+      <td>0.381594</td>
+      <td>32.204208</td>
+    </tr>
+    <tr>
+      <td>std</td>
+      <td>257.353842</td>
+      <td>0.486592</td>
+      <td>0.836071</td>
+      <td>14.526497</td>
+      <td>1.102743</td>
+      <td>0.806057</td>
+      <td>49.693429</td>
+    </tr>
+    <tr>
+      <td>min</td>
+      <td>1.000000</td>
+      <td>0.000000</td>
+      <td>1.000000</td>
+      <td>0.420000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+    </tr>
+    <tr>
+      <td>25%</td>
+      <td>223.500000</td>
+      <td>0.000000</td>
+      <td>2.000000</td>
+      <td>20.125000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>7.910400</td>
+    </tr>
+    <tr>
+      <td>50%</td>
+      <td>446.000000</td>
+      <td>0.000000</td>
+      <td>3.000000</td>
+      <td>28.000000</td>
+      <td>0.000000</td>
+      <td>0.000000</td>
+      <td>14.454200</td>
+    </tr>
+    <tr>
+      <td>75%</td>
+      <td>668.500000</td>
+      <td>1.000000</td>
+      <td>3.000000</td>
+      <td>38.000000</td>
+      <td>1.000000</td>
+      <td>0.000000</td>
+      <td>31.000000</td>
+    </tr>
+    <tr>
+      <td>max</td>
+      <td>891.000000</td>
+      <td>1.000000</td>
+      <td>3.000000</td>
+      <td>80.000000</td>
+      <td>8.000000</td>
+      <td>6.000000</td>
+      <td>512.329200</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<p>mean代表各项的均值，获救率为0.383838</p>
+<h3 id="1-3-1-年龄数据简化分组"><a href="#1-3-1-年龄数据简化分组" class="headerlink" title="1.3.1  年龄数据简化分组"></a>1.3.1  年龄数据简化分组</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">simplify_ages</span><span class="params">(df)</span>:</span></span><br><span class="line">    <span class="comment">#把缺失值补上，方便分组</span></span><br><span class="line">    df.Age = df.Age.fillna(<span class="number">-0.5</span>)</span><br><span class="line">   </span><br><span class="line">    <span class="comment">#把Age分为不同区间,-1到0,1-5,6-12...,60以上,放到bins里，八个区间，对应的八个区间名称在group_names那</span></span><br><span class="line">    bins = (<span class="number">-1</span>, <span class="number">0</span>, <span class="number">5</span>, <span class="number">12</span>, <span class="number">18</span>, <span class="number">25</span>, <span class="number">35</span>, <span class="number">60</span>, <span class="number">120</span>)</span><br><span class="line">    group_names = [<span class="string">'Unknown'</span>, <span class="string">'Baby'</span>, <span class="string">'Child'</span>, <span class="string">'Teenager'</span>, <span class="string">'Student'</span>, <span class="string">'Young Adult'</span>, <span class="string">'Adult'</span>, <span class="string">'Senior'</span>]</span><br><span class="line">    </span><br><span class="line">    <span class="comment">#开始对数据进行离散化，pandas.cut就是这个功能</span></span><br><span class="line">    catagories = pd.cut(df.Age,bins,labels=group_names)</span><br><span class="line">    df.Age = catagories</span><br><span class="line">    <span class="keyword">return</span> df</span><br></pre></td></tr></table></figure>
+
+<p>简化Cabin，就是取字母</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">simplify_cabin</span><span class="params">(df)</span>:</span></span><br><span class="line">    df.Cabin = df.Cabin.fillna(<span class="string">'N'</span>)</span><br><span class="line">    df.Cabin = df.Cabin.apply(<span class="keyword">lambda</span> x:x[<span class="number">0</span>])</span><br><span class="line">    <span class="keyword">return</span> df</span><br></pre></td></tr></table></figure>
+
+<p>简化工资，也就是分组</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">simplify_fare</span><span class="params">(df)</span>:</span></span><br><span class="line">    df.Fare = df.Fare.fillna(<span class="number">-0.5</span>)</span><br><span class="line">    bins = (<span class="number">-1</span>, <span class="number">0</span>, <span class="number">8</span>, <span class="number">15</span>, <span class="number">31</span>, <span class="number">1000</span>)</span><br><span class="line">    group_names = [<span class="string">'Unknown'</span>, <span class="string">'1_quartile'</span>, <span class="string">'2_quartile'</span>, <span class="string">'3_quartile'</span>, <span class="string">'4_quartile'</span>]</span><br><span class="line">    catagories = pd.cut(df.Fare,bins,labels=group_names)</span><br><span class="line">    df.Fare = catagories</span><br><span class="line">    <span class="keyword">return</span> df</span><br></pre></td></tr></table></figure>
+
+<p>删除无用信息</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">simplify_drop</span><span class="params">(df)</span>:</span></span><br><span class="line">    <span class="keyword">return</span> df.drop([<span class="string">'Name'</span>,<span class="string">'Ticket'</span>,<span class="string">'Embarked'</span>],axis=<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<p>整合一遍，凑成新表</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">transform_features</span><span class="params">(df)</span>:</span></span><br><span class="line">    df = simplify_ages(df)</span><br><span class="line">    df = simplify_cabin(df)</span><br><span class="line">    df = simplify_fare(df)</span><br><span class="line">    df = simplify_drop(df)</span><br><span class="line">    <span class="keyword">return</span> df</span><br></pre></td></tr></table></figure>
+
+<p>执行读取新表</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#必须要再读取一遍原来的表，不然会报错,不仅训练集要简化，测试集也要，两者的特征名称要一致</span></span><br><span class="line">data_train = pd.read_csv(<span class="string">r'train.csv'</span>)</span><br><span class="line">data_train = transform_features(data_train)</span><br><span class="line">data_test = transform_features(data_test)</span><br><span class="line">data_train.head()</span><br></pre></td></tr></table></figure>
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}</code></pre><p></style><p></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>PassengerId</th>
+      <th>Survived</th>
+      <th>Pclass</th>
+      <th>Sex</th>
+      <th>Age</th>
+      <th>SibSp</th>
+      <th>Parch</th>
+      <th>Fare</th>
+      <th>Cabin</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>3</td>
+      <td>male</td>
+      <td>Student</td>
+      <td>1</td>
+      <td>0</td>
+      <td>1_quartile</td>
+      <td>N</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>female</td>
+      <td>Adult</td>
+      <td>1</td>
+      <td>0</td>
+      <td>4_quartile</td>
+      <td>C</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>3</td>
+      <td>1</td>
+      <td>3</td>
+      <td>female</td>
+      <td>Young Adult</td>
+      <td>0</td>
+      <td>0</td>
+      <td>1_quartile</td>
+      <td>N</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>4</td>
+      <td>1</td>
+      <td>1</td>
+      <td>female</td>
+      <td>Young Adult</td>
+      <td>1</td>
+      <td>0</td>
+      <td>4_quartile</td>
+      <td>C</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>5</td>
+      <td>0</td>
+      <td>3</td>
+      <td>male</td>
+      <td>Young Adult</td>
+      <td>0</td>
+      <td>0</td>
+      <td>2_quartile</td>
+      <td>N</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#data_train=data_train.drop(["PassengerId","Cabin","Name"],axis=1)</span></span><br><span class="line">data_train.head(<span class="number">200</span>)</span><br></pre></td></tr></table></figure>
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}</code></pre><p></style><p></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Survived</th>
+      <th>Pclass</th>
+      <th>Sex</th>
+      <th>Age</th>
+      <th>SibSp</th>
+      <th>Parch</th>
+      <th>Ticket</th>
+      <th>Fare</th>
+      <th>Embarked</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>0</td>
+      <td>3</td>
+      <td>male</td>
+      <td>22.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>A/5 21171</td>
+      <td>7.2500</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>female</td>
+      <td>38.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>PC 17599</td>
+      <td>71.2833</td>
+      <td>C</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>1</td>
+      <td>3</td>
+      <td>female</td>
+      <td>26.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>STON/O2. 3101282</td>
+      <td>7.9250</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>1</td>
+      <td>1</td>
+      <td>female</td>
+      <td>35.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>113803</td>
+      <td>53.1000</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>0</td>
+      <td>3</td>
+      <td>male</td>
+      <td>35.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>373450</td>
+      <td>8.0500</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <td>195</td>
+      <td>1</td>
+      <td>1</td>
+      <td>female</td>
+      <td>58.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>PC 17569</td>
+      <td>146.5208</td>
+      <td>C</td>
+    </tr>
+    <tr>
+      <td>196</td>
+      <td>0</td>
+      <td>3</td>
+      <td>male</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>0</td>
+      <td>368703</td>
+      <td>7.7500</td>
+      <td>Q</td>
+    </tr>
+    <tr>
+      <td>197</td>
+      <td>0</td>
+      <td>3</td>
+      <td>male</td>
+      <td>42.0</td>
+      <td>0</td>
+      <td>1</td>
+      <td>4579</td>
+      <td>8.4042</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <td>198</td>
+      <td>1</td>
+      <td>3</td>
+      <td>female</td>
+      <td>NaN</td>
+      <td>0</td>
+      <td>0</td>
+      <td>370370</td>
+      <td>7.7500</td>
+      <td>Q</td>
+    </tr>
+    <tr>
+      <td>199</td>
+      <td>0</td>
+      <td>2</td>
+      <td>female</td>
+      <td>24.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>248747</td>
+      <td>13.0000</td>
+      <td>S</td>
+    </tr>
+  </tbody>
+</table>
+<p>200 rows × 9 columns</p>
+</div>
+
+
+
+<p>选取我们需要的那几个列作为输入， 对于票价和姓名我就舍弃了，姓名没什么用</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cols = [<span class="string">'PassengerId'</span>,<span class="string">'Survived'</span>,<span class="string">'Pclass'</span>,<span class="string">'Sex'</span>,<span class="string">'Age'</span>,<span class="string">'SibSp'</span>,<span class="string">'Parch'</span>,<span class="string">'Fare'</span>,<span class="string">'Embarked'</span>]</span><br><span class="line">data_tr=data_train[cols].copy()</span><br><span class="line">data_tr.head()</span><br></pre></td></tr></table></figure>
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}</code></pre><p></style><p></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>PassengerId</th>
+      <th>Survived</th>
+      <th>Pclass</th>
+      <th>Sex</th>
+      <th>Age</th>
+      <th>SibSp</th>
+      <th>Parch</th>
+      <th>Fare</th>
+      <th>Embarked</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>3</td>
+      <td>male</td>
+      <td>22.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>7.2500</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>female</td>
+      <td>38.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>71.2833</td>
+      <td>C</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>3</td>
+      <td>1</td>
+      <td>3</td>
+      <td>female</td>
+      <td>26.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>7.9250</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>4</td>
+      <td>1</td>
+      <td>1</td>
+      <td>female</td>
+      <td>35.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>53.1000</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>5</td>
+      <td>0</td>
+      <td>3</td>
+      <td>male</td>
+      <td>35.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>8.0500</td>
+      <td>S</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">cols = [<span class="string">'PassengerId'</span>,<span class="string">'Pclass'</span>,<span class="string">'Sex'</span>,<span class="string">'Age'</span>,<span class="string">'SibSp'</span>,<span class="string">'Parch'</span>,<span class="string">'Fare'</span>,<span class="string">'Embarked'</span>]</span><br><span class="line">data_te=data_test[cols].copy()</span><br><span class="line">data_te.head()</span><br></pre></td></tr></table></figure>
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}</code></pre><p></style><p></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>PassengerId</th>
+      <th>Pclass</th>
+      <th>Sex</th>
+      <th>Age</th>
+      <th>SibSp</th>
+      <th>Parch</th>
+      <th>Fare</th>
+      <th>Embarked</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>892</td>
+      <td>3</td>
+      <td>male</td>
+      <td>34.5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>7.8292</td>
+      <td>Q</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>893</td>
+      <td>3</td>
+      <td>female</td>
+      <td>47.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>7.0000</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>894</td>
+      <td>2</td>
+      <td>male</td>
+      <td>62.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>9.6875</td>
+      <td>Q</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>895</td>
+      <td>3</td>
+      <td>male</td>
+      <td>27.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>8.6625</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>896</td>
+      <td>3</td>
+      <td>female</td>
+      <td>22.0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>12.2875</td>
+      <td>S</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">data_tr.isnull().sum()</span><br><span class="line">data_te.isnull().sum()</span><br></pre></td></tr></table></figure>
+
+<pre><code>PassengerId     0
+Pclass          0
+Sex             0
+Age            86
+SibSp           0
+Parch           0
+Fare            1
+Embarked        0
+dtype: int64</code></pre><p>填充数据，，，，，，</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">age_mean = data_tr[<span class="string">'Age'</span>].mean()</span><br><span class="line">data_tr[<span class="string">'Age'</span>] = data_tr[<span class="string">'Age'</span>].fillna(age_mean)</span><br><span class="line">data_tr[<span class="string">'Embarked'</span>] = data_tr[<span class="string">'Embarked'</span>].fillna(<span class="string">'S'</span>)</span><br><span class="line">data_tr.isnull().sum()</span><br></pre></td></tr></table></figure>
+
+<pre><code>PassengerId    0
+Survived       0
+Pclass         0
+Sex            0
+Age            0
+SibSp          0
+Parch          0
+Fare           0
+Embarked       0
+dtype: int64</code></pre><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">data_tr.head()</span><br></pre></td></tr></table></figure>
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}</code></pre><p></style><p></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>PassengerId</th>
+      <th>Survived</th>
+      <th>Pclass</th>
+      <th>Sex</th>
+      <th>Age</th>
+      <th>SibSp</th>
+      <th>Parch</th>
+      <th>Fare</th>
+      <th>Embarked</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>3</td>
+      <td>male</td>
+      <td>22.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>7.2500</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>female</td>
+      <td>38.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>71.2833</td>
+      <td>C</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>3</td>
+      <td>1</td>
+      <td>3</td>
+      <td>female</td>
+      <td>26.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>7.9250</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>4</td>
+      <td>1</td>
+      <td>1</td>
+      <td>female</td>
+      <td>35.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>53.1000</td>
+      <td>S</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>5</td>
+      <td>0</td>
+      <td>3</td>
+      <td>male</td>
+      <td>35.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>8.0500</td>
+      <td>S</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<p>用数组特征化编码年龄和S C Q等等，，因为随机森林的输入需要数值，字符不行</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">#import numpy as np</span></span><br><span class="line">age_mean = data_te[<span class="string">'Age'</span>].mean()</span><br><span class="line">data_te[<span class="string">'Age'</span>] = data_te[<span class="string">'Age'</span>].fillna(age_mean)</span><br><span class="line">age_mean = data_te[<span class="string">'Fare'</span>].mean()</span><br><span class="line">data_te[<span class="string">'Fare'</span>] = data_te[<span class="string">'Fare'</span>].fillna(age_mean)</span><br><span class="line"><span class="comment">#data_te.replace(np.na, 0, inplace=True)</span></span><br><span class="line"><span class="comment">#data_te.replace(np.inf, 0, inplace=True)</span></span><br><span class="line">data_te[<span class="string">'Sex'</span>]= data_te[<span class="string">'Sex'</span>].map(&#123;<span class="string">'female'</span>:<span class="number">0</span>, <span class="string">'male'</span>: <span class="number">1</span>&#125;).astype(int)</span><br><span class="line">data_te[<span class="string">'Embarked'</span>]= data_te[<span class="string">'Embarked'</span>].map(&#123;<span class="string">'S'</span>:<span class="number">0</span>, <span class="string">'C'</span>: <span class="number">1</span>,<span class="string">'Q'</span>:<span class="number">2</span>&#125;).astype(int)</span><br><span class="line">data_te.head()</span><br></pre></td></tr></table></figure>
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}</code></pre><p></style><p></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>PassengerId</th>
+      <th>Pclass</th>
+      <th>Sex</th>
+      <th>Age</th>
+      <th>SibSp</th>
+      <th>Parch</th>
+      <th>Fare</th>
+      <th>Embarked</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>892</td>
+      <td>3</td>
+      <td>1</td>
+      <td>34.5</td>
+      <td>0</td>
+      <td>0</td>
+      <td>7.8292</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>893</td>
+      <td>3</td>
+      <td>0</td>
+      <td>47.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>7.0000</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>894</td>
+      <td>2</td>
+      <td>1</td>
+      <td>62.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>9.6875</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>895</td>
+      <td>3</td>
+      <td>1</td>
+      <td>27.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>8.6625</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>896</td>
+      <td>3</td>
+      <td>0</td>
+      <td>22.0</td>
+      <td>1</td>
+      <td>1</td>
+      <td>12.2875</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">data_tr[<span class="string">'Sex'</span>]= data_tr[<span class="string">'Sex'</span>].map(&#123;<span class="string">'female'</span>:<span class="number">0</span>, <span class="string">'male'</span>: <span class="number">1</span>&#125;).astype(int)</span><br><span class="line">data_tr[<span class="string">'Embarked'</span>]= data_tr[<span class="string">'Embarked'</span>].map(&#123;<span class="string">'S'</span>:<span class="number">0</span>, <span class="string">'C'</span>: <span class="number">1</span>,<span class="string">'Q'</span>:<span class="number">2</span>&#125;).astype(int)</span><br><span class="line">data_tr.head()</span><br><span class="line"><span class="comment">#data_tr = pd.get_dummies(data_tr=data_tr,columns=['Embarked'])</span></span><br></pre></td></tr></table></figure>
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}</code></pre><p></style><p></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>PassengerId</th>
+      <th>Survived</th>
+      <th>Pclass</th>
+      <th>Sex</th>
+      <th>Age</th>
+      <th>SibSp</th>
+      <th>Parch</th>
+      <th>Fare</th>
+      <th>Embarked</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>3</td>
+      <td>1</td>
+      <td>22.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>7.2500</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>38.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>71.2833</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>3</td>
+      <td>1</td>
+      <td>3</td>
+      <td>0</td>
+      <td>26.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>7.9250</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>4</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>35.0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>53.1000</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>5</td>
+      <td>0</td>
+      <td>3</td>
+      <td>1</td>
+      <td>35.0</td>
+      <td>0</td>
+      <td>0</td>
+      <td>8.0500</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<h2 id="2-数据可视化"><a href="#2-数据可视化" class="headerlink" title="2 数据可视化"></a>2 数据可视化</h2><h3 id="2-1-年龄和生存率之间的关系"><a href="#2-1-年龄和生存率之间的关系" class="headerlink" title="2.1  年龄和生存率之间的关系"></a>2.1  年龄和生存率之间的关系</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sns.barplot(x=<span class="string">'Embarked'</span>,y=<span class="string">'Survived'</span>,hue=<span class="string">'Sex'</span>,data=data_train)</span><br></pre></td></tr></table></figure>
+
+<pre><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7fee5875e3c8&gt;</code></pre><p><img src="http://web.wvdon.com/md/output_35_1.png" alt="png"></p>
+<ul>
+<li>female的获救率大于 male,(应该是男士都比较绅士吧，即使面对死亡，也希望将最后的机会留给女生，，电影感悟）</li>
+<li>获救率 C 男性女性都是最高，Q时男性最低，S 时 女性最低</li>
+<li>男性的获救率低于女性的三分之一</li>
+</ul>
+<h3 id="2-2-所做的位置和生存率之间的关系"><a href="#2-2-所做的位置和生存率之间的关系" class="headerlink" title="2.2 所做的位置和生存率之间的关系"></a>2.2 所做的位置和生存率之间的关系</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">sns.pointplot(x=<span class="string">'Pclass'</span>,y=<span class="string">'Survived'</span>,hue=<span class="string">'Sex'</span>,data=data_train,palette=&#123;<span class="string">'male'</span>:<span class="string">'blue'</span>,<span class="string">'female'</span>:<span class="string">'pink'</span>&#125;,</span><br><span class="line">             marker=[<span class="string">'*'</span>,<span class="string">"o"</span>],linestyle=[<span class="string">'-'</span>,<span class="string">'--'</span>])</span><br></pre></td></tr></table></figure>
+
+<pre><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7fee586f70b8&gt;</code></pre><p><img src="http://web.wvdon.com/md/output_38_1.png" alt="png"></p>
+<ul>
+<li>等级越高获救率越高</li>
+<li>女性大于男性</li>
+</ul>
+<h3 id="2-3-生存率与年龄的关系"><a href="#2-3-生存率与年龄的关系" class="headerlink" title="2.3 生存率与年龄的关系"></a>2.3 生存率与年龄的关系</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sns.barplot(x = <span class="string">'Age'</span>,y = <span class="string">'Survived'</span>,hue=<span class="string">'Sex'</span>,data = data_train)</span><br></pre></td></tr></table></figure>
+
+<pre><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7fee587238d0&gt;</code></pre><p><img src="http://web.wvdon.com/md/output_41_1.png" alt="png"></p>
+<ul>
+<li>男性大于女性</li>
+<li>student的生存率最低,bady的生存率最高</li>
+</ul>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sns.barplot(x = <span class="string">'Cabin'</span>,y = <span class="string">'Survived'</span>,hue=<span class="string">'Sex'</span>,data = data_train)</span><br></pre></td></tr></table></figure>
+
+<pre><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7fee585b0748&gt;</code></pre><p><img src="http://web.wvdon.com/md/output_43_1.png" alt="png"></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sns.barplot(x = <span class="string">'Fare'</span>,y = <span class="string">'Survived'</span>,hue=<span class="string">'Sex'</span>,data = data_train)</span><br></pre></td></tr></table></figure>
+
+<pre><code>&lt;matplotlib.axes._subplots.AxesSubplot at 0x7fee5852b390&gt;</code></pre><p><img src="http://web.wvdon.com/md/output_44_1.png" alt="png"></p>
+<h2 id="3-建立模型"><a href="#3-建立模型" class="headerlink" title="3 建立模型"></a>3 建立模型</h2><h3 id="3-1-随机森林"><a href="#3-1-随机森林" class="headerlink" title="3.1 随机森林"></a>3.1 随机森林</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line">X_all = data_tr.drop([<span class="string">'PassengerId'</span>,<span class="string">'Survived'</span>],axis=<span class="number">1</span>)<span class="comment">#主要是乘客ID也没啥用，删就删了吧</span></span><br><span class="line">y_all = data_tr[<span class="string">'Survived'</span>]</span><br><span class="line">p = <span class="number">0.2</span> <span class="comment">#用 百分之20作为测试集</span></span><br><span class="line"></span><br><span class="line">X_train,X_test, y_train, y_test = train_test_split(X_all,y_all,test_size=p, random_state=<span class="number">23</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> make_scorer, accuracy_score</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> GridSearchCV</span><br><span class="line"></span><br><span class="line"><span class="comment">#选择分类器的类型，我没试过其他的哦，因为在这个案例中，有人做过试验发现随机森林模型是最好的，所以选了它。呜呜，我下次试试其他的</span></span><br><span class="line">clf = RandomForestClassifier()</span><br><span class="line"></span><br><span class="line"><span class="comment">#可以通过定义树的各种参数，限制树的大小，防止出现过拟合现象哦，也可以通过剪枝来限制，但sklearn中的决策树分类器目前不支持剪枝</span></span><br><span class="line">parameters = &#123;<span class="string">'n_estimators'</span>: [<span class="number">4</span>, <span class="number">6</span>, <span class="number">9</span>], </span><br><span class="line">              <span class="string">'max_features'</span>: [<span class="string">'log2'</span>, <span class="string">'sqrt'</span>,<span class="string">'auto'</span>], </span><br><span class="line">              <span class="string">'criterion'</span>: [<span class="string">'entropy'</span>, <span class="string">'gini'</span>],        <span class="comment">#分类标准用熵，基尼系数</span></span><br><span class="line">              <span class="string">'max_depth'</span>: [<span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>, <span class="number">10</span>], </span><br><span class="line">              <span class="string">'min_samples_split'</span>: [<span class="number">2</span>, <span class="number">3</span>, <span class="number">5</span>],</span><br><span class="line">              <span class="string">'min_samples_leaf'</span>: [<span class="number">1</span>,<span class="number">5</span>,<span class="number">8</span>]</span><br><span class="line">             &#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">#以下是用于比较参数好坏的评分，使用'make_scorer'将'accuracy_score'转换为评分函数</span></span><br><span class="line">acc_scorer = make_scorer(accuracy_score)</span><br><span class="line"></span><br><span class="line"><span class="comment">#自动调参，GridSearchCV，它存在的意义就是自动调参，只要把参数输进去，就能给出最优化的结果和参数</span></span><br><span class="line"><span class="comment">#GridSearchCV用于系统地遍历多种参数组合，通过交叉验证确定最佳效果参数。</span></span><br><span class="line">grid_obj = GridSearchCV(clf,parameters,scoring=acc_scorer)</span><br><span class="line">grid_obj = grid_obj.fit(X_train,y_train)</span><br><span class="line"></span><br><span class="line"><span class="comment">#将clf设置为参数的最佳组合</span></span><br><span class="line">clf = grid_obj.best_estimator_</span><br><span class="line"></span><br><span class="line"><span class="comment">#将最佳算法运用于数据中</span></span><br><span class="line">clf.fit(X_train,y_train)</span><br></pre></td></tr></table></figure>
+
+<pre><code>/home/wvdon/anaconda3/envs/weidong/lib/python3.7/site-packages/sklearn/model_selection/_split.py:1978: FutureWarning: The default value of cv will change from 3 to 5 in version 0.22. Specify it explicitly to silence this warning.
+  warnings.warn(CV_WARNING, FutureWarning)
+/home/wvdon/anaconda3/envs/weidong/lib/python3.7/site-packages/sklearn/model_selection/_search.py:814: DeprecationWarning: The default of the `iid` parameter will change from True to False in version 0.22 and will be removed in 0.24. This will change numeric results when test-set sizes are unequal.
+  DeprecationWarning)
+
+
+
+
+
+RandomForestClassifier(bootstrap=True, class_weight=None, criterion=&apos;entropy&apos;,
+                       max_depth=5, max_features=&apos;sqrt&apos;, max_leaf_nodes=None,
+                       min_impurity_decrease=0.0, min_impurity_split=None,
+                       min_samples_leaf=1, min_samples_split=3,
+                       min_weight_fraction_leaf=0.0, n_estimators=4,
+                       n_jobs=None, oob_score=False, random_state=None,
+                       verbose=0, warm_start=False)</code></pre><h3 id="3-2-预测"><a href="#3-2-预测" class="headerlink" title="3.2 预测"></a>3.2 预测</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">predictions = clf.predict(X_test)</span><br><span class="line">print(accuracy_score(y_test,predictions))</span><br><span class="line">data_tr</span><br></pre></td></tr></table></figure>
+
+<pre><code>0.8268156424581006</code></pre><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}</code></pre><p></style><p></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>PassengerId</th>
+      <th>Survived</th>
+      <th>Pclass</th>
+      <th>Sex</th>
+      <th>Age</th>
+      <th>SibSp</th>
+      <th>Parch</th>
+      <th>Fare</th>
+      <th>Embarked</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>1</td>
+      <td>0</td>
+      <td>3</td>
+      <td>1</td>
+      <td>22.000000</td>
+      <td>1</td>
+      <td>0</td>
+      <td>7.2500</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>2</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>38.000000</td>
+      <td>1</td>
+      <td>0</td>
+      <td>71.2833</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>3</td>
+      <td>1</td>
+      <td>3</td>
+      <td>0</td>
+      <td>26.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>7.9250</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>4</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>35.000000</td>
+      <td>1</td>
+      <td>0</td>
+      <td>53.1000</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>5</td>
+      <td>0</td>
+      <td>3</td>
+      <td>1</td>
+      <td>35.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>8.0500</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+      <td>...</td>
+    </tr>
+    <tr>
+      <td>886</td>
+      <td>887</td>
+      <td>0</td>
+      <td>2</td>
+      <td>1</td>
+      <td>27.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>13.0000</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>887</td>
+      <td>888</td>
+      <td>1</td>
+      <td>1</td>
+      <td>0</td>
+      <td>19.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>30.0000</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>888</td>
+      <td>889</td>
+      <td>0</td>
+      <td>3</td>
+      <td>0</td>
+      <td>29.699118</td>
+      <td>1</td>
+      <td>2</td>
+      <td>23.4500</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>889</td>
+      <td>890</td>
+      <td>1</td>
+      <td>1</td>
+      <td>1</td>
+      <td>26.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>30.0000</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>890</td>
+      <td>891</td>
+      <td>0</td>
+      <td>3</td>
+      <td>1</td>
+      <td>32.000000</td>
+      <td>0</td>
+      <td>0</td>
+      <td>7.7500</td>
+      <td>2</td>
+    </tr>
+  </tbody>
+</table>
+<p>891 rows × 9 columns</p>
+</div>
+
+
+
+<h3 id="3-3-预测test文件"><a href="#3-3-预测test文件" class="headerlink" title="3.3 预测test文件"></a>3.3 预测test文件</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">predictions = clf.predict(data_te.drop(<span class="string">'PassengerId'</span>,axis=<span class="number">1</span>))</span><br><span class="line">output = pd.DataFrame(&#123;<span class="string">'Passengers'</span>:data_te[<span class="string">'PassengerId'</span>],<span class="string">'Survived'</span>:predictions&#125;)</span><br><span class="line">output.to_csv(<span class="string">r'test1.csv'</span>)</span><br><span class="line">output.head()</span><br></pre></td></tr></table></figure>
+
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+<pre><code>.dataframe tbody tr th {
+    vertical-align: top;
+}
+
+.dataframe thead th {
+    text-align: right;
+}</code></pre><p></style><p></p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Passengers</th>
+      <th>Survived</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>0</td>
+      <td>892</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>1</td>
+      <td>893</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>2</td>
+      <td>894</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>3</td>
+      <td>895</td>
+      <td>0</td>
+    </tr>
+    <tr>
+      <td>4</td>
+      <td>896</td>
+      <td>0</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+
+
+<h3 id="3-4-提交到kaggle官网"><a href="#3-4-提交到kaggle官网" class="headerlink" title="3.4 提交到kaggle官网"></a>3.4 提交到kaggle官网</h3><p>结果是 0.77990<br>hhhhhhhh还是比较满意的<br>下次用深度学习试试</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+    </div>
+
+    
+    
+    
+        
+      
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>Wedong Wu</li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="http://wvdon.com/2019/09/09/machineLearning/titanc/" title="数据挖掘：Python使用随机森林预测泰坦尼克号生存">http://wvdon.com/2019/09/09/machineLearning/titanc/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.</li>
+</ul>
+</div>
+
+      
+		<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+</div>
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/随机森林/" rel="tag"># 随机森林</a>
+            
+              <a href="/tags/kaggle/" rel="tag"># kaggle</a>
+            
+              <a href="/tags/数据挖掘/" rel="tag"># 数据挖掘</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/08/28/Git-分布式版本控制/" rel="next" title="Git:分布式版本控制">
+                  <i class="fa fa-chevron-left"></i> Git:分布式版本控制
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/09/27/2019-09-27-题目/" rel="prev" title="Photoshop 记录">
+                  Photoshop 记录 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="comments"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc" data-target="post-toc-wrap">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言："><span class="nav-text">前言：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-数据预处理"><span class="nav-text">1 数据预处理</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-1-读入数据"><span class="nav-text">1.1 读入数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-训练集与数据集"><span class="nav-text">1.2 训练集与数据集</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-1-查看数据完整性"><span class="nav-text">1.2.1 查看数据完整性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-2-查看训练数据描述信息"><span class="nav-text">1.2.2 查看训练数据描述信息</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-3-1-年龄数据简化分组"><span class="nav-text">1.3.1  年龄数据简化分组</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-数据可视化"><span class="nav-text">2 数据可视化</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-年龄和生存率之间的关系"><span class="nav-text">2.1  年龄和生存率之间的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-所做的位置和生存率之间的关系"><span class="nav-text">2.2 所做的位置和生存率之间的关系</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-生存率与年龄的关系"><span class="nav-text">2.3 生存率与年龄的关系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-建立模型"><span class="nav-text">3 建立模型</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#3-1-随机森林"><span class="nav-text">3.1 随机森林</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-2-预测"><span class="nav-text">3.2 预测</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-3-预测test文件"><span class="nav-text">3.3 预测test文件</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-4-提交到kaggle官网"><span class="nav-text">3.4 提交到kaggle官网</span></a></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/uploads/avatar.gif"
+      alt="Wedong Wu">
+  <p class="site-author-name" itemprop="name">Wedong Wu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">19</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">categories</span>
+        
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">24</span>
+        <span class="site-state-item-name">tags</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/wvdon" title="GitHub &rarr; https://github.com/wvdon" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:mail@wvdon.com" title="E-Mail &rarr; mailto:mail@wvdon.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://blog.csdn.net/wedon_t/?ref=toolbar" title="CSDN &rarr; https://blog.csdn.net/wedon_t/?ref=toolbar" rel="noopener" target="_blank"><i class="fa fa-fw fa-copyright"></i>CSDN</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://space.bilibili.com/303911459" title="Bilibili &rarr; https://space.bilibili.com/303911459" rel="noopener" target="_blank"><i class="fa fa-fw fa-youtube"></i>Bilibili</a>
+      </span>
+    
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://liuchuo.net" title="http://liuchuo.net" rel="noopener" target="_blank">柳婼のBlog</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://cyc2018.github.io/CS-Notes/#/" title="https://cyc2018.github.io/CS-Notes/#/" rel="noopener" target="_blank">CS-Notes</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://www.draw.io/" title="https://www.draw.io/" rel="noopener" target="_blank">Draw.io</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://ailearning.apachecn.org/#/" title="https://ailearning.apachecn.org/#/" rel="noopener" target="_blank">ApacheCN</a>
+        </li>
+      
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2020</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Powered By Wedong Wu</span>
+</div>
+  <div class="powered-by"><a>豫ICP备18006395号-1</a></div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info"></div>
+<span id="busuanzi_container_site_uv">
+  本站访问次数：<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+</span>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="Total Visitors">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="Total Views">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.3.0"></script><script src="/js/motion.js?v=7.3.0"></script>
+<script src="/js/schemes/pisces.js?v=7.3.0"></script>
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.3.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+    
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: true,
+    notify: true,
+    appId: 'KQU7yEE1PiNFHAyF8jwKYTkM-gzGzoHsz',
+    appKey: 'NmcJxL2vR7P6ipHDQtHJPpM6',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname
+  });
+}, window.Valine);
+</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+</body>
+</html>
