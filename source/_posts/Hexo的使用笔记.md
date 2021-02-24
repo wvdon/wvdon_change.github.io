@@ -1,8 +1,9 @@
 ---
 title: 'Hexo:使用记录'
 date: 2019-09-27 23:42:57
-tags: [hexo]
-categories: tools
+tags: 
+	- hexo
+categories: [tools]
 description: 生产力工具
 ---
 
@@ -33,3 +34,12 @@ description: 生产力工具
 > hexo g 生成静态文件
 >
 > hexo d 部署到github上
+
+重新部署本地时
+
+> 安装node.js  url=https://nodejs.org/dist/ 。（高版本可能会出现问题）
+>
+> npm安装 ` npm install -g hexo-cli ` 
+
+
+

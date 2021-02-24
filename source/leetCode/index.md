@@ -30,11 +30,11 @@ date: 2019-09-27 20:42:00
 > 因为 nums[0] + nums[1] = 2 + 7 = 9
 > 所以返回 [0, 1]
 
-##### 题解
+**题解**
 
 从数组中选出和为target的两个数，输出他的下标
 
-##### 思路
+**思路**
 
 - 思路一
 
@@ -44,11 +44,11 @@ date: 2019-09-27 20:42:00
 
   利用hashmap将键值存入map中，然后循环，如果存在target-nums[i]时 返回数组下标
 
-##### 考察
+**考察**
 
 数组和hashmap的使用
 
-##### 实现
+**实现**
 
 ```java
 class Solution{
@@ -75,7 +75,7 @@ class Solution{
 
 ```
 
-##### 优化
+**优化**
 
 ```java
 class Solution1{
@@ -114,19 +114,19 @@ class Solution1{
 > 原因：342 + 465 = 807
 > ```
 
-##### 题解
+**题解**
 
 返回一个求和的新链表
 
-##### 思路
+**思路**
 
 添加一个预先指针，判断下一位是否进位
 
-##### 考察
+**考察**
 
 利用链表进行加减
 
-##### 实现
+**实现**
 
 ```java
 class Solution {
@@ -161,8 +161,6 @@ class Solution {
 
 
 
-##### 优化
-
 #### [3. 无重复字符的最长子串](https://leetcode-cn.com/problems/longest-substring-without-repeating-characters/)
 
 给定一个字符串，请你找出其中不含有重复字符的 最长子串 的长度。
@@ -183,19 +181,19 @@ class Solution {
 > > 解释: 因为无重复字符的最长子串是 "wke"，所以其长度为 3。
 > >      请注意，你的答案必须是 子串 的长度，"pwke" 是一个子序列，不是子串
 
-##### 题解
+题解
 
 在所给的字符串中找到那个前后不重复且长度最长的子串
 
-##### 思路
+思路
 
 将key存在hashmap中，如果不相同就++，存在相同的情况下就更新max值
 
-##### 考察
+考察
 
 字符串的匹配，滑动窗口
 
-##### 实现
+实现
 
 ```java
 class Solution {
@@ -216,8 +214,6 @@ class Solution {
 ```
 
 
-
-##### 优化
 
 #### [6. Z 字形变换](https://leetcode-cn.com/problems/zigzag-conversion/)
 
@@ -250,19 +246,19 @@ string convert(string s, int numRows);
 > E C   I H   N
 > T     S     G
 
-##### 题解
+题解
 
 将原先的字符串按照z字形进行转换输出
 
-##### 思路
+思路
 
 可以构造n个 StringBuilder，然后定义一个 res 判断z字形的下一个元素是 进入到 str[i+1]还是 str[i-1]上
 
-##### 考察
+考察
 
 字符串操作
 
-##### 实现
+实现
 
 ```java
 class Solution {
@@ -292,8 +288,6 @@ class Solution {
 
 
 
-##### 优化
-
 #### [7. 整数反转](https://leetcode-cn.com/problems/reverse-integer/)
 
 给出一个 32 位的有符号整数，你需要将这个整数中每位上的数字进行反转。
@@ -317,15 +311,15 @@ class Solution {
 
 假设我们的环境只能存储得下 32 位的有符号整数，则其数值范围为 [−2^31,  2^31 − 1]。请根据这个假设，如果反转后整数溢出那么就返回 0。
 
-##### 思路
+思路
 
 可以利用StringBuilder的 reverse()方法将字符进行翻转。
 
-##### 考察
+考察
 
 字符串的操作吧！
 
-##### 实现
+实现
 
 ```java
 class Solution {
@@ -358,11 +352,9 @@ class Solution {
 
 
 
-##### 优化
-
 #### [9. 回文数](https://leetcode-cn.com/problems/palindrome-number/)
 
-##### 题解
+题解
 
 判断一个整数是否是回文数。回文数是指正序（从左向右）和倒序（从右向左）读都是一样的整数。
 
@@ -383,15 +375,15 @@ class Solution {
 > 输出: false
 > 解释: 从右向左读, 为 01 。因此它不是一个回文数。
 
-##### 思路
+思路
 
 直接用reverse()
 
 需要注意的是在进行比较的时候 int转为str可以是 int+""
 
-##### 考察
+考察
 
-##### 实现
+实现
 
 ```java
 class Solution {
@@ -403,7 +395,7 @@ class Solution {
 }
 ```
 
-##### 优化
+优化
 
 #### [14. 最长公共前缀](https://leetcode-cn.com/problems/longest-common-prefix/)
 
@@ -428,19 +420,19 @@ class Solution {
 
 来源：力扣（LeetCode）
 
-##### 题解
+题解
 
 找到字符串相同的前缀
 
-##### 思路
+思路
 
 直接设置一个字符串，如果字符串前缀相同，则存入，否则 跳出；
 
-##### 考察
+考察
 
 字符串操作
 
-##### 实现
+实现
 
 ```java
 class Solution {
@@ -465,19 +457,17 @@ class Solution {
 }
 ```
 
-##### 优化
-
-
+### 剑指offer 
 
 #### 模板
 
-##### 题解
+**题解**
 
-##### 思路
+**思路**
 
-##### 考察
+**考察**
 
-##### 实现
+**实现**
 
-##### 优化
+**优化**
 

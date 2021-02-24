@@ -1363,7 +1363,7 @@ sns.barplot(x='Embarked',y='Survived',hue='Sex',data=data_train)
 
 
 
-![png](http://web.wvdon.com/md/output_35_1.png)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20210110162140990.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1dlRG9uX3Q=,size_16,color_FFFFFF,t_70#pic_center)
 
 
 - female的获救率大于 male,(应该是男士都比较绅士吧，即使面对死亡，也希望将最后的机会留给女生，，电影感悟）
@@ -1386,7 +1386,7 @@ sns.pointplot(x='Pclass',y='Survived',hue='Sex',data=data_train,palette={'male':
 
 
 
-![png](http://web.wvdon.com/md/output_38_1.png)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20210110164700555.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1dlRG9uX3Q=,size_16,color_FFFFFF,t_70#pic_center)
 
 
 - 等级越高获救率越高
@@ -1407,7 +1407,7 @@ sns.barplot(x = 'Age',y = 'Survived',hue='Sex',data = data_train)
 
 
 
-![png](http://web.wvdon.com/md/output_41_1.png)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20210110164809985.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1dlRG9uX3Q=,size_16,color_FFFFFF,t_70#pic_center)
 
 
 - 男性大于女性
@@ -1423,10 +1423,10 @@ sns.barplot(x = 'Cabin',y = 'Survived',hue='Sex',data = data_train)
 
     <matplotlib.axes._subplots.AxesSubplot at 0x7fee585b0748>
 
+​    
 
 
-
-![png](http://web.wvdon.com/md/output_43_1.png)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20210110164859598.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1dlRG9uX3Q=,size_16,color_FFFFFF,t_70#pic_center)
 
 
 
@@ -1442,7 +1442,7 @@ sns.barplot(x = 'Fare',y = 'Survived',hue='Sex',data = data_train)
 
 
 
-![png](http://web.wvdon.com/md/output_44_1.png)
+![在这里插入图片描述](https://img-blog.csdnimg.cn/20210110164953458.png?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1dlRG9uX3Q=,size_16,color_FFFFFF,t_70#pic_center)
 
 
 ## 3 建立模型
@@ -1718,6 +1718,7 @@ output.head()
         text-align: right;
     }
 </style>
+
 <table border="1" class="dataframe">
   <thead>
     <tr style="text-align: right;">

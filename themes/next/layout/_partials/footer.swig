@@ -43,7 +43,7 @@
 
 {%- if theme.footer.powered.enable %}
   <div class="powered-by">{#
-  #}<a>豫ICP备18006395号-1</a>{#
+  #}<a href='https://beian.miit.gov.cn'>豫ICP备18006395号-1</a>{#
   #}{#
  #}</div>
 {%- endif %}

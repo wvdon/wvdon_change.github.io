@@ -1,0 +1,862 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":false,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":true,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    }
+  };
+</script>
+
+  <meta name="description" content="前言本系列文章源自于读《机器学习实战》这本书的学习笔记，用于记录学习内容，不断更新，，21世纪互联网的发展，使得我们对于数据的收集更加容易，在这样大量数据的前提下，我们必须要挖掘出海量数据的价值，而机器学习的算法受到许多爱好技术人员的青睐，是因为这些算法在一定程度上可以帮助我们进行一些诸如回归预测，分类，识别等诸多场景的应用。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="第一章 ：机器学习基础">
+<meta property="og:url" content="http://wvdon.com/2019/10/22/machineLearning/machineLearning/2019-10-22-第一章-：机器学习基础/index.html">
+<meta property="og:site_name" content="吴卫东のBlog">
+<meta property="og:description" content="前言本系列文章源自于读《机器学习实战》这本书的学习笔记，用于记录学习内容，不断更新，，21世纪互联网的发展，使得我们对于数据的收集更加容易，在这样大量数据的前提下，我们必须要挖掘出海量数据的价值，而机器学习的算法受到许多爱好技术人员的青睐，是因为这些算法在一定程度上可以帮助我们进行一些诸如回归预测，分类，识别等诸多场景的应用。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://img-blog.csdnimg.cn/20210110163343351.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1dlRG9uX3Q=,size_16,color_FFFFFF,t_70#pic_center">
+<meta property="og:updated_time" content="2021-01-10T08:52:27.415Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="第一章 ：机器学习基础">
+<meta name="twitter:description" content="前言本系列文章源自于读《机器学习实战》这本书的学习笔记，用于记录学习内容，不断更新，，21世纪互联网的发展，使得我们对于数据的收集更加容易，在这样大量数据的前提下，我们必须要挖掘出海量数据的价值，而机器学习的算法受到许多爱好技术人员的青睐，是因为这些算法在一定程度上可以帮助我们进行一些诸如回归预测，分类，识别等诸多场景的应用。">
+<meta name="twitter:image" content="https://img-blog.csdnimg.cn/20210110163343351.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1dlRG9uX3Q=,size_16,color_FFFFFF,t_70#pic_center">
+  <link rel="alternate" href="/atom.xml" title="吴卫东のBlog" type="application/atom+xml">
+  <link rel="canonical" href="http://wvdon.com/2019/10/22/machineLearning/machineLearning/2019-10-22-第一章-：机器学习基础/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>第一章 ：机器学习基础 | 吴卫东のBlog</title>
+  <meta name="generator" content="Hexo 3.9.0">
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+	 <a href="https://github.com/wvdon" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">吴卫东のBlog</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">我究竟拿时间换了什么</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-machinelearnig">
+      
+    
+
+    <a href="/machineLearning" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>machineLearnig</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-main">
+      
+    
+
+    <a href="/Main" rel="section"><i class="menu-item-icon fa fa-fw fa-book"></i> <br>Main</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-leetcode">
+      
+    
+
+    <a href="/leetCode" rel="section"><i class="menu-item-icon fa fa-fw fa-sitemap"></i> <br>leetCode</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tools">
+      
+    
+
+    <a href="/tools/" rel="section"><i class="menu-item-icon fa fa-fw fa-wrench"></i> <br>tools</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-about">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>About</a>
+
+  </li>
+      <li class="menu-item menu-item-search">
+        <a href="javascript:;" class="popup-trigger">
+        
+          <i class="menu-item-icon fa fa-search fa-fw"></i> <br>Search</a>
+      </li>
+    
+  </ul>
+
+</nav>
+  <div class="site-search">
+    <div class="popup search-popup">
+    <div class="search-header">
+  <span class="search-icon">
+    <i class="fa fa-search"></i>
+  </span>
+  <div class="search-input-container">
+    <input autocomplete="off" autocorrect="off" autocapitalize="none"
+           placeholder="Searching..." spellcheck="false"
+           type="text" id="search-input">
+  </div>
+  <span class="popup-btn-close">
+    <i class="fa fa-times-circle"></i>
+  </span>
+</div>
+<div id="search-result"></div>
+
+</div>
+<div class="search-pop-overlay"></div>
+
+  </div>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+            
+
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://wvdon.com/2019/10/22/machineLearning/machineLearning/2019-10-22-第一章-：机器学习基础/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Wedong Wu">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="吴卫东のBlog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">第一章 ：机器学习基础
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-10-22 21:04:52" itemprop="dateCreated datePublished" datetime="2019-10-22T21:04:52+08:00">2019-10-22</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-01-10 16:52:27" itemprop="dateModified" datetime="2021-01-10T16:52:27+08:00">2021-01-10</time>
+              </span>
+            
+          
+
+          
+            <span class="post-meta-item" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+        
+      
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2019/10/22/machineLearning/machineLearning/2019-10-22-第一章-：机器学习基础/#comments" itemprop="discussionUrl"><span class="post-comments-count valine-comment-count" data-xid="/2019/10/22/machineLearning/machineLearning/2019-10-22-第一章-：机器学习基础/" itemprop="commentCount"></span></a>
+  </span>
+  
+  
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p>本系列文章源自于读《机器学习实战》这本书的学习笔记，用于记录学习内容，不断更新，，</p><p>21世纪互联网的发展，使得我们对于数据的收集更加容易，在这样大量数据的前提下，我们必须要挖掘出海量数据的价值，而机器学习的算法受到许多爱好技术人员的青睐，是因为这些算法在一定程度上可以帮助我们进行一些诸如回归预测，分类，识别等诸多场景的应用。</p><a id="more"></a>
+
+<h4 id="何谓数据，信息，知识呢？"><a href="#何谓数据，信息，知识呢？" class="headerlink" title="何谓数据，信息，知识呢？"></a>何谓数据，信息，知识呢？</h4><blockquote>
+<p>一切的实物都是数据，而信息是有用的数据</p>
+<p>例如： 通过测量行星的位置和对应的时间，我们得到的就是数据。而通过这些数据获得行星的轨迹就是信息，通过这些信息总结出来开普勒三定律就是知识了。</p>
+</blockquote>
+<h2 id="本书结构"><a href="#本书结构" class="headerlink" title="本书结构"></a>本书结构</h2><p>《机器学习实战》全书共15章，主要是介绍了数据挖掘的十大算法其八：</p>
+<p>C4.5决策树、K-均值（K-mean）、支持向量机（SVM）、Apriori、 最大期望算法（EM）、PageRank算法、AdaBoost算法、k-近邻算法（kNN）、朴素贝叶斯算法（NB） 和分类回归树（CART）算法。没有包括最大期望算法和PageRank 算法。本书没有包括PageRank算法，是因为搜索引擎巨头Google引入的PageRank算法已经在很多 著作里得到了充分的论述，没有必要进一步累述；而最大期望算法没有纳入，是因为涉及太多的</p>
+<h4 id="选择本书的原因"><a href="#选择本书的原因" class="headerlink" title="选择本书的原因"></a>选择本书的原因</h4><p>本书的实战性比较强，每个章节都是用例子来说明的，符合我这种喜欢写代码的同学，如果是西瓜书我可能看着就睡着了，理论知识太多了。</p>
+<p>我的计划是可以通过本书对这几个算法有一定的了解之后再选择西瓜书或李宏毅的课程进行研读。</p>
+<p>由于书上实现都是用的python2.x，我会用python3.7将其复现，并用jupyter展示出来。</p>
+<h2 id="何谓机器学习呢？"><a href="#何谓机器学习呢？" class="headerlink" title="何谓机器学习呢？"></a>何谓机器学习呢？</h2><p>机器学习是一类算法的总称，这些算法企图从大量历史数据中挖掘出其中隐含的规律，并用于预测或者分类，更具体的说，机器学习可以看作是寻找一个函数，输入是样本数据，输出是期望的结果，只是这个函数过于复杂，以至于不太方便形式化表达。需要注意的是，机器学习的目标是使学到的函数很好地适用于“新样本”，而不仅仅是在训练样本上表现很好。学到的函数适用于新样本的能力，称为泛化（Generalization）能力。</p>
+<p>简言之，机器学习可以揭示数据背后的真实 含义</p>
+<h2 id="人工智能-机器学习-深度学习"><a href="#人工智能-机器学习-深度学习" class="headerlink" title="人工智能 机器学习 深度学习"></a>人工智能 机器学习 深度学习</h2><p><b>人工智能是追求目标，机器学习是实现手段，深度学习是其中一种方法。</b></p>
+<h3 id="人工智能（Artificial-Intelligence）：机器赋予人的智慧"><a href="#人工智能（Artificial-Intelligence）：机器赋予人的智慧" class="headerlink" title="人工智能（Artificial Intelligence）：机器赋予人的智慧"></a>人工智能<strong>（Artificial Intelligence）</strong>：机器赋予人的智慧</h3><p>1956年，几个计算机科学家相聚在达特茅斯会议，提出了“人工智能”的概念，梦想着用当时刚刚出现的计算机来构造复杂的、拥有与人类智慧同样本质特性的机器<br>2012年以后，得益于数据量的上涨、运算力的提升和机器学习新算法（深度学习）的出现，人工智能开始大爆发。</p>
+<p>现在人工智能的研究领域只要有 专家系统、机器学习、进化计算、模糊逻辑、计算机视觉、自然语言处理、推荐系统等</p>
+<h5 id="弱人工智能-强人工智能"><a href="#弱人工智能-强人工智能" class="headerlink" title="弱人工智能-强人工智能"></a>弱人工智能-强人工智能</h5><p>我们现在所说的人工智能都是弱人工智能，能够实现具体的某一种任务，如人脸识别，机器翻译。<br>墙人工智能大概就像是人一样吧，能够自己学习everything</p>
+<h3 id="机器学习（Machine-Learning）：一种实现人工智能的手段"><a href="#机器学习（Machine-Learning）：一种实现人工智能的手段" class="headerlink" title="机器学习（Machine Learning）：一种实现人工智能的手段"></a>机器学习（Machine Learning）：一种实现人工智能的手段</h3><p>机器学习的最基本做法，便是使用算法来对数据进行解析、学习，然后对真实世界中的数据/事件作出决策/预测。</p>
+<p>根据<strong>使用算法</strong>的不同，机器学习的算法可包括：决策树、聚类、支持向量机、朴素贝叶斯等。</p>
+<p>根据<strong>学习方法</strong>的不同，机器学习可以分为：监督学习、半监督学习、无监督学习、集成学习等。</p>
+<h3 id="深度学习-Deep-Learning-：一种实现机器学习的方法"><a href="#深度学习-Deep-Learning-：一种实现机器学习的方法" class="headerlink" title="深度学习(Deep Learning)：一种实现机器学习的方法"></a>深度学习(Deep Learning)：一种实现机器学习的方法</h3><p>对机器学习来说，特征提取并不简单。特征工程往往需要大量的时间去优化，而此时，深度学习便可以自动学习特征和任务之间的关联，还能从简单特征中提取复杂的特征。深</p>
+<p>度学习的概念源于人工神经网络的研究，含多隐层的多层感知器就是一种深度学习结构，深度学习通过组合低层特征形成更加抽象的高层表示属性类别或特征，以发现数据的分布式特征表示</p>
+<h3 id="三者联系"><a href="#三者联系" class="headerlink" title="三者联系"></a>三者联系</h3><p><img src="https://img-blog.csdnimg.cn/20210110163343351.PNG?x-oss-process=image/watermark,type_ZmFuZ3poZW5naGVpdGk,shadow_10,text_aHR0cHM6Ly9ibG9nLmNzZG4ubmV0L1dlRG9uX3Q=,size_16,color_FFFFFF,t_70#pic_center" alt="在这里插入图片描述"></p>
+<p>人工智能 &gt;&gt; 机器学习 &gt;&gt; 深度学习</p>
+<h2 id="补充"><a href="#补充" class="headerlink" title="补充"></a>补充</h2><p>机器学习的任务个人理解是主要做分类与回归。分类和回归属于监督学习，之所以称 之为监督学习，是因为这类算法必须知道预测什么，即目标变量的分类信息。</p>
+<p>与监督学习相对应的是无监督学习，此时数据没有类别信息，也不会给定目标值。对于离散型的遍历</p>
+<h4 id="选择合适的算法："><a href="#选择合适的算法：" class="headerlink" title="选择合适的算法："></a>选择合适的算法：</h4><p>如果想要预测目标变量的值，则可以选择监督学习算法， 否则可以选择无监督学习算法。确定选择监督学习算法之后，需要进一步确定目标变量类型，如 果目标变量是离散型，如是/否、1/2/3、A/B/C或者红/黄/黑等，则可以选择分类器算法；如果目 标变量是连续型的数值，如0.0～100.00、999～999或者+∞～-∞等，则需要选择回归算法</p>
+<blockquote>
+<p> 离散型：分类器</p>
+<p>连续性：逻辑回归</p>
+</blockquote>
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><p><a href="https://blog.csdn.net/hohaizx/article/details/80584307" target="_blank" rel="noopener">机器学习简介</a></p>
+<p><a href="https://www.zhihu.com/question/57770020" target="_blank" rel="noopener">知乎-人工智能-机器学习-深度学习的区别</a></p>
+
+    </div>
+
+    
+    
+    
+        
+      
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>Wedong Wu</li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="http://wvdon.com/2019/10/22/machineLearning/machineLearning/2019-10-22-第一章-：机器学习基础/" title="第一章 ：机器学习基础">http://wvdon.com/2019/10/22/machineLearning/machineLearning/2019-10-22-第一章-：机器学习基础/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.</li>
+</ul>
+</div>
+
+      
+		<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+</div>
+      <footer class="post-footer">
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/10/18/linux/2019-10-18-Linux/" rel="next" title="Linux">
+                  <i class="fa fa-chevron-left"></i> Linux
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2019/10/24/machineLearning/machineLearning/2019-10-24-第二章-：k-近邻算法/" rel="prev" title="第二章 ：k-近邻算法">
+                  第二章 ：k-近邻算法 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="comments"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc" data-target="post-toc-wrap">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-text">前言</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#何谓数据，信息，知识呢？"><span class="nav-text">何谓数据，信息，知识呢？</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#本书结构"><span class="nav-text">本书结构</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#选择本书的原因"><span class="nav-text">选择本书的原因</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#何谓机器学习呢？"><span class="nav-text">何谓机器学习呢？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#人工智能-机器学习-深度学习"><span class="nav-text">人工智能 机器学习 深度学习</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#人工智能（Artificial-Intelligence）：机器赋予人的智慧"><span class="nav-text">人工智能（Artificial Intelligence）：机器赋予人的智慧</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#弱人工智能-强人工智能"><span class="nav-text">弱人工智能-强人工智能</span></a></li></ol></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#机器学习（Machine-Learning）：一种实现人工智能的手段"><span class="nav-text">机器学习（Machine Learning）：一种实现人工智能的手段</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#深度学习-Deep-Learning-：一种实现机器学习的方法"><span class="nav-text">深度学习(Deep Learning)：一种实现机器学习的方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#三者联系"><span class="nav-text">三者联系</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#补充"><span class="nav-text">补充</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#选择合适的算法："><span class="nav-text">选择合适的算法：</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-text">参考</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/uploads/avatar.gif"
+      alt="Wedong Wu">
+  <p class="site-author-name" itemprop="name">Wedong Wu</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">8</span>
+        <span class="site-state-item-name">categories</span>
+        
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">30</span>
+        <span class="site-state-item-name">tags</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/wvdon" title="GitHub &rarr; https://github.com/wvdon" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:mail@wvdon.com" title="E-Mail &rarr; mailto:mail@wvdon.com"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://blog.csdn.net/wedon_t/?ref=toolbar" title="CSDN &rarr; https://blog.csdn.net/wedon_t/?ref=toolbar" rel="noopener" target="_blank"><i class="fa fa-fw fa-copyright"></i>CSDN</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://space.bilibili.com/303911459" title="Bilibili &rarr; https://space.bilibili.com/303911459" rel="noopener" target="_blank"><i class="fa fa-fw fa-youtube"></i>Bilibili</a>
+      </span>
+    
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="http://liuchuo.net" title="http://liuchuo.net" rel="noopener" target="_blank">柳婼のBlog</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://cyc2018.github.io/CS-Notes/#/" title="https://cyc2018.github.io/CS-Notes/#/" rel="noopener" target="_blank">CS-Notes</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://www.draw.io/" title="https://www.draw.io/" rel="noopener" target="_blank">Draw.io</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://ailearning.apachecn.org/#/" title="https://ailearning.apachecn.org/#/" rel="noopener" target="_blank">ApacheCN</a>
+        </li>
+      
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2017 – <span itemprop="copyrightYear">2021</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Powered By Wedong Wu</span>
+</div>
+  <div class="powered-by"><a href='https://beian.miit.gov.cn'>豫ICP备18006395号-1</a></div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info"></div>
+<span id="busuanzi_container_site_uv">
+  本站访问次数：<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+</span>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="Total Visitors">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="Total Views">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.3.0"></script><script src="/js/motion.js?v=7.3.0"></script>
+<script src="/js/schemes/pisces.js?v=7.3.0"></script>
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+  <script src="/js/local-search.js?v=7.3.0"></script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: true,
+    notify: true,
+    appId: 'KQU7yEE1PiNFHAyF8jwKYTkM-gzGzoHsz',
+    appKey: 'NmcJxL2vR7P6ipHDQtHJPpM6',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname
+  });
+}, window.Valine);
+</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+</body>
+</html>
