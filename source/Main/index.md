@@ -16,3 +16,16 @@ date: 2019-10-22 21:30:54
 
 - 计算机操作系统
 - [Linux](http://wvdon.com/2019/10/18/linux/2019-10-18-Linux/)
+
+
+
+## 数据库
+
+- mysql
+- redeis
+
+## 系统开发框架
+
+- [mybatis-plus](https://wvdon.com/2021/05/06/java/mybatisPlus/) ：为简化开发而生的数据库开发框架
+- springBoot
+

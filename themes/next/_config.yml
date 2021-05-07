@@ -157,16 +157,18 @@ baidu_push: false
 menu:
   home: / || home
   #pat: /pat || sitemap
+  
+  main: /Main || book
   machineLearnig: /machineLearning || th
-  Main: /Main || book
   leetCode: /leetCode || sitemap
   tools: /tools/ || wrench
   
   #categories: /categories/ || th
   archives: /archives/ || archive
-  tags: /tags/ || tags
-  about: /about/ || user
   
+  
+  tags: /tags/ || tags
+  aboutMe: /about/ || user
   #books: /books/ || book
   #sitemap: /sitemap.xml || sitemap
   #commonweal: /404/ || heartbeat
@@ -232,7 +234,7 @@ links_settings:
 links:
   柳婼のBlog: http://liuchuo.net
   CS-Notes: https://cyc2018.github.io/CS-Notes/#/
-  Draw.io: https://www.draw.io/
+  狂神: https://www.kuangstudy.com/course
   ApacheCN: https://ailearning.apachecn.org/#/
 # Sidebar Avatar
 avatar:
@@ -471,7 +473,7 @@ bookmark:
 # `Follow me on GitHub` banner in the top-right corner.
 github_banner:
   enable: false
-  permalink: https://github.com/yourname
+  permalink: https://github.com/wvdon
   title: Follow me on GitHub
 
 
@@ -816,7 +818,7 @@ algolia_search:
 # Local Search
 # Dependencies: https://github.com/wzpan/hexo-generator-search
 local_search:
-  enable: true
+  enable: false
   # If auto, trigger search by changing input.
   # If manual, trigger search by pressing enter key or search button.
   trigger: auto

@@ -15,7 +15,7 @@ date: 2019-09-27 20:42:00
 >
 > 五个方面进行解释
 
-
+刷题地址：https://leetcode-cn.com/
 
 ## 题目顺序如下 
 
@@ -456,6 +456,12 @@ class Solution {
     }
 }
 ```
+
+## 加油
+
+刷题地址：https://leetcode-cn.com/
+
+**已解决 12/2074**
 
 ### 剑指offer 
 

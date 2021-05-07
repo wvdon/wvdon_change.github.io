@@ -37,7 +37,11 @@ description: 生产力工具
 
 重新部署本地时
 
-> 安装node.js  url=https://nodejs.org/dist/ 。（高版本可能会出现问题）
+> 安装node.js  url地址是 
+>
+> https://nodejs.org/dist/ 。（高版本在同步到git 可能会出现问题`TypeError [ERR_INVALID_ARG_TYPE]: The "mode" argument must be integer. Received an instance of Object`）
+>
+> 选择低版本 `https://nodejs.org/dist/v12.4.0/node-v12.4.0-x64.msi`
 >
 > npm安装 ` npm install -g hexo-cli ` 
 

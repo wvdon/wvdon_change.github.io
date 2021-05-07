@@ -61,7 +61,7 @@
 <meta property="og:site_name" content="吴卫东のBlog">
 <meta property="og:description" content="每日论文翻译">
 <meta property="og:locale" content="en">
-<meta property="og:updated_time" content="2021-01-28T13:30:41.451Z">
+<meta property="og:updated_time" content="2021-05-06T11:55:55.773Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="论文阅读笔记-推荐系统类 ">
 <meta name="twitter:description" content="每日论文翻译">
@@ -319,11 +319,19 @@
                 
               
 
-              <time title="Created: 2021-01-28 21:30:00 / Modified: 21:30:41" itemprop="dateCreated datePublished" datetime="2021-01-28T21:30:00+08:00">2021-01-28</time>
+              <time title="Created: 2021-01-28 21:30:00" itemprop="dateCreated datePublished" datetime="2021-01-28T21:30:00+08:00">2021-01-28</time>
             </span>
           
             
 
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2021-05-06 19:55:55" itemprop="dateModified" datetime="2021-05-06T19:55:55+08:00">2021-05-06</time>
+              </span>
             
           
             <span class="post-meta-item">
@@ -384,7 +392,7 @@
 <h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><p>之前常见的解决方法是设计额外的损失项，将社会影响假设进行编码，最后和推荐目标一起优化。但是这些方法在利用社交关系上过于含蓄，因为他需要仔细的调整社会正规化系数才能得到好的结果。</p>
 <p>基于以上，作者提出了一种新的基于GCN的预测模型，该模型通过多步消息传播将高阶社会关系明确编码到用户嵌入学习中。</p>
 <p>然后在豆瓣和yelp的数据集上进行试验。并且与BPR,NCF,NSCR等模型进行对比，HOSE在任何情况下都能够达到最好的性能</p>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在这项工作中，作者提出了一个新的社会推荐框架HOSR，该框架整合了高阶邻居信息来解决数据稀疏问题。该模型的核心是通过沿高阶社会邻居进行嵌入传播来生成用户嵌入。利用图卷积层，作者可以将高阶邻域的效果显式建模到表示框架中。进一步利用注意机制来杠杆不同层次的输出，并采用两种dropout策略来缓解过拟合。在两个真实数据集上的实验证明了他的模型的有效性和传播的影响。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p>在这项工作中，作者提出了一个新的社会推荐框架HOSR，该框架整合了高阶邻居信息来解决数据稀疏问题。该模型的核心是通过沿高阶社会邻居进行嵌入传播来生成用户嵌入。利用图卷积层，作者可以将高阶邻域的效果显式建模到表示框架中。进一步利用注意机制来进行不同层次的输出，并采用两种dropout策略来缓解过拟合。在两个真实数据集上的实验证明了他的模型的有效性和传播的影响。</p>
 
     </div>
 
@@ -434,6 +442,10 @@
             <span class="post-nav-divider"></span>
 
             <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2021/02/24/paper/P5-cloud-computing/" rel="prev" title="BigData&&CloudComputiing">
+                  BigData&&CloudComputiing <i class="fa fa-chevron-right"></i>
+                </a>
               
             </div>
           </div>
@@ -503,7 +515,7 @@
         
           <a href="/archives/">
         
-          <span class="site-state-item-count">33</span>
+          <span class="site-state-item-count">34</span>
           <span class="site-state-item-name">posts</span>
         </a>
       </div>
@@ -530,7 +542,9 @@
         
           
         
-        <span class="site-state-item-count">8</span>
+          
+        
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">categories</span>
         
       </div>
@@ -605,7 +619,9 @@
         
           
         
-        <span class="site-state-item-count">30</span>
+          
+        
+        <span class="site-state-item-count">31</span>
         <span class="site-state-item-name">tags</span>
         </a>
       </div>
