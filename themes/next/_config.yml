@@ -158,10 +158,10 @@ menu:
   home: / || home
   #pat: /pat || sitemap
   
-  main: /Main || book
+  main: /paperNotes || book
   machineLearnig: /machineLearning || th
-  leetCode: /leetCode || sitemap
-  tools: /tools/ || wrench
+  code: /leetCode || sitemap
+  tools: /tools || wrench
   
   #categories: /categories/ || th
   archives: /archives/ || archive
