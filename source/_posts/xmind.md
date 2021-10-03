@@ -85,4 +85,5 @@ Categories=GTK;GNOME;Office;
     也可以 super 搜索 xmind 添加到收藏夹
       <img src="http://wvdon.com/&quot;wp-content/uploads&quot;/2019/02/2019-02-10-15-32-54屏幕截图.png" alt="" />
 </blockquote>
+---
 
