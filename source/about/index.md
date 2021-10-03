@@ -9,7 +9,7 @@ date: 2019-08-27 15:40:13
 
 ![](https://web.wvdon.com/WeChatf2a450f24da523878430944e4f0b61e1.png)
 
-
+<center>pic1:博客概要</center>
 
 ---
 
