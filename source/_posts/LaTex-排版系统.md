@@ -65,6 +65,25 @@ LaTex公式
 >
 > <a href="https://www.codecogs.com/eqnedit.php?latex=\sqrt[x]{y}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\sqrt[x]{y}" title="\sqrt[x]{y}" /></a>
 
+图片的插入与引用：
+
+引用`如图\ref{fig1}` {}为label内容
+
+```latex
+\begin{figure}
+    \centering
+    \includegraphics[width=17cm]{figure/m3.png}
+    \caption{高通量检测预测系统研究方案}
+    \label{fig1}
+\end{figure}
+\subsection{研究方法}
+\subsection{技术路线}
+```
+
+
+
+
+
 ## 参考
 
 [参考](https://www.cnblogs.com/endlesscoding/p/9797237.html)
