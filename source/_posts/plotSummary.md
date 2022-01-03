@@ -1,13 +1,13 @@
 ---
-title: 'summary about plot'
-date: 2022-01-04 15:50:39
+title: 'summary_about plot'
+date: 2022-01-04
 tags: 
   - seabron
   - matplotlib
   - python
 categories: [code]
 mathjax: true
-Description:code template about plot picture 
+Description: code template about plot picture 
 ---
 
 总结常用的画图：
