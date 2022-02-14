@@ -17,6 +17,26 @@ date: 2019-09-27 20:42:00
 
 刷题地址：https://leetcode-cn.com/
 
+链表：
+
+链表题目：`一个原则， 两种题型，三个注意，四个技巧`
+
+一个原则：画图
+两个考点：
+
+- 指针的修改
+
+  - 最典型的指针的修改
+
+- 链表的拼接
+
+  
+
+Excerpt From
+西法的刷题秘籍
+Unknown
+This material may be protected by copyright.
+
 ## 题目顺序如下 
 
 #### [1. 两数之和](https://leetcode-cn.com/problems/two-sum/)
