@@ -17,7 +17,7 @@ date: 2019-09-27 20:42:00
 
 刷题地址：https://leetcode-cn.com/
 
-链表：
+# 链表：
 
 链表题目：`一个原则， 两种题型，三个注意，四个技巧`
 
@@ -27,15 +27,29 @@ date: 2019-09-27 20:42:00
 - 指针的修改
 
   - 最典型的指针的修改
-
 - 链表的拼接
 
-  
 
-Excerpt From
-西法的刷题秘籍
-Unknown
-This material may be protected by copyright.
+
+`01 Two sum 2.16`
+
+```python
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]: 
+        for i in nums:
+            j = target - i
+            start_index = nums.index(i)
+            next_index = start_index + 1
+            temp_nums = nums[next_index:]
+            if j in temp_nums:
+                return(start_index,temp_nums.index(j)+next_index)
+```
+
+
+
+
+
+
 
 ## 题目顺序如下 
 
