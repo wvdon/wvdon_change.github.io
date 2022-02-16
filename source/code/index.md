@@ -45,7 +45,15 @@ class Solution:
                 return(start_index,temp_nums.index(j)+next_index)
 ```
 
+[1380. 矩阵中的幸运数](https://leetcode-cn.com/problems/lucky-numbers-in-a-matrix/)
 
+```python
+class Solution:
+    def luckyNumbers (self, matrix: List[List[int]]) -> List[int]:
+      rowmin = [min(i) for i in matrix]
+      colmax = [max(i) for i in zip(*matrix)]
+      return [i for i in rowmin if i in colmax]
+```
 
 
 
