@@ -158,8 +158,9 @@ menu:
   home: / || home
   #pat: /pat || sitemap
   
-  paperNotes: /BioMl/ || book
+  #BioDL group: /BioMl/ || book
   machineLearnig: /machineLearning || th
+  BioDL group: /BioMl/ || book
   #code: /code || sitemap
   tools: /tools || wrench
   
