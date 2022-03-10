@@ -158,7 +158,7 @@ menu:
   home: / || home
   #pat: /pat || sitemap
   
-  paperNotes: /paperNotes || book
+  #paperNotes: /paperNotes || book
   machineLearnig: /machineLearning || th
   #code: /code || sitemap
   tools: /tools || wrench
