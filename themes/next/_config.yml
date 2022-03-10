@@ -52,7 +52,7 @@ favicon:
 
 footer:
   # Specify the date when the site was setup. If not defined, current year will be used.
-  since: 2017
+  since: 2022
 
   # Icon between year and copyright info.
   icon:
@@ -160,7 +160,7 @@ menu:
   
   paperNotes: /paperNotes || book
   machineLearnig: /machineLearning || th
-  code: /code || sitemap
+  #code: /code || sitemap
   tools: /tools || wrench
   
   #categories: /categories/ || th
@@ -168,7 +168,7 @@ menu:
   
   
   tags: /tags/ || tags
-  aboutMe: /about/ || user
+  #aboutMe: /about/ || user
   #books: /books/ || book
   #sitemap: /sitemap.xml || sitemap
   #commonweal: /404/ || heartbeat
@@ -206,13 +206,13 @@ site_state: true
 social:
   GitHub: https://github.com/wvdon|| github
   E-Mail: mailto:mail@wvdon.com || envelope
-  CSDN: https://blog.csdn.net/wedon_t/?ref=toolbar || copyright
-  Bilibili: https://space.bilibili.com/303911459 || youtube
+  #CSDN: https://blog.csdn.net/wedon_t/?ref=toolbar || copyright
+  #Bilibili: https://space.bilibili.com/303911459 || youtube
   #Weibo: https://weibo.com/yourname || weibo
   #Google: https://plus.google.com/yourname || google
   #Twitter: https://twitter.com/yourname || twitter
-  #FB Page: https://www.facebook.com/yourname || facebook
-  #VK Group: https://vk.com/yourname || vk
+  #FB AI: https://ai.facebook.com/ || facebook
+  #Course: https://mit6874.github.io/ || vk
   #StackOverflow: https://stackoverflow.com/wvdon || stack-overflow
   #YouTube: https://youtube.com/yourname || youtube
   #Instagram: https://instagram.com/yourname || instagram
@@ -232,10 +232,10 @@ links_settings:
   layout: inline
 
 links:
-  柳婼のBlog: http://liuchuo.net
-  CS-Notes: https://cyc2018.github.io/CS-Notes/#/
-  狂神: https://www.kuangstudy.com/course
-  ApacheCN: https://ailearning.apachecn.org/#/
+  Facebook AI: https://ai.facebook.com/
+  #CS-Notes: https://cyc2018.github.io/CS-Notes/#/
+  DP for life science mit: https://mit6874.github.io/
+  #ApacheCN: https://ailearning.apachecn.org/#/
 # Sidebar Avatar
 avatar:
   # In theme directory (source/images): /images/avatar.gif
