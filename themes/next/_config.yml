@@ -172,7 +172,7 @@ menu:
   aboutMe: /about/ || user
   #books: /books/ || book
   #sitemap: /sitemap.xml || sitemap
-  commonweal: /404/ || heartbeat
+  #commonweal: /404/ || heartbeat
 
 # Enable / Disable menu icons / item badges.
 menu_settings:
