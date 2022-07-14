@@ -206,7 +206,7 @@ site_state: true
 # Value after `||` delimiter is the name of Font Awesome icon. If icon (with or without delimiter) is not specified, globe icon will be loaded.
 social:
   GitHub: https://github.com/wvdon|| github
-  E-Mail: mailto:mail@wvdon.com || envelope
+  E-Mail: mailto:weidongwu404@gmail.com || envelope
   #CSDN: https://blog.csdn.net/wedon_t/?ref=toolbar || copyright
   #Bilibili: https://space.bilibili.com/303911459 || youtube
   #Weibo: https://weibo.com/yourname || weibo
@@ -234,6 +234,8 @@ links_settings:
 
 links:
   Facebook AI: https://ai.facebook.com/
+  LiMu Bil: https://space.bilibili.com/1567748478/?spm_id_from=333.999.0.0
+  Dive Into DL: https://zh.d2l.ai/chapter_preface/index.html
   #CS-Notes: https://cyc2018.github.io/CS-Notes/#/
   DP for life science mit: https://mit6874.github.io/
   #ApacheCN: https://ailearning.apachecn.org/#/
@@ -441,7 +443,7 @@ codeblock:
   highlight_theme: normal
   # Add copy button on codeblock
   copy_button:
-    enable: false
+    enable: true
     # Show text copy result.
     show_result: false
     # Available values: default | flat | mac
