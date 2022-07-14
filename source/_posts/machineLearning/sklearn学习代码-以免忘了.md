@@ -7,6 +7,10 @@ categories: [tools]
 description: machinelearning
 ---
 
+sklearn 记录
+
+<!-- more -->
+
 ## 数据包
 
 ### sklearn datasets
