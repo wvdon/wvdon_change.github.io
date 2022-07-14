@@ -160,7 +160,7 @@ menu:
   
   #BioDL group: /BioMl/ || book
   machineLearnig: /machineLearning || th
-  BioDL group: /BioMl/ || book
+  #BioDL group: /BioMl/ || book
   #code: /code || sitemap
   tools: /tools || wrench
   
@@ -169,10 +169,10 @@ menu:
   
   
   tags: /tags/ || tags
-  #aboutMe: /about/ || user
+  aboutMe: /about/ || user
   #books: /books/ || book
   #sitemap: /sitemap.xml || sitemap
-  #commonweal: /404/ || heartbeat
+  commonweal: /404/ || heartbeat
 
 # Enable / Disable menu icons / item badges.
 menu_settings:
