@@ -1,35 +1,45 @@
 ---
-title: Data Science 
+title: Machine Learning for Life Science 
 date: 2019-10-22 21:04:52
 ---
 
 # Coding
 
-## Python
+## Python 
 
-- (data manipulation):Pandas
-- (Array):Numpy
-- (Scientific computing):SciPy
+[Python 3.10 tutorial documentation](https://docs.python.org/zh-cn/3.10/tutorial/index.html)        [Google Python coding style Guide](https://google.github.io/styleguide/pyguide.html)
+
+[Python Standard Library](https://docs.python.org/zh-cn/3.10/library/index.html#library-index)
+
+## Package:
+
+- [Pandas](https://pandas.pydata.org/docs/user_guide/index.html#user-guide) [Numpy](https://numpy.org/doc/stable/reference/index.html#reference) SciPy
 - (Data visvalization):Matplotlib&&Seaborn
-- (Machine larning):scikit-learn.tensorflow,pytorch
+- (Machine larning):scikit-learn, 
+- [Pytorch Documentation](https://pytorch.org/docs/stable/index.html)  [PYG](https://pytorch-geometric.readthedocs.io/en/latest/#pyg-documentation)    [pytorch lighting](https://www.pytorchlightning.ai/)
 
-## Sql
-
-
-
-# 数学
+# Math
 
 线性代数
 
 统计学
 
-# 机器学习
+# Machine Learning
 
-## 吴恩达机器学习理论
+[Dive2Learning-李沐](https://zh.d2l.ai/chapter_preface/index.html)
+
+
 
 梯度下降
 
 线性回归
+
+## Model
+
+- CNN (computer vision)
+- Recurrent NN ,Long short-term menory ,Sequence processing
+- Encoders/decoders ,Transformers(nlp)
+- Autorenciders, Generative Adversarial Networks(Generative learning)
 
 ## 机器学习实战
 
@@ -43,13 +53,6 @@ date: 2019-10-22 21:04:52
 支持向量机
 
 XGB
-
-# 深度学习
-
-- CNN (computer vision)
-- Recurrent NN ,Long short-term menory ,Sequence processing
-- Encoders/decoders ,Transformers(nlp)
-- Autorenciders, Generative Adversarial Networks(Generative learning)
 
 # 生物医药信息
 
