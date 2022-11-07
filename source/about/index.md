@@ -5,7 +5,7 @@ Description: 一位从计算机转到生物医药的少年，酷爱日漫，到�
 ---
 
 研究方向：
-图神经网络，AI药物研发中靶点发现，分子设计以及蛋白相互作用的分子动力学模拟。。。
+数据挖掘，生物信息学
 
 # 教育背景:
 
@@ -23,11 +23,13 @@ Description: 一位从计算机转到生物医药的少年，酷爱日漫，到�
 
 **数字郑州科技有限公司**（阿里巴巴与市政府共建）2021.03～2021.09
 
-- Java研发实习生，
+- Java后端研发实习生
 
 # 科研经历
 
 **W. Wu,**Y. Wang, S. Xu and K. Yan. SFNN: Semantic Features Fusion Neural Network for Multimodal Sentiment Analysis.  In CACRE 2020.
+
+Xia Xue , **Weidong Wu**,.etc.  The Evolution of SARS-CoV-2 and COVID-19 Pandemic: What the Virus is Expecting For? （Investing,Co first author ）2022
 
 # 获奖
 
@@ -39,7 +41,9 @@ Description: 一位从计算机转到生物医药的少年，酷爱日漫，到�
 # 技能
 
 1. 熟练Python语言与Pytorch深度学习框架
-2. 
+1. 生物组学数据处理与挖掘
+
+---
 
 以前总是不知道自己想要什么，也不会去主动争取，总是一副随性，且自卑，好面子的样子。
 
