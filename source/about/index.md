@@ -1,6 +1,6 @@
 ---
 title: Weidong Wu
-date: 2019-08-27 15:40:13
+date: 2020-08-27 15:40:13
 Description: 一位从计算机转到生物医药的少年，酷爱日漫，到处玩玩转转的coder。
 ---
 
@@ -27,9 +27,13 @@ Description: 一位从计算机转到生物医药的少年，酷爱日漫，到�
 
 # 科研经历
 
+Xia Xue$ , **Weidong Wu$**,.etc.  The Evolution of SARS-CoV-2 and COVID-19 Pandemic: What the Virus is Expecting For? （Investing,Co first author，Current Bioinformatics IF: 4.85 ）2022
+
 **W. Wu,**Y. Wang, S. Xu and K. Yan. SFNN: Semantic Features Fusion Neural Network for Multimodal Sentiment Analysis.  In CACRE 2020.
 
-Xia Xue , **Weidong Wu**,.etc.  The Evolution of SARS-CoV-2 and COVID-19 Pandemic: What the Virus is Expecting For? （Investing,Co first author ）2022
+Ye, S., Li, C., Zhao, R., & **Wu, W**. NOAA-LSTM: A New Method of Dialect Identification. In *International Conference on Artificial Intelligence and Security* (pp. 16-26). Springer, Cham. (2019, July)
+
+李翠霞,李英豪,王亚博,**吴卫东**,周元元,杨珊珊,闫凯波,许书宁,叶帅,赵若琰. 多模态的驾驶员情绪辅助调节方法[P]. 河南省：CN111329498A,2020-06-26.
 
 # 获奖
 
