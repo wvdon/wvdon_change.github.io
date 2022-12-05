@@ -46,6 +46,7 @@ Ye, S., Li, C., Zhao, R., & **Wu, W**. NOAA-LSTM: A New Method of Dialect Identi
 
 1. 熟练Python语言与Pytorch深度学习框架
 1. 生物组学数据处理与挖掘
+1. ATAC-seq,RNA-seq
 
 ---
 
