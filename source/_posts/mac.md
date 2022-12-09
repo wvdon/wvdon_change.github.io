@@ -1,3 +1,16 @@
+---
+title: '打造可以提升科研效率的工具'
+date: 2022-08-19 00:11:41
+tags:
+  - mac
+  - tools
+categories: tools
+mathjax: true
+
+---
+
+
+
 ### Mac 添加扩展词典（提高外刊文献阅读效率）
 
 > mac三指点击查询词汇非常方便，但是自带的词典(Dictionary)很多专业性词汇都查不出来
