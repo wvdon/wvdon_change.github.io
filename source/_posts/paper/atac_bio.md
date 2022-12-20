@@ -20,7 +20,7 @@ description: 描述ATAC-seq与RNA-seq数据挖掘与联合分析的思路和心�
 
 
 
-![](/Users/wuweidong/code/wvdon.github.io/source/_posts/paper/assets/chrom.png)
+![](https://web.wvdon.com/image/chrom.png)
 
 <center>Fig 1: Chromatin Accessibility</center>
 
@@ -30,7 +30,7 @@ description: 描述ATAC-seq与RNA-seq数据挖掘与联合分析的思路和心�
 
 为了研究**染色质的开放性**，目前有MNase-seq,Dnase-seq,ATAC-seq等，但是目前最常用的是2013年由斯坦福大学开发的ATAC-seq。与传统的MNase-seq以及DNase-seq相比，其具有可重复性强，实验步骤简单，需要的实验样本量少等优点，因而被广泛应用<sup>1</sup>。
 
-![image-20221219190711398](/Users/wuweidong/code/wvdon.github.io/source/_posts/paper/assets/image-20221219190711398-1508244.png)
+![image-20221219190711398](https://web.wvdon.com/image/image-20221219190711398.png)
 
 <center> Fig 2: Methods of Researching Chromatin Accessibility a nd ATAC-seq principle</center>
 
@@ -38,7 +38,7 @@ description: 描述ATAC-seq与RNA-seq数据挖掘与联合分析的思路和心�
 
 利用转座酶Tn5会携带特定的已知序列，并且可以结合开放的染色质。Tn5酶对染色质开放区进行打断，在打断的同时加上测序接头，接着进行DNA提取，PCR扩增构建文库。经过测序分析，就可以推断染色质可行性、转录因子结合位点、组蛋白修饰区域和核小体位置。
 
-![image-20221219193308860](/Users/wuweidong/code/wvdon.github.io/source/_posts/paper/assets/image-20221219193308860-1508259.png)
+![image-20221219193308860](https://web.wvdon.com/image/image-20221219193308860.png)
 
 <center>Fig 3: The Process of Tn5</center>
 
@@ -50,7 +50,7 @@ description: 描述ATAC-seq与RNA-seq数据挖掘与联合分析的思路和心�
 
 针对Call Peak 的结果，可以计算不同组间差异的Peak，或者Motif 富集与转录因子足迹分析，跟进一步的可以联合RNA-seq,
 
-![image-20221219191431029](/Users/wuweidong/code/wvdon.github.io/source/_posts/paper/assets/image-20221219191431029-1508275.png)
+![image-20221219191431029](https://web.wvdon.com/image/image-20221219191431029.png)
 
 
 
