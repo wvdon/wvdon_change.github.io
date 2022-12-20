@@ -48,11 +48,13 @@ description: 描述ATAC-seq与RNA-seq数据挖掘与联合分析的思路和心�
 
 **QC->Alignment->Remove low quality-> Call Peak** 
 
-针对Call Peak 的结果，可以计算不同组间差异的Peak，或者Motif 富集与转录因子足迹分析，跟进一步的可以联合RNA-seq,
+针对Call Peak 的结果，可以计算不同组间差异的Peak，或者Motif 富集与转录因子足迹分析，更进一步的可以联合RNA-seq。
 
 ![image-20221219191431029](https://web.wvdon.com/image/image-20221219191431029.png)
 
 
+
+<center>Fig 4: Roadmap of a typical ATAC-seq analysis.</center>
 
 Pipeline:
 
@@ -60,7 +62,63 @@ Pipeline:
 
 2. [ATAC-seq Guidelines form Harvard](https://informatics.fas.harvard.edu/atac-seq-guidelines.html)
 
-   
+#### **标准**
+
+> 介绍前期质控指标，避免样本问题对后期实验结果的影响，造成错误或返工
+
+**比对率：**
+
+正常是超过95%，最低不能低于80%。
+
+```shell
+zcat ../data/B63_L4_Q803601.R1.fastq.gz | head -n 1000 >B63_1
+zcat ../data/B63_L4_Q803601.R2.fastq.gz | head -n 1000 >B63_2
+ 
+awk '{if(NR%4 == 1){print ">" substr($0, 2)}}{if(NR%4 == 2){print}}' B63_1 > B63_1.fasta
+blastn -task blastn -query B63_1.fasta -db /home/nt -num_threads 6 -out unpaired_blastn.aln
+# 本地构建db花费时间较多，可以线上。
+#B63_atac：73.4
+#B60_atac：77.3
+#细菌污染
+```
+
+
+
+**峰值区域的读数比例（FRiP score）**：
+
+FRiP score应大于0.3，最低不能低于0.2。
+
+所有映射的读数中，属于被称为峰值区域的部分，即显著富集的峰值中的**可用读数除以所有可用读数**。一般来说，FRiP得分与区域的数量呈正相关.(Landt et al, Genome Research Sept. 2012, 22(9): 1813–1831)
+
+**TSS 富集：**
+
+TSS富集计算是一种信噪比计算。收集一组参考TSSs周围的读数，形成以TSSs为中心、向任一方向延伸2000bp（共计4000bp）的读数总分布。然后，该分布被归一化，即在分布的每个末端侧翼的100bps内取平均读数深度（总共200bp的平均数据），并计算每个位置相对于该平均读数深度的倍数变化。这意味着侧翼应该从1开始，如果在转录起始位点（基因组的高度开放区域）有高的读数信号，那么信号应该增加，直到中间的一个峰值。我们把这个归一化后的分布中心的信号值作为我们的TSS富集度量。用于评估ATAC-seq。
+
+![](https://web.wvdon.com/image/tss_e.png)
+
+<center>Fig 5: Transcription Start Site (TSS) Enrichment</center>
+
+![](https://web.wvdon.com/image/tss.png)
+
+<center>Fig 6: Transcription Start Site (TSS) Enrichment Standard Value</center>
+
+**文库复杂度测量：**
+
+理想状态值是: NRF>0.9, PBC1>0.9, and PBC2>3. 
+
+![](https://web.wvdon.com/image/pbc.png)
+
+<center>Fig 7: Non-Redundant Fraction etc. Standard Value</center>
+
+**Non-Redundant Fraction (NRF)** – Number of distinct uniquely mapping reads (i.e. after removing duplicates) / Total number of reads.
+
+**PCR Bottlenecking Coefficient 1 (PBC1)**
+
+**PCR Bottlenecking Coefficient 2 (PBC2)**
+
+
+
+
 
 # RNA-seq
 
