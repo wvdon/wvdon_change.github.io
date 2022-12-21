@@ -10,15 +10,13 @@ description: 描述ATAC-seq与RNA-seq数据挖掘与联合分析的思路和心�
 
 ---
 
-# ATAC-seq
+## ATAC-seq
 
 ### 背景
 
 **Chromatin Accessibility**
 
 人的DNA链全部展开大约有2m，需要折叠为染色质结构才可以存储到放到细胞核中。染色质的基本结构单位是核小体，核小体再折叠能形成高度压缩的染色质结构。这个过程像我们将文件压缩为zip或者rar的压缩包，只要在使用的时候才会解压出来，平时可以减少它的占用空间。
-
-
 
 ![](https://web.wvdon.com/image/chrom.png)
 
@@ -71,6 +69,7 @@ Pipeline:
 正常是超过95%，最低不能低于80%。
 
 ```shell
+# 可以抽取部分样本在nt数据库中进行比对，看map到那些物种中，是否有部分细菌污染
 zcat ../data/B63_L4_Q803601.R1.fastq.gz | head -n 1000 >B63_1
 zcat ../data/B63_L4_Q803601.R2.fastq.gz | head -n 1000 >B63_2
  
@@ -118,28 +117,242 @@ TSS富集计算是一种信噪比计算。收集一组参考TSSs周围的读数�
 
 
 
+```python
+import os
+import pandas as pd
+import json
+import matplotlib.pyplot as plt
+%matplotlib inline
+import seaborn as sns
+
+path= '/media/wvdon/data/wfy/atac/work/'
+dirs = os.listdir(path)
+aaa = []
+for d in dirs:
+    if not str(d).endswith("e"):
+        json_path = f'/media/wvdon/data/wfy/atac/work/{d}/qc/qc.json'
+        #print(d)
+        data = ''
+        with open(json_path, 'r') as f:
+            data = json.load(f)
+            #print(data)
+        tss = data["align_enrich"]['tss_enrich']['rep1']['tss_enrich']
+        map_read_prc =data["align"]['samstat']['rep1']['pct_mapped_reads']
+        NRF = data["lib_complexity"]['lib_complexity']['rep1']['NRF']
+        PBC1 = data["lib_complexity"]['lib_complexity']['rep1']['PBC1']
+        aaa.append([d,tss,map_read_prc,NRF,PBC1])
+an_data = pd.DataFrame(aaa,columns=['B',"tss","map_read_prc","NRF","PBC1"])
+
+sns.kdeplot(an_data['PBC1'],cut=0,cumulative=True,shade=True,color="b")
+#sns.kdeplot(an_data['map_read_prc'],cut=0,cumulative=True,shade=True,color="r")
+plt.legend(title="PBC1")
+plt.show()
+an_data['PBC1'].hist()
+```
+
+![](https://web.wvdon.com/image/qc_python.png)
 
 
-# RNA-seq
+
+#### 差异Peak分析
+
+差异peak是分析的第一步，也是基础。根据实验的设计，可以比较两个组之间差异的Peak.
+
+以往的几篇文章都推荐使用[Diffbind](https://rdrr.io/bioc/DiffBind/man/DiffBind-package.html)(*Differential binding analysis of ChIP-seq peaksets*)
+
+> 目前没有专门为ATAC设计的差异peak 分析工具，不过他们都是计算该区域的counts数据，归一化，对比两个组之间的差异。
+>
+> 另外HOMER, DBChIP，也能实现同样的需求。
+
+
+
+#### Peak 注释
+
+```python
+
+import argparse
+import math
+import numpy as np
+import pandas as pd
+from matplotlib import pyplot as plt
+import sys
+sys.path.append(r'/home/wvdon/BIO_ATAC/')
+from common.pyShell import  runShell  
+import os
+
+def shellAccept():
+    '''
+    预定义命令行参数，接收并存储
+    必须参数：None
+    可选参数：
+    -u / --URL
+    -t / --threads
+    -v / --version
+    @return:返回获取到的命令行参数args，以数据字典格式
+    '''
+    try:    # 异常处理
+        parser = argparse.ArgumentParser(description="peak 基因注释")
+        #@todo 临时写成测试文件。
+        parser.add_argument("-u", "--csv",required=False, type=str, help="peak csv path",default='/media/wvdon/sdata/test/12_19_peak_FDR005_remove4.csv')
+        parser.add_argument("-v", "--version", type=str, help="工具版本号:V1.0")
+        parser.add_argument("-output","--output", type=str,default='./annotate',help='输出路径')
+        parser.add_argument("-annotatePeaks",default='/usr/local/share/bio/homer/bin/annotatePeaks.pl',help='-annotatePeaks.pl 执行路径')
+        args = parser.parse_args()  # 获取参数字典
+        return args
+    except Exception as e:
+        print(e)
+def peakAnnotion(csv_path,work_path):
+    bed_path=os.path.join(work_path,'outputPeak.bed')
+    df = pd.read_csv(csv_path).iloc[:,1:11]
+    
+    df.columns = ['Chromosome', 'Start', 'End','width','Strand','C','N','P','Fold','pv']
+    df[['Chromosome', 'Start', 'End','Strand']].to_csv(bed_path,header=None,sep='\t',index=0)
+    
+    shell = f'{args.annotatePeaks}  {bed_path} hg38 > {work_path}/outputPeakAnnotate.txt'
+    print(f'exectue shell {shell}')
+    status_code = runShell(shell,timeout = 120)
+    if status_code==0:
+        print(f'success annotate,export Peak Annotate file :{work_path}/outputPeakAnnotate.txt')
+    else:
+       print(f"Exectue '{shell}' Failed") 
+    gene = pd.read_table(f'{work_path}/outputPeakAnnotate.txt',sep='\t')
+    ids_list = []
+    for k in gene.iloc[:,0]:
+        if len(str(k))>1:
+            ids_list.append(int(str(k)[2:])-1)
+        else:
+            ids_list.append(0)
+    gene['ids'] = ids_list
+    gene.sort_values('ids').to_csv(f'{work_path}/peak_outputPeakAnnotate_sorted.csv')
+    
+    atac_gene = gene.sort_values('ids')
+    atac_gene['Fold']=df['Fold']
+
+    output_gene_path = f'{work_path}/peak_outputPeakAnnotate_sorted_conact.csv'
+    atac_gene.to_csv(output_gene_path)
+    list_annotion = []
+    for an in atac_gene['Annotation']:
+        list_annotion.append(str(an).split(' (')[0])
+    dict={}
+    for key in list_annotion:
+        dict[key]=dict.get(key,0)+1
+    peakAnnotionPie(work_path,dict)
+    peakUpDownPieAndBar(work_path,output_gene_path)
+    return output_gene_path
+def peakUpDownPieAndBar(work_path,data_path):
+    data = pd.read_csv(data_path)
+    fig = plt.figure()
+    x = np.arange(0,math.pi*2,0.05)
+    up=data[data['Fold']>0]['Fold']
+    down = data[data['Fold']<0]['Fold']
+
+    if len(up) > len(down):
+        up_bins = 200
+        down_bins = int(2000/len(up)*len(down))
+        exp = (0,0.5)
+        sits = 221
+    else:
+        down_bins = 200
+        up_bins = int(2000/len(down)*len(up))
+        ex = (0.5,0)
+        sits = 222
+    ax1 = fig.add_subplot(111)
+    ax1.hist(down,bins=down_bins,color='orange')
+    ax1.hist(up,bins=up_bins,color='red')
+    ax2 = fig.add_subplot(sits,facecolor='r')
+    ax2.pie([len(up),len(down)],shadow=True,colors=['orange','red'],explode=exp,labels=['colsed','open'],autopct='%1.1f%%')
+    ax2.set_title(f'Total:{len(data)}')
+    plt.savefig(f'{work_path}/percent_atac_pie.svg',dpi=300)
+    print('plot annotion pie_bar done!')
+    
+def peakAnnotionPie(work_path,dict):
+    expodes = (0,0,0.1,0,0,0,0,0.1)
+    colors = ['red','orange','yellow','green','purple','blue','black','brown']
+    plt.pie(dict.values(),explode=expodes,labels=dict.keys(),shadow=True,colors=colors,autopct='%1.1f%%')
+    ## 用于显示为一个长宽相等的饼图
+    plt.axis('equal')
+    #保存并显示
+    plt.savefig(f'{work_path}/pie_annotion.svg',dpi=300)
+    print('plot annotion pie done!')
+
+
+if __name__ == '__main__':
+    root_path = os.getcwd()
+    
+    args = shellAccept()
+    work_path = args.output
+    csv_path = args.csv
+    if not os.path.exists(work_path):
+        os.makedirs(work_path)
+    output_gene_path = peakAnnotion(csv_path,work_path)
+```
+
+```python
+import subprocess
+class pyShell():
+    def __init__(self) -> None:
+        pass
+    '''
+    return 0 : Success , else: Fail
+    '''
+def runShell(command,timeout=5):
+    ret = subprocess.run(command,shell=True,stdout=subprocess.PIPE,stderr=subprocess.PIPE,encoding="utf-8",timeout=timeout)
+    return ret.returncode 
+```
 
 
 
 
 
+**annotion nearby peaks**
 
+```shell
 
-# 联合分析
-
-
-
-
-
-# 总结
+```
 
 
 
+#### Motif
+
+peak注释虽然提供了功能解释，但并没有直接解释底层机制。开放的染色质可以通过转录因子影响转录，转录因子通过识别和结合 DNA 上的特定序列(*TFBS:TF 结合位点*)来促进转录。而事实上转录因子通过与组蛋白或非组蛋白 [100,101] 的竞争以及与辅因子的合作来调节转录。
+
+有两种类型的基序或基于 TF 的分析方法(**研究TF调控**)：
+
+- 基序频率或活动的基于序列的预测
+-  TF 占用的足迹。
+
+JASPAR是现在用的最多的一个motif 数据库，事实上存的就是一些转录因子对应的位置权重矩阵（PWM），其中有的是实验的结果，还有的是计算预测出来的。
+
+工具：
+
+- TFBSTools
+- **HOMER**
+- MEME FIMO
+
+原理都是一样的，基于PWM矩阵，然后在序列里面扫描搜索。
+
+> 一直有一个疑问，对于motif扫描的时候，我们是应该用差异的区域，还是全部的区域？。差异的区域中全部的还是仅上调的区域？
+
+```shell
+/usr/local/share/bio/homer/bin/findMotifsGenome.pl out.bed hg38 first -len 6,8,10,12,14
+```
+
+> 对于hommer,其result 有两个，一部分是能够和已有数据库中，匹配到的，另外一部分是基于序列预测出来了的，可能没有任何的生物学意义。
+
+#### TF Footprints
+
+ 除了motif，TF Footprints的另外一种研究转录因子调控的方法。
+
+## RNA-seq 联合分析
 
 
-# 参考
+
+## 总结
+
+
+
+## 参考
 
 1. Yan, Feng, et al. "From reads to insight: a hitchhiker’s guide to ATAC-seq data analysis." *Genome biology* 21.1 (2020): 1-16.
+1. Krishnan, H. R. *et al.* Unraveling the epigenomic and transcriptomic interplay during alcohol-induced anxiolysis. *Mol. Psychiatry* (2022) doi:10.1038/s41380-022-01732-2.
+1. Mok, G. F. *et al.* Characterising open chromatin in chick embryos identifies cis-regulatory elements important for paraxial mesoderm formation and axis extension. *Nat. Commun.* **12**, 1157 (2021).
