@@ -158,7 +158,7 @@ an_data['PBC1'].hist()
 
 #### 差异Peak分析
 
-差异peak是分析的第一步，也是基础。根据实验的设计，可以比较两个组之间差异的Peak.
+差异peak是分析的**第一步，也是基础**。根据实验的设计，可以比较两个组之间差异的Peak.
 
 以往的几篇文章都推荐使用[Diffbind](https://rdrr.io/bioc/DiffBind/man/DiffBind-package.html)(*Differential binding analysis of ChIP-seq peaksets*)
 
@@ -304,16 +304,6 @@ def runShell(command,timeout=5):
 
 
 
-
-
-**annotion nearby peaks**
-
-```shell
-
-```
-
-
-
 #### Motif
 
 peak注释虽然提供了功能解释，但并没有直接解释底层机制。开放的染色质可以通过转录因子影响转录，转录因子通过识别和结合 DNA 上的特定序列(*TFBS:TF 结合位点*)来促进转录。而事实上转录因子通过与组蛋白或非组蛋白的竞争以及与辅因子的合作来调节转录。
@@ -341,6 +331,14 @@ JASPAR是现在用的最多的一个motif 数据库，事实上存的就是一�
 
 > 对于hommer,其result 有两个，一部分是能够和已有数据库中，匹配到的，另外一部分是基于序列预测出来了的，可能没有任何的生物学意义。
 
+对于HINT 也发现能够做motif 富集。
+
+```shell
+rgt-motifanalysis --enrichment --organism mm9 --input-matrix Matrix_CDP_cDC.txt match/random_regions.bed
+```
+
+
+
 #### TF Footprints
 
  除了motif，TF Footprints是另外一种研究转录因子调控的方法。原理是TF 与 DNA 结合会阻止结合位点内的 Tn5 切割，就会形成一个深渊低谷一样的峰值分布。
@@ -349,17 +347,47 @@ JASPAR是现在用的最多的一个motif 数据库，事实上存的就是一�
 
 
 
-最近的 HINT-ATAC 也使用 HMM，但只有 HINT-ATAC 校正了链特异性 Tn5 切割偏差
+最近的 HINT-ATAC 也使用 HMM，但只有 HINT-ATAC 校正了链特异性 Tn5 切割偏差.
+
+[Hint install introduction](https://reg-gen.readthedocs.io/en/latest/hint/introduction.html)
+
+```shell
+# need bam and bed file for input 
+## rep twice
+rgt-hint footprinting --atac-seq --paired-end --output-prefix=fp_paired ATAC.bam ATACPeaks.bed
+gt-motifanalysis matching --organism=hg38 --input-files IMN.bed IMP.bed  --output-location motif
+rgt-hint differential --organism=hg38 --bc --nc 16 --mpbs-files=motif/IMN_mpbs.bed,motif/IMP_mpbs.bed --reads-files=IMN.bam,IMP.bam --conditions=IMN,IMP --output-location=tfprinting
+```
+
+> @todo 针对单组数据，对于重复数据，两组，还代解决code。
 
 ## RNA-seq 联合分析
 
 通过 RNA-seq 定性或定量地将染色质可及性的变化与感兴趣的基因表达的变化联系起来，直观地，我们可以发现 DE 基因是否在相应的 TSS 周围也具有显着差异的染色质可及性，可以推断 DE 基因受与开放染色质中特定基序或足迹相关的 TF 调节.
 
+### **案例：**
+
+#### **1. PECA：转录因子TF，染色质调控因子CR和调控元件RE相互作用网络推断的新方法**（*Cell Stem Cell*  2019 ）
+
 ![image-20221222165742726](https://web.wvdon.com/peca.png)
 
-<center>Fig: Schematic overview of the method for constructing TF-chromatin transcriptional regulatory network/center>
+<center>Fig: Schematic overview of the method for constructing TF-chromatin transcriptional regulatory network</center>
 
-转录因子TF，染色质调控因子CR和调控元件RE相互作用网络推断的新方法PECA，**可以使用 PECA<sup>[6]</sup> 方法重建调控网络。**中科院王勇教授团队，利用匹配的基因表达和染色质可及性数据刻画转录因子和调控元件结合调控下游基因表达的数学模型，构建了描绘细胞状态转化的染色质调控网络，通过网络分析鉴定出TFAP2C和p63分别为表面外胚层起始和角质形成细胞成熟的关键因子
+**可以使用 PECA<sup>[7]</sup> 方法重建调控网络。**中科院王勇教授团队，利用匹配的基因表达和染色质可及性数据刻画转录因子和调控元件结合调控下游基因表达的数学模型，构建了描绘细胞状态转化的染色质调控网络，通过网络分析鉴定出TFAP2C和p63分别为表面外胚层起始和角质形成细胞成熟的关键因子.
+
+[PECA Github](https://github.com/SUwonglab/PECA)
+
+#### 2. 鸡胚的体节分化过程，挖掘关键的TF和Enhancer（nature communications 2021）
+
+ggg
+
+#### 3. 揭示酒精诱导的抗焦虑过程中的表观基因组学和转录组学相互作用（Molecular P s ychiatry 2022）
+
+![](https://web.wvdon.com/image/89241671709615_.pic.jpg)
+
+<center>Fig.n This model depicts the ability of acute ethanol to rapidly alter the epigenome in the amygdala and produce transcriptomic change</center>
+
+
 
 ## 总结
 
@@ -373,3 +401,5 @@ JASPAR是现在用的最多的一个motif 数据库，事实上存的就是一�
 1. RS ∗, GB †. DiffBind: Differential binding analysis of ChIP- Seq peak data. 
 1. Li, Z., Schulz, M. H., Look, T., Begemann, M., Zenke, M., & Costa, I. G. (2019). [Identification of transcription factor binding sites using ATAC-seq](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1642-2). Genome Biology, 20(1), 45.
 1. Duren Z, Chen X, Xin J, et al. Time course regulatory analysis based on paired expression and chromatin accessibility data[J]. Genome research, 2020, 30(4): 622-634.
+1. Li, Lingjie, et al. "TFAP2C-and p63-dependent networks sequentially rearrange chromatin landscapes to drive human epidermal lineage commitment." *Cell Stem Cell* 24.2 (2019): 271-284
+1. Quinlan, AR, Hall IM. BEDTools: a flexible suite of utilities for comparing genomic features. Bioinformatics 2010;26:841-842
