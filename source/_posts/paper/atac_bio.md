@@ -14,7 +14,7 @@ description: 描述ATAC-seq与RNA-seq数据挖掘与联合分析的思路和心�
 
 ### 背景
 
-**Chromatin Accessibility**
+#### **染色质开放性** **Chromatin Accessibility**
 
 人的DNA链全部展开大约有2m，需要折叠为染色质结构才可以存储到放到细胞核中。染色质的基本结构单位是核小体，核小体再折叠能形成高度压缩的染色质结构。这个过程像我们将文件压缩为zip或者rar的压缩包，只要在使用的时候才会解压出来，平时可以减少它的占用空间。
 
@@ -32,13 +32,35 @@ description: 描述ATAC-seq与RNA-seq数据挖掘与联合分析的思路和心�
 
 <center> Fig 2: Methods of Researching Chromatin Accessibility a nd ATAC-seq principle</center>
 
-**原理：**
+#### **原理**
 
 利用转座酶Tn5会携带特定的已知序列，并且可以结合开放的染色质。Tn5酶对染色质开放区进行打断，在打断的同时加上测序接头，接着进行DNA提取，PCR扩增构建文库。经过测序分析，就可以推断染色质可行性、转录因子结合位点、组蛋白修饰区域和核小体位置。
 
 ![image-20221219193308860](https://web.wvdon.com/image/image-20221219193308860.png)
 
 <center>Fig 3: The Process of Tn5</center>
+
+#### 研究内容
+
+肠上皮化生简称**肠化**，是指正常的胃黏膜上皮被肠型上皮所取代。
+
+正常情况下，我们的器官各司其职，胃表面生长的是具有分泌胃酸功能的胃黏膜上皮细胞，肠道表面生长的是具有分泌和吸收功能的肠黏膜上皮细胞。但当胃黏膜细胞受到比较严重的损伤后，胃肠黏膜上皮结构出现了一定改变，越长越像邻居家肠黏膜的孩子。看上去就像肠黏膜长错了地方，本该长在肠道上长的结构却出现在了胃黏膜上，就像一片草地长出了树木，树木就显得很突出。
+
+
+
+![](http://inews.gtimg.com/newsapp_bt/0/13126637655/641)
+
+目前的假设是，**胃黏膜腺体的颈部干细胞具有多方面分泌的潜能，在正常时它可以分化成各种胃黏膜的成熟上皮细胞<sup>[9]</sup>。**干细胞不正常工作时肠化进程会加速，从肠化生过渡到胃癌，而**肠化属于胃癌前病变的一种**。
+
+胃黏膜上皮细胞癌变并非一朝一夕的事情，不是由正常细胞一跃成为癌细胞，而是一个慢性渐进的过程，在发展成恶性肿瘤之前，经历多年持续的癌前变化。**若能及早识别和及早干预，也是一种防止胃癌的有效途径**。
+
+**因此从干细胞水平上能够发现促使正常干细胞分化为肠化细胞的根本原因，对于预防胃癌，以及使肠化逆转显得尤为重要。**
+
+#### 实验设计：
+
+
+
+
 
 ### 分析
 
@@ -403,3 +425,4 @@ ggg
 1. Duren Z, Chen X, Xin J, et al. Time course regulatory analysis based on paired expression and chromatin accessibility data[J]. Genome research, 2020, 30(4): 622-634.
 1. Li, Lingjie, et al. "TFAP2C-and p63-dependent networks sequentially rearrange chromatin landscapes to drive human epidermal lineage commitment." *Cell Stem Cell* 24.2 (2019): 271-284
 1. Quinlan, AR, Hall IM. BEDTools: a flexible suite of utilities for comparing genomic features. Bioinformatics 2010;26:841-842
+1. “肠化”到底是怎么回事？什么情况下会癌变？https://view.inews.qq.com/a/20210205A0CTTC00
