@@ -60,6 +60,8 @@ Pipeline:
 
 2. [ATAC-seq Guidelines form Harvard](https://informatics.fas.harvard.edu/atac-seq-guidelines.html)
 
+This pipeline is designed for automated end-to-end quality control and processing of ATAC-seq and DNase-seq data.
+
 #### **标准**
 
 > 介绍前期质控指标，避免样本问题对后期实验结果的影响，造成错误或返工
@@ -314,7 +316,7 @@ def runShell(command,timeout=5):
 
 #### Motif
 
-peak注释虽然提供了功能解释，但并没有直接解释底层机制。开放的染色质可以通过转录因子影响转录，转录因子通过识别和结合 DNA 上的特定序列(*TFBS:TF 结合位点*)来促进转录。而事实上转录因子通过与组蛋白或非组蛋白 [100,101] 的竞争以及与辅因子的合作来调节转录。
+peak注释虽然提供了功能解释，但并没有直接解释底层机制。开放的染色质可以通过转录因子影响转录，转录因子通过识别和结合 DNA 上的特定序列(*TFBS:TF 结合位点*)来促进转录。而事实上转录因子通过与组蛋白或非组蛋白的竞争以及与辅因子的合作来调节转录。
 
 有两种类型的基序或基于 TF 的分析方法(**研究TF调控**)：
 
@@ -341,11 +343,23 @@ JASPAR是现在用的最多的一个motif 数据库，事实上存的就是一�
 
 #### TF Footprints
 
- 除了motif，TF Footprints的另外一种研究转录因子调控的方法。
+ 除了motif，TF Footprints是另外一种研究转录因子调控的方法。原理是TF 与 DNA 结合会阻止结合位点内的 Tn5 切割，就会形成一个深渊低谷一样的峰值分布。
+
+对于检测方法，目前都是基于Boyle 提出的变种隐马尔可夫模型HMM，即在每个碱基使用归一化和平滑的片段计数来检测不同的状态，例如足迹、侧翼和背景。其中目前用的比较多的是针对ATAC数据的HINT-ATAC。
+
+
+
+最近的 HINT-ATAC 也使用 HMM，但只有 HINT-ATAC 校正了链特异性 Tn5 切割偏差
 
 ## RNA-seq 联合分析
 
+通过 RNA-seq 定性或定量地将染色质可及性的变化与感兴趣的基因表达的变化联系起来，直观地，我们可以发现 DE 基因是否在相应的 TSS 周围也具有显着差异的染色质可及性，可以推断 DE 基因受与开放染色质中特定基序或足迹相关的 TF 调节.
 
+![image-20221222165742726](https://web.wvdon.com/peca.png)
+
+<center>Fig: Schematic overview of the method for constructing TF-chromatin transcriptional regulatory network/center>
+
+转录因子TF，染色质调控因子CR和调控元件RE相互作用网络推断的新方法PECA，**可以使用 PECA<sup>[6]</sup> 方法重建调控网络。**中科院王勇教授团队，利用匹配的基因表达和染色质可及性数据刻画转录因子和调控元件结合调控下游基因表达的数学模型，构建了描绘细胞状态转化的染色质调控网络，通过网络分析鉴定出TFAP2C和p63分别为表面外胚层起始和角质形成细胞成熟的关键因子
 
 ## 总结
 
@@ -356,3 +370,6 @@ JASPAR是现在用的最多的一个motif 数据库，事实上存的就是一�
 1. Yan, Feng, et al. "From reads to insight: a hitchhiker’s guide to ATAC-seq data analysis." *Genome biology* 21.1 (2020): 1-16.
 1. Krishnan, H. R. *et al.* Unraveling the epigenomic and transcriptomic interplay during alcohol-induced anxiolysis. *Mol. Psychiatry* (2022) doi:10.1038/s41380-022-01732-2.
 1. Mok, G. F. *et al.* Characterising open chromatin in chick embryos identifies cis-regulatory elements important for paraxial mesoderm formation and axis extension. *Nat. Commun.* **12**, 1157 (2021).
+1. RS ∗, GB †. DiffBind: Differential binding analysis of ChIP- Seq peak data. 
+1. Li, Z., Schulz, M. H., Look, T., Begemann, M., Zenke, M., & Costa, I. G. (2019). [Identification of transcription factor binding sites using ATAC-seq](https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1642-2). Genome Biology, 20(1), 45.
+1. Duren Z, Chen X, Xin J, et al. Time course regulatory analysis based on paired expression and chromatin accessibility data[J]. Genome research, 2020, 30(4): 622-634.
