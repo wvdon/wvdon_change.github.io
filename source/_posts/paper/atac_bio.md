@@ -58,7 +58,11 @@ description: 描述ATAC-seq与RNA-seq数据挖掘与联合分析的思路和心�
 
 #### 实验设计：
 
+针对10个病人，分别采集胃，肠化组织，分为两组（stemness + / - ）进行培养。
 
+其中*阴性对照：正常胃组织，阳性对照：正常十二指肠组织，*
+stemness: 位置细胞干性的条件。+ 维持干性，-不维持,IM: + 。 - 。
+胃窦：A, 胃体：C, 胃角：AC
 
 
 
@@ -187,6 +191,88 @@ an_data['PBC1'].hist()
 > 目前没有专门为ATAC设计的差异peak 分析工具，不过他们都是计算该区域的counts数据，归一化，对比两个组之间的差异。
 >
 > 另外HOMER, DBChIP，也能实现同样的需求。
+
+**利用Diffbind进行差异Peak分析(PCA,MA,heatmap,Volcano,differ Peak)**:
+
+```R
+library(DiffBind)
+csv_path = "/media/wvdon/sdata/atac-seq/after/example5.csv"
+dbObj <- dba(sampleSheet=csv_path)
+
+plot(dbObj)
+
+dbcount <- dba.count(DBA = dbObj,bUseSummarizeOverlaps=TRUE,bParallel = FALSE)
+save.image("/media/wvdon/sdata/atac-seq/after/atacafter.RData")
+load("/media/wvdon/sdata/atac-seq/after/atacafter.RData")
+
+
+dba_counstrast = dba.contrast(dbcount,categories =
+                                DBA_TREATMENT,minMembers = 2)
+
+bdaaly = dba.analyze(dba_counstrast,method = DBA_DESEQ2)
+
+
+differ_peak_2 = dba.report(bdaaly,bCounts = T)
+head(diff_peaks2)
+diff_peaks_3= subset(differ_peak_2$Fold>=1 | differ_peak_2$Fold<=1)
+#dba.show(dba_counstrast,bContrasts = T)
+pma = dba.plotMA(bdaaly,contrast = 1)
+#ggsave(file="/media/wvdon/sdata/atac-seq/before/atacMA.svg", plot=pma, width=4, height=4)    
+dba.plotVolcano(bdaaly,contrast = 1)
+
+length(differ_peak_2)
+
+#hmap=colorRampPalette(c("blue","white","red"))(n=13)
+#readscores=dba.plotHeatmap(bdaaly,contrast = 1,#ColAttributes=c(DBA_TREATMENT,DBA_GROUP),
+ #                          main = "DESeq2 Differentially Bound Sites",
+  #                         correlations = FALSE,scale='row',colScheme = hmap)
+
+dim(readscores@elementMetadata)
+
+library(dplyr)
+diff_peaks2 <- bind_cols(as_tibble(granges(differ_peak_2)), as_tibble(mcols(differ_peak_2)))
+library(pheatmap)
+Groups=c(rep("IMP",8),rep("IMN",8))
+heatmap_peak = differ_peak_2@elementMetadata[7:22]
+dim(heatmap_peak)
+#write.csv(diff_peaks2, "/media/wvdon/sdata/atac-seq/before/12_18_peak_FDR005.csv")
+
+write.csv(heatmap_peak, "/media/wvdon/sdata/atac-seq/after/12_18heatmap_peak.csv")
+data<-read.csv("/media/wvdon/sdata/atac-seq/after/12_18heatmap_peak.csv",header = T,row.names = 1)
+#heatmap_peak.columns=Groups
+#colnames(heatmap_peak)
+
+annotation_c<-data.frame(Groups)
+rownames(annotation_c)<-colnames(data)
+colnames(data)
+labels_col=c('37AC22','30A51','33A45','46A46','47A47','49AC44','13A06','54A48','37C20','30C04','33C21','46C23','47C07','49C41','13C60','54C62')
+
+p<-pheatmap(data, cluster_rows = F,      #行聚类，列不聚类
+            cluster_cols = F,
+            show_rownames = F,       #不显示行名
+            clustering_distance_rows = "correlation",
+            show_colnames = T,      #显示列明 angle_row="15"，行名旋转15度，列明相似
+            
+            annotation_col = annotation_c,  #对列进行注释即对列进行分组
+            #na_col = "white",
+            scale = "row",   #将数据按行进行标准化
+            
+            #设置格子大小 cellheigt=""设置格子高
+            
+            #设置格子高
+            labels_col= labels_col,
+            angle_col = 90,
+            border=F
+            ,color = colorRampPalette(colors= c("blue","white","red"))(10) 
+            #,color = colorRampPalette(c("#FFFF00","#FF0000"))(100)
+)   
+p
+library("ggplot2")
+#some sample data
+#BiocManager::install('svglite')
+#This actually save the plot in a image
+ggsave(file="/media/wvdon/sdata/atac-seq/after/12_18heatmap.svg", plot=p, width=8, height=8)
+```
 
 
 
@@ -426,3 +512,11 @@ ggg
 1. Li, Lingjie, et al. "TFAP2C-and p63-dependent networks sequentially rearrange chromatin landscapes to drive human epidermal lineage commitment." *Cell Stem Cell* 24.2 (2019): 271-284
 1. Quinlan, AR, Hall IM. BEDTools: a flexible suite of utilities for comparing genomic features. Bioinformatics 2010;26:841-842
 1. “肠化”到底是怎么回事？什么情况下会癌变？https://view.inews.qq.com/a/20210205A0CTTC00
+
+## Software Version
+
+| macs2 ==2.2.4     |      |
+| ----------------- | ---- |
+| bwa ==0.7.17      |      |
+| bowtie2 ==2.3.4.3 |      |
+| pipeline (v2.1.3) |      |
