@@ -498,22 +498,156 @@ rgt-hint differential --organism=hg38 --bc --nc 16 --mpbs-files=motif/IMN_mpbs.b
 ```shell
 featureCounts -T 16 -p -t exon -g gene_id -a /home/wvdon/atac/gene/Homo_sapiens.GRCh38.106.gtf -o all_new_feature.txt \
 /media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
-/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
-/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
-/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
-/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
-/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
-/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
-/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
-/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
-/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
-/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
-/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
-/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
-/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
-/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
-/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
-/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
+```
+
+
+
+RNA-seq 数据分析（差异基因，火山图，热图，富集分析）
+
+```R
+base <- read.table("/media/wvdon/sdata/atac-seq/before/all_new_feature.txt",row.names = 1 ,header=T,sep = '\t')
+basedata=base[6:ncol(base)]
+group_list <- factor(c(rep("IM",8), rep("NC",8)))
+table(group_list)
+colData <- data.frame(row.names=colnames(basedata),group_list=group_list)
+head(basedata)
+colnames(colData)
+ncol(basedata)
+nrow(colData)
+library(DESeq2)
+dds <- DESeqDataSetFromMatrix(countData = basedata,colData = colData,
+                              design = ~ group_list)
+dds_2 <- DESeq(dds)
+resultsNames(dds_2)
+res <- results(dds_2)
+diff_gene_deseq2 <-subset(res, padj < 0.05 )
+
+up_DEG <- subset(res, padj < 0.05 & log2FoldChange > 1)
+down_DEG <- subset(res, padj < 0.05 & log2FoldChange < -1)
+dim(up_DEG)
+dim(down_DEG)
+
+#BiocManager::install("biomaRt")
+library(biomaRt)
+human <- useMart('ensembl',dataset = "hsapiens_gene_ensembl")
+gene_id = row.names(diff_gene_deseq2)
+gene_name<-getBM(attributes=c("ensembl_gene_id","external_gene_name"),filters = "ensembl_gene_id",values =gene_id , mart = human)
+
+# RNA-seq,火山图, heatmap
+library(ggplot2)
+library(ggrepel)  #用于标记的包
+
+library(pheatmap)
+row.names(assay(dds_2))
+head(assay(dds_2))
+rownames(gene_name)=gene_name$ensembl_gene_id
+final_rna =merge(gene_name,assay(dds_2), by = "row.names",all=F)
+dim(assay(dds_2)) # =103 
+
+head(final_rna)
+heat_map_data=final_rna[4:ncol(final_rna)]
+dim(heat_map_data)
+
+Groups=c(rep("IM",8),rep("NC",8))
+annotation_c<-data.frame(Groups)
+annotation_c<-data.frame(Groups)
+rownames(annotation_c)<-colnames(heat_map_data)
+data<-log2(heat_map_data+1)
+colnames(data)
+#rownames(data)=final_rna$external_gene_name
+ac = c("37AC73","30A72","33A37","46A94","47A84","49AC90","13A87","54A80",
+"37C74","30C78","33C82","46C81","47C79","49C93","13C64","54C62")
+p<-pheatmap(data, cluster_rows = T,      #行聚类，列不聚类
+            cluster_cols = F,
+            show_rownames = F,       #不显示行名
+            
+            show_colnames = T,      #显示列明 angle_row="15"，行名旋转15度，列明相似
+            
+            annotation_col = annotation_c,  #对列进行注释即对列进行分组
+            #na_col = "white",
+            scale = "row",   #将数据按行进行标准化
+            
+            #设置格子大小 cellheigt=""设置格子高
+            
+            #设置格子高
+            labels_col= ac,
+            angle_col = 30,
+            border=F
+            ,color = colorRampPalette(colors= c("blue","white","red"))(10) 
+            #,color = colorRampPalette(c("#FFFF00","#FF0000"))(100)
+)  
+p
+ggsave(file="/media/wvdon/sdata/atac-seq/before/heatmap_rna.svg", plot=p, width=8, height=8)
+
+
+
+# 火山图
+
+
+final_rna_vo =merge(gene_name,DataFrame(diff_gene_deseq2), by = "row.names",all=F)
+write.csv(final_rna_vo,'/media/wvdon/sdata/atac-seq/before/vo.csv')
+
+data<-read.csv('/media/wvdon/sdata/atac-seq/before/vo.csv')
+data$log2FoldChange=-data$log2FoldChange
+cut_off_pvalue=0.05
+data$external_gene_name
+PvalueLimit = 5
+data$label=ifelse(-log10(data$pvalue) > PvalueLimit , as.character(data$external_gene_name), '')
+data$group<-as.factor(ifelse(data$pvalue <= 0.05 & abs(data$log2FoldChange) >=0,
+                             ifelse(data$log2FoldChange<=0  ,'down','up'),'NS'))
+
+this_tile <- paste0('Cutoff for logFC is abs 1.0 and pvalue is 0.05',
+                    '\nThe number of up gene is 59',
+                    '\nThe number of down gene is 43')                 
+
+p <- ggplot(
+  #设置数据
+  data, 
+  aes(x = log2FoldChange, 
+      y = -log10(pvalue), 
+      colour=group)) +
+  geom_point(alpha=0.4, size=3.5) +
+  ggtitle( this_tile ) +
+  #scale_fill_manual(values=c("#d2dae2","#546de5"))+
+  
+  # 辅助线
+  geom_vline(xintercept=c(-1,1),lty=4,col="black",lwd=0.8) +
+  geom_hline(yintercept = -log10(cut_off_pvalue),lty=4,col="black",lwd=0.8) +
+  
+  # 坐标轴
+  labs(x="log2(fold change)",
+       y="-log10 (p-value)")+scale_color_manual(values = c( 'green','red'))+
+  theme_bw()+ 
+  
+  #theme(plot.title = element_text(vjust = -30,size=12), 
+  #      legend.position="right", 
+  #      legend.title = element_blank(),
+  #)+
+  geom_text_repel(aes(x = log2FoldChange,                   # geom_text_repel 标记函数
+                      y = -1*log10(pvalue),          
+                      label=label),                       
+                  max.overlaps = 10000,                    # 最大覆盖率，当点很多时，有些标记会被覆盖，调大该值则不被覆盖，反之。
+                  size=5,                                  # 字体大小
+                  box.padding=unit(0.5,'lines'),           # 标记的边距
+                  point.padding=unit(0.1, 'lines'), 
+                  segment.color='black',      
+                  show.legend=FALSE)   
+
+# 图例
+#p+ggtitle(this_tile)
+p
+ggsave(file="/media/wvdon/sdata/atac-seq/before/vo_rna.svg", plot=p, width=8, height=8)
+write.csv(data,'/media/wvdon/sdata/atac-seq/before/p005_filter_rna_before.csv')
+
+human <- useMart('ensembl',dataset = "hsapiens_gene_ensembl")
+gene_id = row.names(res)
+gene_name<-getBM(attributes=c("ensembl_gene_id","external_gene_name"),filters = "ensembl_gene_id",values =gene_id , mart = human)
+
+res$log2FoldChange=-res$log2FoldChange
+rownames(gene_name)=gene_name$ensembl_gene_id
+all_before_rna = merge(gene_name,DataFrame(res), by = "row.names",all=F)
+
+write.csv(all_before_rna,'/media/wvdon/sdata/atac-seq/before/all_before_rna.csv')
 ```
 
 
@@ -543,3 +677,10 @@ featureCounts -T 16 -p -t exon -g gene_id -a /home/wvdon/atac/gene/Homo_sapiens.
 | bwa ==0.7.17      |      |
 | bowtie2 ==2.3.4.3 |      |
 | pipeline (v2.1.3) |      |
+| Homer             |      |
+| HINT-ATAC         |      |
+|                   |      |
+|                   |      |
+|                   |      |
+
+所有的代码都被上传到GitHub，https://github.com/wvdon/BIO_ATAC。目前是个人私人仓库，后续会开放。
