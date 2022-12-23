@@ -46,9 +46,7 @@ description: 描述ATAC-seq与RNA-seq数据挖掘与联合分析的思路和心�
 
 正常情况下，我们的器官各司其职，胃表面生长的是具有分泌胃酸功能的胃黏膜上皮细胞，肠道表面生长的是具有分泌和吸收功能的肠黏膜上皮细胞。但当胃黏膜细胞受到比较严重的损伤后，胃肠黏膜上皮结构出现了一定改变，越长越像邻居家肠黏膜的孩子。看上去就像肠黏膜长错了地方，本该长在肠道上长的结构却出现在了胃黏膜上，就像一片草地长出了树木，树木就显得很突出。
 
-
-
-![](http://inews.gtimg.com/newsapp_bt/0/13126637655/641)
+![](https://web.wvdon.com/image/20221223150540197.png)
 
 目前的假设是，**胃黏膜腺体的颈部干细胞具有多方面分泌的潜能，在正常时它可以分化成各种胃黏膜的成熟上皮细胞<sup>[9]</sup>。**干细胞不正常工作时肠化进程会加速，从肠化生过渡到胃癌，而**肠化属于胃癌前病变的一种**。
 
@@ -487,7 +485,7 @@ rgt-hint differential --organism=hg38 --bc --nc 16 --mpbs-files=motif/IMN_mpbs.b
 
 #### 2. 鸡胚的体节分化过程，挖掘关键的TF和Enhancer（nature communications 2021）
 
-ggg
+![](https://web.wvdon.com/image/PSM.png)
 
 #### 3. 揭示酒精诱导的抗焦虑过程中的表观基因组学和转录组学相互作用（Molecular P s ychiatry 2022）
 
@@ -495,11 +493,36 @@ ggg
 
 <center>Fig.n This model depicts the ability of acute ethanol to rapidly alter the epigenome in the amygdala and produce transcriptomic change</center>
 
+**featureCounts**
+
+```shell
+featureCounts -T 16 -p -t exon -g gene_id -a /home/wvdon/atac/gene/Homo_sapiens.GRCh38.106.gtf -o all_new_feature.txt \
+/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
+/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
+/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
+/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
+/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
+/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
+/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
+/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
+/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
+/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
+/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
+/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
+/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
+/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
+/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
+/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
+/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam
+```
+
 
 
 ## 总结
 
+![](https://web.wvdon.com/image/conact.png)
 
+<center>Fig. The Summary of ATAC & RNA-seq</center>
 
 ## 参考
 
