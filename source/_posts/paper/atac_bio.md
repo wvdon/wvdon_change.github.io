@@ -683,4 +683,6 @@ write.csv(all_before_rna,'/media/wvdon/sdata/atac-seq/before/all_before_rna.csv'
 |                   |      |
 |                   |      |
 
-所有的代码都被上传到GitHub，https://github.com/wvdon/BIO_ATAC。目前是个人私人仓库，后续会开放。
+所有的代码都被上传到GitHub，https://github.com/wvdon/BIO_ATAC
+
+> 目前是个人私人仓库，后续会开放。
