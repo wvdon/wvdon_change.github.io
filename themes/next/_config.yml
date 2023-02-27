@@ -52,7 +52,7 @@ favicon:
 
 footer:
   # Specify the date when the site was setup. If not defined, current year will be used.
-  since: 2022
+  since: 2018
 
   # Icon between year and copyright info.
   icon:
