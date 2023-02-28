@@ -4,12 +4,156 @@ date: 2019-12-27 20:12:51
 tags: 
 	- sklearn
 categories: [tools]
-description: machinelearning
+description: Scikit-learn is an open source machine learning library that supports supervised and unsupervised learning. It also provides various tools for model fitting, data preprocessing, model selection, model evaluation, and many other utilities
 ---
 
-sklearn 记录
-
 <!-- more -->
+
+scikit-learn：
+
+- 简单高效的数据挖掘和数据分析工具
+
+## 前言
+
+[scikit-learn 官方文档](https://scikit-learn.org/stable/user_guide.html)
+
+### Getting Started
+
+#### Fitting and predicting: estimator basics
+
+- [estimators](https://scikit-learn.org/stable/glossary.html#term-estimators) 提供一系列封装好的机器学习算法。
+- [fit](https://scikit-learn.org/stable/glossary.html#term-fit) ：fit到模型数据。
+
+Example:
+
+```python
+from sklearn.ensemble import RandomForestClassifier
+
+clf = RandomForestClassifier(random_state=0)
+
+  # 2 samples, 3 features
+X = [[ 1,  2,  3],[11, 12, 13]]
+y = [0, 1]  # classes of each sample
+clf.fit(X, y)
+
+# Predict
+y_pred = clf.predict(X)
+```
+
+#### Transformers and pre-processors
+
+- [ColumnTransformer](https://scikit-learn.org/stable/modules/compose.html#column-transformer) : 不同特征的转换处理
+
+sklearn.preprocessing 包含了比较多的数据预处理方法(放缩，编码)，能在pipeline应用的同时，也是安全的da ta leakage
+
+```python
+StandardScaler
+OneHotEncoder
+CountVectorizer
+----
+```
+
+#### Pipelines: chaining pre-processors and estimators
+
+整合数据预处理与模型评估到一个pipeline上。
+
+```python
+from sklearn.preprocessing import StandardScaler
+from sklearn.linear_model import LogisticRegression
+from sklearn.pipeline import make_pipeline
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+#同过make_pipeline 把pre-processors 和 estimators整合到一块。
+# create a pipeline object
+pipe = make_pipeline(
+    StandardScaler(),
+    LogisticRegression()
+)
+
+# load the iris dataset and split it into train and test sets
+X, y = load_iris(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+# fit the whole pipeline
+pipe.fit(X_train, y_train)
+
+
+# we can now use it like any other estimator
+accuracy_score(pipe.predict(X_test), y_test)
+```
+
+#### Model evaluation
+
+- [`cross_validate`](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_validate.html#sklearn.model_selection.cross_validate) 
+
+- [`train_test_split`](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split)
+
+  
+
+预测的数据，有时候不能很好的拟合到test数据，可能是泛化能力不好，也有可能是数据的split导致的train和test两部分数据的差异。可以利用交叉验证，在不同划分的数据上都进行拟合。
+
+```python
+from sklearn.datasets import make_regression
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import cross_validate
+
+X, y = make_regression(n_samples=1000, random_state=0)
+lr = LinearRegression()
+
+result = cross_validate(lr, X, y)  # defaults to 5-fold CV
+result['test_score']  # r_squa
+```
+
+![Grid Search Workflow](https://scikit-learn.org/stable/_images/grid_search_workflow.png)
+
+#### Automatic parameter searches
+
+- [`RandomizedSearchCV`](https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html#sklearn.model_selection.RandomizedSearchCV)
+
+Scikit-learn 提供了自动超参数的搜索工具。把最好的参数fit到模型上。
+
+```python
+from sklearn.datasets import fetch_california_housing
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import RandomizedSearchCV
+from sklearn.model_selection import train_test_split
+from scipy.stats import randint
+
+X, y = fetch_california_housing(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
+
+# define the parameter space that will be searched over
+param_distributions = {'n_estimators': randint(1, 5),
+                       'max_depth': randint(5, 10)}
+
+# now create a searchCV object and fit it to the data
+search = RandomizedSearchCV(estimator=RandomForestRegressor(random_state=0),
+                            n_iter=5,
+                            param_distributions=param_distributions,
+                            random_state=0)
+search.fit(X_train, y_train)
+
+
+
+
+search.best_params_
+
+
+# the search object now acts like a normal random forest estimator
+# with max_depth=9 and n_estimators=4
+search.score(X_test, y_test)
+```
+
+
+
+## pre-processing
+
+[Data Leakage](https://www.kaggle.com/code/alexisbcook/data-leakage/tutorial)
+Why? :independence between training and testing data.
+
+how to prevent it:Using a pipeline for cross-validation and searching will largely keep you from this common pitfall
 
 ## 数据包
 
