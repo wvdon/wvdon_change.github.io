@@ -135,9 +135,6 @@ search = RandomizedSearchCV(estimator=RandomForestRegressor(random_state=0),
                             random_state=0)
 search.fit(X_train, y_train)
 
-
-
-
 search.best_params_
 
 
