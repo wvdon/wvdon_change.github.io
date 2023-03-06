@@ -5,7 +5,7 @@ Description: 一位从计算机转到生物医药的少年，酷爱日漫，到�
 ---
 
 研究方向：
-深度学习，计算生物学 (Deep Learning for Life Science)
+深度学习，计算生物学，Generative Models  (Deep Learning for Life Science)
 
 # 教育背景:
 
@@ -39,6 +39,17 @@ Ye, S., Li, C., Zhao, R., & **Wu, W**. NOAA-LSTM: A New Method of Dialect Identi
 
 ---
 
+# 项目经历
+
+**人体肠化组学分析**:
+
+- 联合ATAC-seq与RNA-seq
+- [Web link](https://wvdon.com/2022/12/19/paper/atac_bio/)
+
+
+
+---
+
 # 获奖
 
 郑州大学ACM程序设计竞赛**一等奖**
@@ -51,10 +62,10 @@ Ye, S., Li, C., Zhao, R., & **Wu, W**. NOAA-LSTM: A New Method of Dialect Identi
 # 技能
 
 1. 熟练Python语言与Pytorch深度学习框架
-1. 生物组学数据处理与挖掘,(ATAC-seq,RNA-seq)
-1. Machine Learning 
+1. 生物组学数据处理与挖掘
+1. Java后端开发
 
 ---
 
-以前总是不知道自己想要什么，也不会去主动争取，总是一副随性，且自卑，好面子的样子。
+
 
