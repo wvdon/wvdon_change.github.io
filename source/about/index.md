@@ -1,7 +1,7 @@
 ---
 title: Weidong Wu
 date: 2020-08-27 15:40:13
-Description: 一位从计算机转到生物医药的少年，酷爱日漫，到处玩玩转转的coder。
+Description: a student who pay attention on Artificial Intelligence for Life Sciences (AILS)
 ---
 
 研究方向：
@@ -41,10 +41,16 @@ Ye, S., Li, C., Zhao, R., & **Wu, W**. NOAA-LSTM: A New Method of Dialect Identi
 
 # 项目经历
 
-**人体肠化组学分析**:
+**人肠化组学分析**:
 
 - 联合ATAC-seq与RNA-seq
 - [Web link](https://wvdon.com/2022/12/19/paper/atac_bio/)
+
+**De Novo Design of DNA Binding Proteins Learn From Bacterial Chromosome Segregation System**
+
+- 从细菌染色体分离系统中学习DNA结合蛋白的从头设计
+
+**河南省教育厅项目** **"基于大数据的河南省企业征信动态评估系统"(2019.03~2019.09)**
 
 
 
@@ -52,10 +58,11 @@ Ye, S., Li, C., Zhao, R., & **Wu, W**. NOAA-LSTM: A New Method of Dialect Identi
 
 # 获奖
 
-郑州大学ACM程序设计竞赛**一等奖**
+郑州大学ACM程序设计竞赛**一等奖**（2018）
 ‘科大讯飞’AI 算法竞赛多模态情感识别赛道复赛第二名(2/456)
-“挑战杯”全国大学生课外学术科技作品竞赛河南省一等奖
-中国高校计算机挑战赛“网络技术挑战赛”华中赛区二等奖
+“挑战杯”全国大学生课外学术科技作品竞赛河南省一等奖 （2019）
+中国高校计算机挑战赛“网络技术挑战赛”华中赛区二等奖（2018）
+郑州大学智能循迹挑战赛二等奖（2018）
 
 ---
 

@@ -41,14 +41,9 @@ date: 2019-10-22 21:04:52
 - Encoders/decoders ,Transformers(nlp)
 - Autorenciders, Generative Adversarial Networks(Generative learning)
 
-## 机器学习实战
+## 机器学习
 
-| [第一章 ：机器学习基础](https://wvdon.com/2019/10/22/machineLearning/machineLearning/2019-10-22-第一章-：机器学习基础/) | [第二张：KNN近邻算法]() |
-| ------------------------------------------------------------ | ----------------------- |
-| 章节                                                         | 章节                    |
-| [第三章：决策树]()                                           |                         |
 
-随机森林
 
 支持向量机
 
