@@ -342,16 +342,40 @@ print('concurrent:')  # 创建多个进程，并行执行
 pool = Pool(3)  # 创建拥有3个进程数量的进程池
 # testFL:要处理的数据列表，run：处理testFL列表中数据的函数
 for fn in testFL:
-  pool.apply_async(run, (fn,))
-  pool.close()  # 关闭进程池，不再接受新的进程
-  pool.join()  # 主进程阻塞等待子进程的退出
-  t2 = time.time()
-  print("并行执行时间：", int(t2 - t1))
+		pool.apply_async(run, (fn,))
+pool.close()  # 关闭进程池，不再接受新的进程
+pool.join()  # 主进程阻塞等待子进程的退出
+ t2 = time.time()
+ print("并行执行时间：", int(t2 - t1))
 ```
 
 apply_async(func[, args[, kwds]]) ：使用非阻塞方式调用func（并行执行，堵塞方式必须等待上一个进程退出才能执行下一个进程），args为传递给func的参数列表，kwds为传递给func的关键字参数列表；异步，多个线程同时执行
 
 
+
+#### 使用tqdm多线程监控
+
+```python
+from multiprocessing import Pool
+from tqdm import tqdm
+
+def f(x):
+    return x * x
+
+
+if __name__ == '__main__':
+    with Pool(5) as p:
+        print(list((tqdm(p.imap(f, range(10)), total=10, desc='监视进度'))))
+
+```
+
+
+
+#### 共享变量参数
+
+
+
+#### 锁
 
 
 
