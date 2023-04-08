@@ -10,7 +10,7 @@ My principal research interests lie in the area of **<u>Computational Biology</u
 # Education
 
 **ME**, Zhengzhou University (Biology and Medicine, 2021-now)
-**BE**, Zhengzhou University (Biology and Medicine, 2017-2021)                                
+**BE**, Zhengzhou University (Software Engineering, 2017-2021)                                
 
 ---
 
