@@ -4,30 +4,17 @@ date: 2020-08-27 15:40:13
 Description: a student who pay attention on Artificial Intelligence for Life Sciences (AILS)
 ---
 
-研究方向：
-深度学习，计算生物学，Generative Models  (Deep Learning for Life Science)
+**Smmary** ：
+My principal research interests lie in the area of **<u>Computational Biology</u>**, **<u>Epigenomics</u>** and **<u>Deep Learning for Life Science</u>**
 
-# 教育背景:
+# Education
 
-2017～2021，**郑州大学**，软件工程 本科                                 
-
-2021～now ，**郑州大学**，生物与医药 硕士
-
----
-
-# 实习经历
-
-**广州赛诚生物科技有限公司**  2022.04～2022.05
-
-- 生信实习工程师
-
-**数字郑州科技有限公司**（阿里巴巴与市政府共建）2021.03～2021.09
-
-- Java后端研发实习生
+**ME**, Zhengzhou University (Biology and Medicine, 2021~now)
+**BE**, Zhengzhou University (Biology and Medicine, 2017~2021)                                
 
 ---
 
-# 科研经历
+# RESEARCH
 
 Xia Xue$ , **Weidong Wu$**,.etc.  The Evolution of SARS-CoV-2 and COVID-19 Pandemic: What the Virus is Expecting For? （Investing,Co first author，Current Bioinformatics IF: 4.85 ）2023
 
@@ -35,42 +22,17 @@ Xia Xue$ , **Weidong Wu$**,.etc.  The Evolution of SARS-CoV-2 and COVID-19 Pande
 
 Ye, S., Li, C., Zhao, R., & **Wu, W**. NOAA-LSTM: A New Method of Dialect Identification. In *International Conference on Artificial Intelligence and Security* (pp. 16-26). Springer, Cham. (2019, July)
 
-李翠霞,李英豪,王亚博,**吴卫东**,周元元,杨珊珊,闫凯波,许书宁,叶帅,赵若琰. 多模态的驾驶员情绪辅助调节方法[P]. 河南省：CN111329498A,2020-06-26.
+Li,C., Li,H., Wang.,Y,**Wu,W**., et al. Multimodal driver emotion-assisted regulation method [P]. Henan Province, China:
+CN111329498A, 2020-06-26.
 
 ---
 
-# 项目经历
+# TECHNICAL SKILLS
 
-**人肠化组学分析**:
-
-- 联合ATAC-seq与RNA-seq
-- [Web link](https://wvdon.com/2022/12/19/paper/atac_bio/)
-
-**De Novo Design of DNA Binding Proteins Learn From Bacterial Chromosome Segregation System**
-
-- 从细菌染色体分离系统中学习DNA结合蛋白的从头设计
-
-**河南省教育厅项目** **"基于大数据的河南省企业征信动态评估系统"(2019.03~2019.09)**
-
-
-
----
-
-# 获奖
-
-郑州大学ACM程序设计竞赛**一等奖**（2018）
-‘科大讯飞’AI 算法竞赛多模态情感识别赛道复赛第二名(2/456)
-“挑战杯”全国大学生课外学术科技作品竞赛河南省一等奖 （2019）
-中国高校计算机挑战赛“网络技术挑战赛”华中赛区二等奖（2018）
-郑州大学智能循迹挑战赛二等奖（2018）
-
----
-
-# 技能
-
-1. 熟练Python语言与Pytorch深度学习框架
-1. 生物组学数据处理与挖掘
-1. Java后端开发
+**Languages**           : Python, Java, English (Toefl:95), Chinese (Native)
+**Frameworks**        : Pytorch, Flask, Spring Boot
+**Package**                : Sklearn,Pandas, BioPython,Matplotlib
+**Others**                   : Linux,Sql,Git
 
 ---
 

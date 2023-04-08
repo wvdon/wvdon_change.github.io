@@ -20,5 +20,3 @@ mathjax: true
 目前已经停更了，版本到2019年的
 
 链接地址：[one drive](https://1drv.ms/f/s!AHfwbyaw226qhig) ，[百度网盘：ejee](https://pan.baidu.com/s/1B6N1Z_sk_tMckw3yNlvuNA)
-
-This suggests that in amphibians the MEOX1 Enh can be activated by the same regulatory mechanism, even though the CRE is not conserved in the same location in the Xenopus laevis genome.
