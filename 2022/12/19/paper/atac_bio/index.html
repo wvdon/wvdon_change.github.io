@@ -1,0 +1,1026 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    }
+  };
+</script>
+
+  <meta name="description" content="描述ATAC-seq与RNA-seq数据挖掘与联合分析的思路和心得总结。能够反复回顾，检查自己做的是否有些许错误的地方，另外也能过给想要了解的同学提供一些思路，避免走太多弯路。">
+<meta name="keywords" content="bio,atac">
+<meta property="og:type" content="article">
+<meta property="og:title" content="生信数据挖掘：ATAC-seq,RNA-seq">
+<meta property="og:url" content="http://wvdon.com/2022/12/19/paper/atac_bio/index.html">
+<meta property="og:site_name" content="AILS">
+<meta property="og:description" content="描述ATAC-seq与RNA-seq数据挖掘与联合分析的思路和心得总结。能够反复回顾，检查自己做的是否有些许错误的地方，另外也能过给想要了解的同学提供一些思路，避免走太多弯路。">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://web.wvdon.com/image/chrom.png">
+<meta property="og:image" content="https://web.wvdon.com/image/image-20221219190711398.png">
+<meta property="og:image" content="https://web.wvdon.com/image/image-20221219193308860.png">
+<meta property="og:image" content="https://web.wvdon.com/image/20221223150540197.png">
+<meta property="og:image" content="https://web.wvdon.com/image/image-20221219191431029.png">
+<meta property="og:image" content="https://web.wvdon.com/image/tss_e.png">
+<meta property="og:image" content="https://web.wvdon.com/image/tss.png">
+<meta property="og:image" content="https://web.wvdon.com/image/pbc.png">
+<meta property="og:image" content="https://web.wvdon.com/image/qc_python.png">
+<meta property="og:image" content="https://web.wvdon.com/peca.png">
+<meta property="og:image" content="https://web.wvdon.com/image/PSM.png">
+<meta property="og:image" content="https://web.wvdon.com/image/89241671709615_.pic.jpg">
+<meta property="og:image" content="https://web.wvdon.com/image/conact.png">
+<meta property="og:updated_time" content="2023-04-08T07:47:32.627Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="生信数据挖掘：ATAC-seq,RNA-seq">
+<meta name="twitter:description" content="描述ATAC-seq与RNA-seq数据挖掘与联合分析的思路和心得总结。能够反复回顾，检查自己做的是否有些许错误的地方，另外也能过给想要了解的同学提供一些思路，避免走太多弯路。">
+<meta name="twitter:image" content="https://web.wvdon.com/image/chrom.png">
+  <link rel="alternate" href="/atom.xml" title="AILS" type="application/atom+xml">
+  <link rel="canonical" href="http://wvdon.com/2022/12/19/paper/atac_bio/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>生信数据挖掘：ATAC-seq,RNA-seq | AILS</title>
+  <meta name="generator" content="Hexo 3.9.0">
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+	 <a href="https://github.com/wvdon" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">AILS</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">Focus on Artificial Intelligence for Life Sciences (AILS)</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-machinelearnig">
+      
+    
+
+    <a href="/machineLearning" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>machineLearnig</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tools">
+      
+    
+
+    <a href="/tools" rel="section"><i class="menu-item-icon fa fa-fw fa-wrench"></i> <br>tools</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-aboutme">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>aboutMe</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://wvdon.com/2022/12/19/paper/atac_bio/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Weidong Wu">
+      <meta itemprop="description" content="a student who pay attention on Artificial Intelligence for Life Sciences (AILS)">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AILS">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">生信数据挖掘：ATAC-seq,RNA-seq
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2022-12-19 00:11:41" itemprop="dateCreated datePublished" datetime="2022-12-19T00:11:41+08:00">2022-12-19</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-04-08 15:47:32" itemprop="dateModified" datetime="2023-04-08T15:47:32+08:00">2023-04-08</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/bio/" itemprop="url" rel="index"><span itemprop="name">bio</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+        
+      
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2022/12/19/paper/atac_bio/#comments" itemprop="discussionUrl"><span class="post-comments-count valine-comment-count" data-xid="/2022/12/19/paper/atac_bio/" itemprop="commentCount"></span></a>
+  </span>
+  
+  
+            <div class="post-description">描述ATAC-seq与RNA-seq数据挖掘与联合分析的思路和心得总结。能够反复回顾，检查自己做的是否有些许错误的地方，另外也能过给想要了解的同学提供一些思路，避免走太多弯路。</div>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <h2 id="ATAC-seq"><a href="#ATAC-seq" class="headerlink" title="ATAC-seq"></a>ATAC-seq</h2><h3 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h3><h4 id="染色质开放性-Chromatin-Accessibility"><a href="#染色质开放性-Chromatin-Accessibility" class="headerlink" title="染色质开放性 Chromatin Accessibility"></a><strong>染色质开放性</strong> <strong>Chromatin Accessibility</strong></h4><p>人的DNA链全部展开大约有2m，需要折叠为染色质结构才可以存储到放到细胞核中。染色质的基本结构单位是核小体，核小体再折叠能形成高度压缩的染色质结构。这个过程像我们将文件压缩为zip或者rar的压缩包，只要在使用的时候才会解压出来，平时可以减少它的占用空间。</p><a id="more"></a>
+<p><img src="https://web.wvdon.com/image/chrom.png" alt></p>
+<center>Fig 1: Chromatin Accessibility</center>
+
+<p>高度折叠的染色质结构在复制和转录时需要暴露出DNA序列，这段暴露的区域就是染色质开放区域，<strong>这个区域可以供转录因子和其他调控元件结合</strong>，所以它与转录调控是密切相关的。</p>
+<p>因此这种致密的核小体结构被破坏后，启动子、增强子等顺式调控元件和反式作用因子可以接近的特性，叫染色质开放性（<strong>Chromatin Accessibility</strong>）。</p>
+<p>为了研究<strong>染色质的开放性</strong>，目前有MNase-seq,Dnase-seq,ATAC-seq等，但是目前最常用的是2013年由斯坦福大学开发的ATAC-seq。与传统的MNase-seq以及DNase-seq相比，其具有可重复性强，实验步骤简单，需要的实验样本量少等优点，因而被广泛应用<sup>1</sup>。</p>
+<p><img src="https://web.wvdon.com/image/image-20221219190711398.png" alt="image-20221219190711398"></p>
+<center> Fig 2: Methods of Researching Chromatin Accessibility a nd ATAC-seq principle</center>
+
+<h4 id="原理"><a href="#原理" class="headerlink" title="原理"></a><strong>原理</strong></h4><p>利用转座酶Tn5会携带特定的已知序列，并且可以结合开放的染色质。Tn5酶对染色质开放区进行打断，在打断的同时加上测序接头，接着进行DNA提取，PCR扩增构建文库。经过测序分析，就可以推断染色质可行性、转录因子结合位点、组蛋白修饰区域和核小体位置。</p>
+<p><img src="https://web.wvdon.com/image/image-20221219193308860.png" alt="image-20221219193308860"></p>
+<center>Fig 3: The Process of Tn5</center>
+
+<h4 id="研究内容"><a href="#研究内容" class="headerlink" title="研究内容"></a>研究内容</h4><p>肠上皮化生简称<strong>肠化</strong>，是指正常的胃黏膜上皮被肠型上皮所取代。</p>
+<p>正常情况下，我们的器官各司其职，胃表面生长的是具有分泌胃酸功能的胃黏膜上皮细胞，肠道表面生长的是具有分泌和吸收功能的肠黏膜上皮细胞。但当胃黏膜细胞受到比较严重的损伤后，胃肠黏膜上皮结构出现了一定改变，越长越像邻居家肠黏膜的孩子。看上去就像肠黏膜长错了地方，本该长在肠道上长的结构却出现在了胃黏膜上，就像一片草地长出了树木，树木就显得很突出。</p>
+<p><img src="https://web.wvdon.com/image/20221223150540197.png" alt></p>
+<p>目前的假设是，<strong>胃黏膜腺体的颈部干细胞具有多方面分泌的潜能，在正常时它可以分化成各种胃黏膜的成熟上皮细胞<sup>[9]</sup>。</strong>干细胞不正常工作时肠化进程会加速，从肠化生过渡到胃癌，而<strong>肠化属于胃癌前病变的一种</strong>。</p>
+<p>胃黏膜上皮细胞癌变并非一朝一夕的事情，不是由正常细胞一跃成为癌细胞，而是一个慢性渐进的过程，在发展成恶性肿瘤之前，经历多年持续的癌前变化。<strong>若能及早识别和及早干预，也是一种防止胃癌的有效途径</strong>。</p>
+<p><strong>因此从干细胞水平上能够发现促使正常干细胞分化为肠化细胞的根本原因，对于预防胃癌，以及使肠化逆转显得尤为重要。</strong></p>
+<h4 id="实验设计："><a href="#实验设计：" class="headerlink" title="实验设计："></a>实验设计：</h4><p>针对10个病人，分别采集胃，肠化组织，分为两组（stemness + / - ）进行培养。</p>
+<p>其中<em>阴性对照：正常胃组织，阳性对照：正常十二指肠组织，</em><br>stemness: 位置细胞干性的条件。+ 维持干性，-不维持,IM: + 。 - 。<br>胃窦：A, 胃体：C, 胃角：AC</p>
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>目前已经开源了很多ATAC-seq原始data的预处理与计算，其基本流程为：</p>
+<p><strong>QC-&gt;Alignment-&gt;Remove low quality-&gt; Call Peak</strong> </p>
+<p>针对Call Peak 的结果，可以计算不同组间差异的Peak，或者Motif 富集与转录因子足迹分析，更进一步的可以联合RNA-seq。</p>
+<p><img src="https://web.wvdon.com/image/image-20221219191431029.png" alt="image-20221219191431029"></p>
+<center>Fig 4: Roadmap of a typical ATAC-seq analysis.</center>
+
+<p>Pipeline:</p>
+<ol>
+<li><p><a href="https://github.com/ENCODE-DCC/atac-seq-pipeline" target="_blank" rel="noopener">ENCODE ATAC-seq pipeline</a></p>
+</li>
+<li><p><a href="https://informatics.fas.harvard.edu/atac-seq-guidelines.html" target="_blank" rel="noopener">ATAC-seq Guidelines form Harvard</a></p>
+</li>
+</ol>
+<p>This pipeline is designed for automated end-to-end quality control and processing of ATAC-seq and DNase-seq data.</p>
+<h4 id="标准"><a href="#标准" class="headerlink" title="标准"></a><strong>标准</strong></h4><blockquote>
+<p>介绍前期质控指标，避免样本问题对后期实验结果的影响，造成错误或返工</p>
+</blockquote>
+<p><strong>比对率：</strong></p>
+<p>正常是超过95%，最低不能低于80%。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> 可以抽取部分样本在nt数据库中进行比对，看map到那些物种中，是否有部分细菌污染</span></span><br><span class="line">zcat ../data/B63_L4_Q803601.R1.fastq.gz | head -n 1000 &gt;B63_1</span><br><span class="line">zcat ../data/B63_L4_Q803601.R2.fastq.gz | head -n 1000 &gt;B63_2</span><br><span class="line"> </span><br><span class="line">awk '&#123;if(NR%4 == 1)&#123;print "&gt;" substr($0, 2)&#125;&#125;&#123;if(NR%4 == 2)&#123;print&#125;&#125;' B63_1 &gt; B63_1.fasta</span><br><span class="line">blastn -task blastn -query B63_1.fasta -db /home/nt -num_threads 6 -out unpaired_blastn.aln</span><br><span class="line"><span class="meta">#</span><span class="bash"> 本地构建db花费时间较多，可以线上。</span></span><br><span class="line"><span class="meta">#</span><span class="bash">B63_atac：73.4</span></span><br><span class="line"><span class="meta">#</span><span class="bash">B60_atac：77.3</span></span><br><span class="line"><span class="meta">#</span><span class="bash">细菌污染</span></span><br></pre></td></tr></table></figure>
+
+<p><strong>峰值区域的读数比例（FRiP score）</strong>：</p>
+<p>FRiP score应大于0.3，最低不能低于0.2。</p>
+<p>所有映射的读数中，属于被称为峰值区域的部分，即显著富集的峰值中的<strong>可用读数除以所有可用读数</strong>。一般来说，FRiP得分与区域的数量呈正相关.(Landt et al, Genome Research Sept. 2012, 22(9): 1813–1831)</p>
+<p><strong>TSS 富集：</strong></p>
+<p>TSS富集计算是一种信噪比计算。收集一组参考TSSs周围的读数，形成以TSSs为中心、向任一方向延伸2000bp（共计4000bp）的读数总分布。然后，该分布被归一化，即在分布的每个末端侧翼的100bps内取平均读数深度（总共200bp的平均数据），并计算每个位置相对于该平均读数深度的倍数变化。这意味着侧翼应该从1开始，如果在转录起始位点（基因组的高度开放区域）有高的读数信号，那么信号应该增加，直到中间的一个峰值。我们把这个归一化后的分布中心的信号值作为我们的TSS富集度量。用于评估ATAC-seq。</p>
+<p><img src="https://web.wvdon.com/image/tss_e.png" alt></p>
+<center>Fig 5: Transcription Start Site (TSS) Enrichment</center>
+
+<p><img src="https://web.wvdon.com/image/tss.png" alt></p>
+<center>Fig 6: Transcription Start Site (TSS) Enrichment Standard Value</center>
+
+<p><strong>文库复杂度测量：</strong></p>
+<p>理想状态值是: NRF&gt;0.9, PBC1&gt;0.9, and PBC2&gt;3. </p>
+<p><img src="https://web.wvdon.com/image/pbc.png" alt></p>
+<center>Fig 7: Non-Redundant Fraction etc. Standard Value</center>
+
+<p><strong>Non-Redundant Fraction (NRF)</strong> – Number of distinct uniquely mapping reads (i.e. after removing duplicates) / Total number of reads.</p>
+<p><strong>PCR Bottlenecking Coefficient 1 (PBC1)</strong></p>
+<p><strong>PCR Bottlenecking Coefficient 2 (PBC2)</strong></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> os</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt</span><br><span class="line">%matplotlib inline</span><br><span class="line"><span class="keyword">import</span> seaborn <span class="keyword">as</span> sns</span><br><span class="line"></span><br><span class="line">path= <span class="string">'/media/wvdon/data/wfy/atac/work/'</span></span><br><span class="line">dirs = os.listdir(path)</span><br><span class="line">aaa = []</span><br><span class="line"><span class="keyword">for</span> d <span class="keyword">in</span> dirs:</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> str(d).endswith(<span class="string">"e"</span>):</span><br><span class="line">        json_path = <span class="string">f'/media/wvdon/data/wfy/atac/work/<span class="subst">&#123;d&#125;</span>/qc/qc.json'</span></span><br><span class="line">        <span class="comment">#print(d)</span></span><br><span class="line">        data = <span class="string">''</span></span><br><span class="line">        <span class="keyword">with</span> open(json_path, <span class="string">'r'</span>) <span class="keyword">as</span> f:</span><br><span class="line">            data = json.load(f)</span><br><span class="line">            <span class="comment">#print(data)</span></span><br><span class="line">        tss = data[<span class="string">"align_enrich"</span>][<span class="string">'tss_enrich'</span>][<span class="string">'rep1'</span>][<span class="string">'tss_enrich'</span>]</span><br><span class="line">        map_read_prc =data[<span class="string">"align"</span>][<span class="string">'samstat'</span>][<span class="string">'rep1'</span>][<span class="string">'pct_mapped_reads'</span>]</span><br><span class="line">        NRF = data[<span class="string">"lib_complexity"</span>][<span class="string">'lib_complexity'</span>][<span class="string">'rep1'</span>][<span class="string">'NRF'</span>]</span><br><span class="line">        PBC1 = data[<span class="string">"lib_complexity"</span>][<span class="string">'lib_complexity'</span>][<span class="string">'rep1'</span>][<span class="string">'PBC1'</span>]</span><br><span class="line">        aaa.append([d,tss,map_read_prc,NRF,PBC1])</span><br><span class="line">an_data = pd.DataFrame(aaa,columns=[<span class="string">'B'</span>,<span class="string">"tss"</span>,<span class="string">"map_read_prc"</span>,<span class="string">"NRF"</span>,<span class="string">"PBC1"</span>])</span><br><span class="line"></span><br><span class="line">sns.kdeplot(an_data[<span class="string">'PBC1'</span>],cut=<span class="number">0</span>,cumulative=<span class="literal">True</span>,shade=<span class="literal">True</span>,color=<span class="string">"b"</span>)</span><br><span class="line"><span class="comment">#sns.kdeplot(an_data['map_read_prc'],cut=0,cumulative=True,shade=True,color="r")</span></span><br><span class="line">plt.legend(title=<span class="string">"PBC1"</span>)</span><br><span class="line">plt.show()</span><br><span class="line">an_data[<span class="string">'PBC1'</span>].hist()</span><br></pre></td></tr></table></figure>
+
+<p><img src="https://web.wvdon.com/image/qc_python.png" alt></p>
+<h4 id="差异Peak分析"><a href="#差异Peak分析" class="headerlink" title="差异Peak分析"></a>差异Peak分析</h4><p>差异peak是分析的<strong>第一步，也是基础</strong>。根据实验的设计，可以比较两个组之间差异的Peak.</p>
+<p>以往的几篇文章都推荐使用<a href="https://rdrr.io/bioc/DiffBind/man/DiffBind-package.html" target="_blank" rel="noopener">Diffbind</a>(<em>Differential binding analysis of ChIP-seq peaksets</em>)</p>
+<blockquote>
+<p>目前没有专门为ATAC设计的差异peak 分析工具，不过他们都是计算该区域的counts数据，归一化，对比两个组之间的差异。</p>
+<p>另外HOMER, DBChIP，也能实现同样的需求。</p>
+</blockquote>
+<p><strong>利用Diffbind进行差异Peak分析(PCA,MA,heatmap,Volcano,differ Peak)</strong>:</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">library</span>(DiffBind)</span><br><span class="line">csv_path = <span class="string">"/media/wvdon/sdata/atac-seq/after/example5.csv"</span></span><br><span class="line">dbObj &lt;- dba(sampleSheet=csv_path)</span><br><span class="line"></span><br><span class="line">plot(dbObj)</span><br><span class="line"></span><br><span class="line">dbcount &lt;- dba.count(DBA = dbObj,bUseSummarizeOverlaps=<span class="literal">TRUE</span>,bParallel = <span class="literal">FALSE</span>)</span><br><span class="line">save.image(<span class="string">"/media/wvdon/sdata/atac-seq/after/atacafter.RData"</span>)</span><br><span class="line">load(<span class="string">"/media/wvdon/sdata/atac-seq/after/atacafter.RData"</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">dba_counstrast = dba.contrast(dbcount,categories =</span><br><span class="line">                                DBA_TREATMENT,minMembers = <span class="number">2</span>)</span><br><span class="line"></span><br><span class="line">bdaaly = dba.analyze(dba_counstrast,method = DBA_DESEQ2)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">differ_peak_2 = dba.report(bdaaly,bCounts = <span class="literal">T</span>)</span><br><span class="line">head(diff_peaks2)</span><br><span class="line">diff_peaks_3= subset(differ_peak_2$Fold&gt;=<span class="number">1</span> | differ_peak_2$Fold&lt;=<span class="number">1</span>)</span><br><span class="line"><span class="comment">#dba.show(dba_counstrast,bContrasts = T)</span></span><br><span class="line">pma = dba.plotMA(bdaaly,contrast = <span class="number">1</span>)</span><br><span class="line"><span class="comment">#ggsave(file="/media/wvdon/sdata/atac-seq/before/atacMA.svg", plot=pma, width=4, height=4)    </span></span><br><span class="line">dba.plotVolcano(bdaaly,contrast = <span class="number">1</span>)</span><br><span class="line"></span><br><span class="line">length(differ_peak_2)</span><br><span class="line"></span><br><span class="line"><span class="comment">#hmap=colorRampPalette(c("blue","white","red"))(n=13)</span></span><br><span class="line"><span class="comment">#readscores=dba.plotHeatmap(bdaaly,contrast = 1,#ColAttributes=c(DBA_TREATMENT,DBA_GROUP),</span></span><br><span class="line"> <span class="comment">#                          main = "DESeq2 Differentially Bound Sites",</span></span><br><span class="line">  <span class="comment">#                         correlations = FALSE,scale='row',colScheme = hmap)</span></span><br><span class="line"></span><br><span class="line">dim(readscores@elementMetadata)</span><br><span class="line"></span><br><span class="line"><span class="keyword">library</span>(dplyr)</span><br><span class="line">diff_peaks2 &lt;- bind_cols(as_tibble(granges(differ_peak_2)), as_tibble(mcols(differ_peak_2)))</span><br><span class="line"><span class="keyword">library</span>(pheatmap)</span><br><span class="line">Groups=c(rep(<span class="string">"IMP"</span>,<span class="number">8</span>),rep(<span class="string">"IMN"</span>,<span class="number">8</span>))</span><br><span class="line">heatmap_peak = differ_peak_2@elementMetadata[<span class="number">7</span>:<span class="number">22</span>]</span><br><span class="line">dim(heatmap_peak)</span><br><span class="line"><span class="comment">#write.csv(diff_peaks2, "/media/wvdon/sdata/atac-seq/before/12_18_peak_FDR005.csv")</span></span><br><span class="line"></span><br><span class="line">write.csv(heatmap_peak, <span class="string">"/media/wvdon/sdata/atac-seq/after/12_18heatmap_peak.csv"</span>)</span><br><span class="line">data&lt;-read.csv(<span class="string">"/media/wvdon/sdata/atac-seq/after/12_18heatmap_peak.csv"</span>,header = <span class="literal">T</span>,row.names = <span class="number">1</span>)</span><br><span class="line"><span class="comment">#heatmap_peak.columns=Groups</span></span><br><span class="line"><span class="comment">#colnames(heatmap_peak)</span></span><br><span class="line"></span><br><span class="line">annotation_c&lt;-data.frame(Groups)</span><br><span class="line">rownames(annotation_c)&lt;-colnames(data)</span><br><span class="line">colnames(data)</span><br><span class="line">labels_col=c(<span class="string">'37AC22'</span>,<span class="string">'30A51'</span>,<span class="string">'33A45'</span>,<span class="string">'46A46'</span>,<span class="string">'47A47'</span>,<span class="string">'49AC44'</span>,<span class="string">'13A06'</span>,<span class="string">'54A48'</span>,<span class="string">'37C20'</span>,<span class="string">'30C04'</span>,<span class="string">'33C21'</span>,<span class="string">'46C23'</span>,<span class="string">'47C07'</span>,<span class="string">'49C41'</span>,<span class="string">'13C60'</span>,<span class="string">'54C62'</span>)</span><br><span class="line"></span><br><span class="line">p&lt;-pheatmap(data, cluster_rows = <span class="literal">F</span>,      <span class="comment">#行聚类，列不聚类</span></span><br><span class="line">            cluster_cols = <span class="literal">F</span>,</span><br><span class="line">            show_rownames = <span class="literal">F</span>,       <span class="comment">#不显示行名</span></span><br><span class="line">            clustering_distance_rows = <span class="string">"correlation"</span>,</span><br><span class="line">            show_colnames = <span class="literal">T</span>,      <span class="comment">#显示列明 angle_row="15"，行名旋转15度，列明相似</span></span><br><span class="line">            </span><br><span class="line">            annotation_col = annotation_c,  <span class="comment">#对列进行注释即对列进行分组</span></span><br><span class="line">            <span class="comment">#na_col = "white",</span></span><br><span class="line">            scale = <span class="string">"row"</span>,   <span class="comment">#将数据按行进行标准化</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment">#设置格子大小 cellheigt=""设置格子高</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment">#设置格子高</span></span><br><span class="line">            labels_col= labels_col,</span><br><span class="line">            angle_col = <span class="number">90</span>,</span><br><span class="line">            border=<span class="literal">F</span></span><br><span class="line">            ,color = colorRampPalette(colors= c(<span class="string">"blue"</span>,<span class="string">"white"</span>,<span class="string">"red"</span>))(<span class="number">10</span>) </span><br><span class="line">            <span class="comment">#,color = colorRampPalette(c("#FFFF00","#FF0000"))(100)</span></span><br><span class="line">)   </span><br><span class="line">p</span><br><span class="line"><span class="keyword">library</span>(<span class="string">"ggplot2"</span>)</span><br><span class="line"><span class="comment">#some sample data</span></span><br><span class="line"><span class="comment">#BiocManager::install('svglite')</span></span><br><span class="line"><span class="comment">#This actually save the plot in a image</span></span><br><span class="line">ggsave(file=<span class="string">"/media/wvdon/sdata/atac-seq/after/12_18heatmap.svg"</span>, plot=p, width=<span class="number">8</span>, height=<span class="number">8</span>)</span><br></pre></td></tr></table></figure>
+
+<h4 id="Peak-注释"><a href="#Peak-注释" class="headerlink" title="Peak 注释"></a>Peak 注释</h4><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"><span class="keyword">import</span> argparse</span><br><span class="line"><span class="keyword">import</span> math</span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np</span><br><span class="line"><span class="keyword">import</span> pandas <span class="keyword">as</span> pd</span><br><span class="line"><span class="keyword">from</span> matplotlib <span class="keyword">import</span> pyplot <span class="keyword">as</span> plt</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line">sys.path.append(<span class="string">r'/home/wvdon/BIO_ATAC/'</span>)</span><br><span class="line"><span class="keyword">from</span> common.pyShell <span class="keyword">import</span>  runShell  </span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">shellAccept</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    预定义命令行参数，接收并存储</span></span><br><span class="line"><span class="string">    必须参数：None</span></span><br><span class="line"><span class="string">    可选参数：</span></span><br><span class="line"><span class="string">    -u / --URL</span></span><br><span class="line"><span class="string">    -t / --threads</span></span><br><span class="line"><span class="string">    -v / --version</span></span><br><span class="line"><span class="string">    @return:返回获取到的命令行参数args，以数据字典格式</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line">    <span class="keyword">try</span>:    <span class="comment"># 异常处理</span></span><br><span class="line">        parser = argparse.ArgumentParser(description=<span class="string">"peak 基因注释"</span>)</span><br><span class="line">        <span class="comment">#@todo 临时写成测试文件。</span></span><br><span class="line">        parser.add_argument(<span class="string">"-u"</span>, <span class="string">"--csv"</span>,required=<span class="literal">False</span>, type=str, help=<span class="string">"peak csv path"</span>,default=<span class="string">'/media/wvdon/sdata/test/12_19_peak_FDR005_remove4.csv'</span>)</span><br><span class="line">        parser.add_argument(<span class="string">"-v"</span>, <span class="string">"--version"</span>, type=str, help=<span class="string">"工具版本号:V1.0"</span>)</span><br><span class="line">        parser.add_argument(<span class="string">"-output"</span>,<span class="string">"--output"</span>, type=str,default=<span class="string">'./annotate'</span>,help=<span class="string">'输出路径'</span>)</span><br><span class="line">        parser.add_argument(<span class="string">"-annotatePeaks"</span>,default=<span class="string">'/usr/local/share/bio/homer/bin/annotatePeaks.pl'</span>,help=<span class="string">'-annotatePeaks.pl 执行路径'</span>)</span><br><span class="line">        args = parser.parse_args()  <span class="comment"># 获取参数字典</span></span><br><span class="line">        <span class="keyword">return</span> args</span><br><span class="line">    <span class="keyword">except</span> Exception <span class="keyword">as</span> e:</span><br><span class="line">        print(e)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">peakAnnotion</span><span class="params">(csv_path,work_path)</span>:</span></span><br><span class="line">    bed_path=os.path.join(work_path,<span class="string">'outputPeak.bed'</span>)</span><br><span class="line">    df = pd.read_csv(csv_path).iloc[:,<span class="number">1</span>:<span class="number">11</span>]</span><br><span class="line">    </span><br><span class="line">    df.columns = [<span class="string">'Chromosome'</span>, <span class="string">'Start'</span>, <span class="string">'End'</span>,<span class="string">'width'</span>,<span class="string">'Strand'</span>,<span class="string">'C'</span>,<span class="string">'N'</span>,<span class="string">'P'</span>,<span class="string">'Fold'</span>,<span class="string">'pv'</span>]</span><br><span class="line">    df[[<span class="string">'Chromosome'</span>, <span class="string">'Start'</span>, <span class="string">'End'</span>,<span class="string">'Strand'</span>]].to_csv(bed_path,header=<span class="literal">None</span>,sep=<span class="string">'\t'</span>,index=<span class="number">0</span>)</span><br><span class="line">    </span><br><span class="line">    shell = <span class="string">f'<span class="subst">&#123;args.annotatePeaks&#125;</span>  <span class="subst">&#123;bed_path&#125;</span> hg38 &gt; <span class="subst">&#123;work_path&#125;</span>/outputPeakAnnotate.txt'</span></span><br><span class="line">    print(<span class="string">f'exectue shell <span class="subst">&#123;shell&#125;</span>'</span>)</span><br><span class="line">    status_code = runShell(shell,timeout = <span class="number">120</span>)</span><br><span class="line">    <span class="keyword">if</span> status_code==<span class="number">0</span>:</span><br><span class="line">        print(<span class="string">f'success annotate,export Peak Annotate file :<span class="subst">&#123;work_path&#125;</span>/outputPeakAnnotate.txt'</span>)</span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">       print(<span class="string">f"Exectue '<span class="subst">&#123;shell&#125;</span>' Failed"</span>) </span><br><span class="line">    gene = pd.read_table(<span class="string">f'<span class="subst">&#123;work_path&#125;</span>/outputPeakAnnotate.txt'</span>,sep=<span class="string">'\t'</span>)</span><br><span class="line">    ids_list = []</span><br><span class="line">    <span class="keyword">for</span> k <span class="keyword">in</span> gene.iloc[:,<span class="number">0</span>]:</span><br><span class="line">        <span class="keyword">if</span> len(str(k))&gt;<span class="number">1</span>:</span><br><span class="line">            ids_list.append(int(str(k)[<span class="number">2</span>:])<span class="number">-1</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            ids_list.append(<span class="number">0</span>)</span><br><span class="line">    gene[<span class="string">'ids'</span>] = ids_list</span><br><span class="line">    gene.sort_values(<span class="string">'ids'</span>).to_csv(<span class="string">f'<span class="subst">&#123;work_path&#125;</span>/peak_outputPeakAnnotate_sorted.csv'</span>)</span><br><span class="line">    </span><br><span class="line">    atac_gene = gene.sort_values(<span class="string">'ids'</span>)</span><br><span class="line">    atac_gene[<span class="string">'Fold'</span>]=df[<span class="string">'Fold'</span>]</span><br><span class="line"></span><br><span class="line">    output_gene_path = <span class="string">f'<span class="subst">&#123;work_path&#125;</span>/peak_outputPeakAnnotate_sorted_conact.csv'</span></span><br><span class="line">    atac_gene.to_csv(output_gene_path)</span><br><span class="line">    list_annotion = []</span><br><span class="line">    <span class="keyword">for</span> an <span class="keyword">in</span> atac_gene[<span class="string">'Annotation'</span>]:</span><br><span class="line">        list_annotion.append(str(an).split(<span class="string">' ('</span>)[<span class="number">0</span>])</span><br><span class="line">    dict=&#123;&#125;</span><br><span class="line">    <span class="keyword">for</span> key <span class="keyword">in</span> list_annotion:</span><br><span class="line">        dict[key]=dict.get(key,<span class="number">0</span>)+<span class="number">1</span></span><br><span class="line">    peakAnnotionPie(work_path,dict)</span><br><span class="line">    peakUpDownPieAndBar(work_path,output_gene_path)</span><br><span class="line">    <span class="keyword">return</span> output_gene_path</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">peakUpDownPieAndBar</span><span class="params">(work_path,data_path)</span>:</span></span><br><span class="line">    data = pd.read_csv(data_path)</span><br><span class="line">    fig = plt.figure()</span><br><span class="line">    x = np.arange(<span class="number">0</span>,math.pi*<span class="number">2</span>,<span class="number">0.05</span>)</span><br><span class="line">    up=data[data[<span class="string">'Fold'</span>]&gt;<span class="number">0</span>][<span class="string">'Fold'</span>]</span><br><span class="line">    down = data[data[<span class="string">'Fold'</span>]&lt;<span class="number">0</span>][<span class="string">'Fold'</span>]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">if</span> len(up) &gt; len(down):</span><br><span class="line">        up_bins = <span class="number">200</span></span><br><span class="line">        down_bins = int(<span class="number">2000</span>/len(up)*len(down))</span><br><span class="line">        exp = (<span class="number">0</span>,<span class="number">0.5</span>)</span><br><span class="line">        sits = <span class="number">221</span></span><br><span class="line">    <span class="keyword">else</span>:</span><br><span class="line">        down_bins = <span class="number">200</span></span><br><span class="line">        up_bins = int(<span class="number">2000</span>/len(down)*len(up))</span><br><span class="line">        ex = (<span class="number">0.5</span>,<span class="number">0</span>)</span><br><span class="line">        sits = <span class="number">222</span></span><br><span class="line">    ax1 = fig.add_subplot(<span class="number">111</span>)</span><br><span class="line">    ax1.hist(down,bins=down_bins,color=<span class="string">'orange'</span>)</span><br><span class="line">    ax1.hist(up,bins=up_bins,color=<span class="string">'red'</span>)</span><br><span class="line">    ax2 = fig.add_subplot(sits,facecolor=<span class="string">'r'</span>)</span><br><span class="line">    ax2.pie([len(up),len(down)],shadow=<span class="literal">True</span>,colors=[<span class="string">'orange'</span>,<span class="string">'red'</span>],explode=exp,labels=[<span class="string">'colsed'</span>,<span class="string">'open'</span>],autopct=<span class="string">'%1.1f%%'</span>)</span><br><span class="line">    ax2.set_title(<span class="string">f'Total:<span class="subst">&#123;len(data)&#125;</span>'</span>)</span><br><span class="line">    plt.savefig(<span class="string">f'<span class="subst">&#123;work_path&#125;</span>/percent_atac_pie.svg'</span>,dpi=<span class="number">300</span>)</span><br><span class="line">    print(<span class="string">'plot annotion pie_bar done!'</span>)</span><br><span class="line">    </span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">peakAnnotionPie</span><span class="params">(work_path,dict)</span>:</span></span><br><span class="line">    expodes = (<span class="number">0</span>,<span class="number">0</span>,<span class="number">0.1</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0</span>,<span class="number">0.1</span>)</span><br><span class="line">    colors = [<span class="string">'red'</span>,<span class="string">'orange'</span>,<span class="string">'yellow'</span>,<span class="string">'green'</span>,<span class="string">'purple'</span>,<span class="string">'blue'</span>,<span class="string">'black'</span>,<span class="string">'brown'</span>]</span><br><span class="line">    plt.pie(dict.values(),explode=expodes,labels=dict.keys(),shadow=<span class="literal">True</span>,colors=colors,autopct=<span class="string">'%1.1f%%'</span>)</span><br><span class="line">    <span class="comment">## 用于显示为一个长宽相等的饼图</span></span><br><span class="line">    plt.axis(<span class="string">'equal'</span>)</span><br><span class="line">    <span class="comment">#保存并显示</span></span><br><span class="line">    plt.savefig(<span class="string">f'<span class="subst">&#123;work_path&#125;</span>/pie_annotion.svg'</span>,dpi=<span class="number">300</span>)</span><br><span class="line">    print(<span class="string">'plot annotion pie done!'</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    root_path = os.getcwd()</span><br><span class="line">    </span><br><span class="line">    args = shellAccept()</span><br><span class="line">    work_path = args.output</span><br><span class="line">    csv_path = args.csv</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> os.path.exists(work_path):</span><br><span class="line">        os.makedirs(work_path)</span><br><span class="line">    output_gene_path = peakAnnotion(csv_path,work_path)</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> subprocess</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">pyShell</span><span class="params">()</span>:</span></span><br><span class="line">    <span class="function"><span class="keyword">def</span> <span class="title">__init__</span><span class="params">(self)</span> -&gt; <span class="keyword">None</span>:</span></span><br><span class="line">        <span class="keyword">pass</span></span><br><span class="line">    <span class="string">'''</span></span><br><span class="line"><span class="string">    return 0 : Success , else: Fail</span></span><br><span class="line"><span class="string">    '''</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">runShell</span><span class="params">(command,timeout=<span class="number">5</span>)</span>:</span></span><br><span class="line">    ret = subprocess.run(command,shell=<span class="literal">True</span>,stdout=subprocess.PIPE,stderr=subprocess.PIPE,encoding=<span class="string">"utf-8"</span>,timeout=timeout)</span><br><span class="line">    <span class="keyword">return</span> ret.returncode</span><br></pre></td></tr></table></figure>
+
+<h4 id="Motif"><a href="#Motif" class="headerlink" title="Motif"></a>Motif</h4><p>peak注释虽然提供了功能解释，但并没有直接解释底层机制。开放的染色质可以通过转录因子影响转录，转录因子通过识别和结合 DNA 上的特定序列(<em>TFBS:TF 结合位点</em>)来促进转录。而事实上转录因子通过与组蛋白或非组蛋白的竞争以及与辅因子的合作来调节转录。</p>
+<p>有两种类型的基序或基于 TF 的分析方法(<strong>研究TF调控</strong>)：</p>
+<ul>
+<li>基序频率或活动的基于序列的预测</li>
+<li>TF 占用的足迹。</li>
+</ul>
+<p>JASPAR是现在用的最多的一个motif 数据库，事实上存的就是一些转录因子对应的位置权重矩阵（PWM），其中有的是实验的结果，还有的是计算预测出来的。</p>
+<p>工具：</p>
+<ul>
+<li>TFBSTools</li>
+<li><strong>HOMER</strong></li>
+<li>MEME FIMO</li>
+</ul>
+<p>原理都是一样的，基于PWM矩阵，然后在序列里面扫描搜索。</p>
+<blockquote>
+<p>一直有一个疑问，对于motif扫描的时候，我们是应该用差异的区域，还是全部的区域？。差异的区域中全部的还是仅上调的区域？</p>
+</blockquote>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/usr/local/share/bio/homer/bin/findMotifsGenome.pl out.bed hg38 first -len 6,8,10,12,14</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>对于hommer,其result 有两个，一部分是能够和已有数据库中，匹配到的，另外一部分是基于序列预测出来了的，可能没有任何的生物学意义。</p>
+</blockquote>
+<p>对于HINT 也发现能够做motif 富集。</p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">rgt-motifanalysis --enrichment --organism mm9 --input-matrix Matrix_CDP_cDC.txt match/random_regions.bed</span><br></pre></td></tr></table></figure>
+
+<h4 id="TF-Footprints"><a href="#TF-Footprints" class="headerlink" title="TF Footprints"></a>TF Footprints</h4><p> 除了motif，TF Footprints是另外一种研究转录因子调控的方法。原理是TF 与 DNA 结合会阻止结合位点内的 Tn5 切割，就会形成一个深渊低谷一样的峰值分布。</p>
+<p>对于检测方法，目前都是基于Boyle 提出的变种隐马尔可夫模型HMM，即在每个碱基使用归一化和平滑的片段计数来检测不同的状态，例如足迹、侧翼和背景。其中目前用的比较多的是针对ATAC数据的HINT-ATAC。</p>
+<p>最近的 HINT-ATAC 也使用 HMM，但只有 HINT-ATAC 校正了链特异性 Tn5 切割偏差.</p>
+<p><a href="https://reg-gen.readthedocs.io/en/latest/hint/introduction.html" target="_blank" rel="noopener">Hint install introduction</a></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> need bam and bed file <span class="keyword">for</span> input </span></span><br><span class="line"><span class="meta">#</span><span class="bash"><span class="comment"># rep twice</span></span></span><br><span class="line">rgt-hint footprinting --atac-seq --paired-end --output-prefix=fp_paired ATAC.bam ATACPeaks.bed</span><br><span class="line">gt-motifanalysis matching --organism=hg38 --input-files IMN.bed IMP.bed  --output-location motif</span><br><span class="line">rgt-hint differential --organism=hg38 --bc --nc 16 --mpbs-files=motif/IMN_mpbs.bed,motif/IMP_mpbs.bed --reads-files=IMN.bam,IMP.bam --conditions=IMN,IMP --output-location=tfprinting</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>@todo 针对单组数据，对于重复数据，两组，还代解决code。</p>
+</blockquote>
+<h2 id="RNA-seq-联合分析"><a href="#RNA-seq-联合分析" class="headerlink" title="RNA-seq 联合分析"></a>RNA-seq 联合分析</h2><p>通过 RNA-seq 定性或定量地将染色质可及性的变化与感兴趣的基因表达的变化联系起来，直观地，我们可以发现 DE 基因是否在相应的 TSS 周围也具有显着差异的染色质可及性，可以推断 DE 基因受与开放染色质中特定基序或足迹相关的 TF 调节.</p>
+<h3 id="案例："><a href="#案例：" class="headerlink" title="案例："></a><strong>案例：</strong></h3><h4 id="1-PECA：转录因子TF，染色质调控因子CR和调控元件RE相互作用网络推断的新方法（Cell-Stem-Cell-2019-）"><a href="#1-PECA：转录因子TF，染色质调控因子CR和调控元件RE相互作用网络推断的新方法（Cell-Stem-Cell-2019-）" class="headerlink" title="1. PECA：转录因子TF，染色质调控因子CR和调控元件RE相互作用网络推断的新方法（Cell Stem Cell  2019 ）"></a><strong>1. PECA：转录因子TF，染色质调控因子CR和调控元件RE相互作用网络推断的新方法</strong>（<em>Cell Stem Cell</em>  2019 ）</h4><p><img src="https://web.wvdon.com/peca.png" alt="image-20221222165742726"></p>
+<center>Fig: Schematic overview of the method for constructing TF-chromatin transcriptional regulatory network</center>
+
+<p><strong>可以使用 PECA<sup>[7]</sup> 方法重建调控网络。</strong>中科院王勇教授团队，利用匹配的基因表达和染色质可及性数据刻画转录因子和调控元件结合调控下游基因表达的数学模型，构建了描绘细胞状态转化的染色质调控网络，通过网络分析鉴定出TFAP2C和p63分别为表面外胚层起始和角质形成细胞成熟的关键因子.</p>
+<p><a href="https://github.com/SUwonglab/PECA" target="_blank" rel="noopener">PECA Github</a></p>
+<h4 id="2-鸡胚的体节分化过程，挖掘关键的TF和Enhancer（nature-communications-2021）"><a href="#2-鸡胚的体节分化过程，挖掘关键的TF和Enhancer（nature-communications-2021）" class="headerlink" title="2. 鸡胚的体节分化过程，挖掘关键的TF和Enhancer（nature communications 2021）"></a>2. 鸡胚的体节分化过程，挖掘关键的TF和Enhancer（nature communications 2021）</h4><p><img src="https://web.wvdon.com/image/PSM.png" alt></p>
+<h4 id="3-揭示酒精诱导的抗焦虑过程中的表观基因组学和转录组学相互作用（Molecular-P-s-ychiatry-2022）"><a href="#3-揭示酒精诱导的抗焦虑过程中的表观基因组学和转录组学相互作用（Molecular-P-s-ychiatry-2022）" class="headerlink" title="3. 揭示酒精诱导的抗焦虑过程中的表观基因组学和转录组学相互作用（Molecular P s ychiatry 2022）"></a>3. 揭示酒精诱导的抗焦虑过程中的表观基因组学和转录组学相互作用（Molecular P s ychiatry 2022）</h4><p><img src="https://web.wvdon.com/image/89241671709615_.pic.jpg" alt></p>
+<center>Fig.n This model depicts the ability of acute ethanol to rapidly alter the epigenome in the amygdala and produce transcriptomic change</center>
+
+<p><strong>featureCounts</strong></p>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">featureCounts -T 16 -p -t exon -g gene_id -a /home/wvdon/atac/gene/Homo_sapiens.GRCh38.106.gtf -o all_new_feature.txt \</span><br><span class="line">/media/wvdon/MY-datas/Release_Datas_20210429/mRNA/bams/B87.sorted.bam</span><br></pre></td></tr></table></figure>
+
+<p>RNA-seq 数据分析（差异基因，火山图，热图，富集分析）</p>
+<figure class="highlight r"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br></pre></td><td class="code"><pre><span class="line">base &lt;- read.table(<span class="string">"/media/wvdon/sdata/atac-seq/before/all_new_feature.txt"</span>,row.names = <span class="number">1</span> ,header=<span class="literal">T</span>,sep = <span class="string">'\t'</span>)</span><br><span class="line">basedata=base[<span class="number">6</span>:ncol(base)]</span><br><span class="line">group_list &lt;- factor(c(rep(<span class="string">"IM"</span>,<span class="number">8</span>), rep(<span class="string">"NC"</span>,<span class="number">8</span>)))</span><br><span class="line">table(group_list)</span><br><span class="line">colData &lt;- data.frame(row.names=colnames(basedata),group_list=group_list)</span><br><span class="line">head(basedata)</span><br><span class="line">colnames(colData)</span><br><span class="line">ncol(basedata)</span><br><span class="line">nrow(colData)</span><br><span class="line"><span class="keyword">library</span>(DESeq2)</span><br><span class="line">dds &lt;- DESeqDataSetFromMatrix(countData = basedata,colData = colData,</span><br><span class="line">                              design = ~ group_list)</span><br><span class="line">dds_2 &lt;- DESeq(dds)</span><br><span class="line">resultsNames(dds_2)</span><br><span class="line">res &lt;- results(dds_2)</span><br><span class="line">diff_gene_deseq2 &lt;-subset(res, padj &lt; <span class="number">0.05</span> )</span><br><span class="line"></span><br><span class="line">up_DEG &lt;- subset(res, padj &lt; <span class="number">0.05</span> &amp; log2FoldChange &gt; <span class="number">1</span>)</span><br><span class="line">down_DEG &lt;- subset(res, padj &lt; <span class="number">0.05</span> &amp; log2FoldChange &lt; -<span class="number">1</span>)</span><br><span class="line">dim(up_DEG)</span><br><span class="line">dim(down_DEG)</span><br><span class="line"></span><br><span class="line"><span class="comment">#BiocManager::install("biomaRt")</span></span><br><span class="line"><span class="keyword">library</span>(biomaRt)</span><br><span class="line">human &lt;- useMart(<span class="string">'ensembl'</span>,dataset = <span class="string">"hsapiens_gene_ensembl"</span>)</span><br><span class="line">gene_id = row.names(diff_gene_deseq2)</span><br><span class="line">gene_name&lt;-getBM(attributes=c(<span class="string">"ensembl_gene_id"</span>,<span class="string">"external_gene_name"</span>),filters = <span class="string">"ensembl_gene_id"</span>,values =gene_id , mart = human)</span><br><span class="line"></span><br><span class="line"><span class="comment"># RNA-seq,火山图, heatmap</span></span><br><span class="line"><span class="keyword">library</span>(ggplot2)</span><br><span class="line"><span class="keyword">library</span>(ggrepel)  <span class="comment">#用于标记的包</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">library</span>(pheatmap)</span><br><span class="line">row.names(assay(dds_2))</span><br><span class="line">head(assay(dds_2))</span><br><span class="line">rownames(gene_name)=gene_name$ensembl_gene_id</span><br><span class="line">final_rna =merge(gene_name,assay(dds_2), by = <span class="string">"row.names"</span>,all=<span class="literal">F</span>)</span><br><span class="line">dim(assay(dds_2)) <span class="comment"># =103 </span></span><br><span class="line"></span><br><span class="line">head(final_rna)</span><br><span class="line">heat_map_data=final_rna[<span class="number">4</span>:ncol(final_rna)]</span><br><span class="line">dim(heat_map_data)</span><br><span class="line"></span><br><span class="line">Groups=c(rep(<span class="string">"IM"</span>,<span class="number">8</span>),rep(<span class="string">"NC"</span>,<span class="number">8</span>))</span><br><span class="line">annotation_c&lt;-data.frame(Groups)</span><br><span class="line">annotation_c&lt;-data.frame(Groups)</span><br><span class="line">rownames(annotation_c)&lt;-colnames(heat_map_data)</span><br><span class="line">data&lt;-log2(heat_map_data+<span class="number">1</span>)</span><br><span class="line">colnames(data)</span><br><span class="line"><span class="comment">#rownames(data)=final_rna$external_gene_name</span></span><br><span class="line">ac = c(<span class="string">"37AC73"</span>,<span class="string">"30A72"</span>,<span class="string">"33A37"</span>,<span class="string">"46A94"</span>,<span class="string">"47A84"</span>,<span class="string">"49AC90"</span>,<span class="string">"13A87"</span>,<span class="string">"54A80"</span>,</span><br><span class="line"><span class="string">"37C74"</span>,<span class="string">"30C78"</span>,<span class="string">"33C82"</span>,<span class="string">"46C81"</span>,<span class="string">"47C79"</span>,<span class="string">"49C93"</span>,<span class="string">"13C64"</span>,<span class="string">"54C62"</span>)</span><br><span class="line">p&lt;-pheatmap(data, cluster_rows = <span class="literal">T</span>,      <span class="comment">#行聚类，列不聚类</span></span><br><span class="line">            cluster_cols = <span class="literal">F</span>,</span><br><span class="line">            show_rownames = <span class="literal">F</span>,       <span class="comment">#不显示行名</span></span><br><span class="line">            </span><br><span class="line">            show_colnames = <span class="literal">T</span>,      <span class="comment">#显示列明 angle_row="15"，行名旋转15度，列明相似</span></span><br><span class="line">            </span><br><span class="line">            annotation_col = annotation_c,  <span class="comment">#对列进行注释即对列进行分组</span></span><br><span class="line">            <span class="comment">#na_col = "white",</span></span><br><span class="line">            scale = <span class="string">"row"</span>,   <span class="comment">#将数据按行进行标准化</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment">#设置格子大小 cellheigt=""设置格子高</span></span><br><span class="line">            </span><br><span class="line">            <span class="comment">#设置格子高</span></span><br><span class="line">            labels_col= ac,</span><br><span class="line">            angle_col = <span class="number">30</span>,</span><br><span class="line">            border=<span class="literal">F</span></span><br><span class="line">            ,color = colorRampPalette(colors= c(<span class="string">"blue"</span>,<span class="string">"white"</span>,<span class="string">"red"</span>))(<span class="number">10</span>) </span><br><span class="line">            <span class="comment">#,color = colorRampPalette(c("#FFFF00","#FF0000"))(100)</span></span><br><span class="line">)  </span><br><span class="line">p</span><br><span class="line">ggsave(file=<span class="string">"/media/wvdon/sdata/atac-seq/before/heatmap_rna.svg"</span>, plot=p, width=<span class="number">8</span>, height=<span class="number">8</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># 火山图</span></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">final_rna_vo =merge(gene_name,DataFrame(diff_gene_deseq2), by = <span class="string">"row.names"</span>,all=<span class="literal">F</span>)</span><br><span class="line">write.csv(final_rna_vo,<span class="string">'/media/wvdon/sdata/atac-seq/before/vo.csv'</span>)</span><br><span class="line"></span><br><span class="line">data&lt;-read.csv(<span class="string">'/media/wvdon/sdata/atac-seq/before/vo.csv'</span>)</span><br><span class="line">data$log2FoldChange=-data$log2FoldChange</span><br><span class="line">cut_off_pvalue=<span class="number">0.05</span></span><br><span class="line">data$external_gene_name</span><br><span class="line">PvalueLimit = <span class="number">5</span></span><br><span class="line">data$label=ifelse(-log10(data$pvalue) &gt; PvalueLimit , as.character(data$external_gene_name), <span class="string">''</span>)</span><br><span class="line">data$group&lt;-as.factor(ifelse(data$pvalue &lt;= <span class="number">0.05</span> &amp; abs(data$log2FoldChange) &gt;=<span class="number">0</span>,</span><br><span class="line">                             ifelse(data$log2FoldChange&lt;=<span class="number">0</span>  ,<span class="string">'down'</span>,<span class="string">'up'</span>),<span class="string">'NS'</span>))</span><br><span class="line"></span><br><span class="line">this_tile &lt;- paste0(<span class="string">'Cutoff for logFC is abs 1.0 and pvalue is 0.05'</span>,</span><br><span class="line">                    <span class="string">'\nThe number of up gene is 59'</span>,</span><br><span class="line">                    <span class="string">'\nThe number of down gene is 43'</span>)                 </span><br><span class="line"></span><br><span class="line">p &lt;- ggplot(</span><br><span class="line">  <span class="comment">#设置数据</span></span><br><span class="line">  data, </span><br><span class="line">  aes(x = log2FoldChange, </span><br><span class="line">      y = -log10(pvalue), </span><br><span class="line">      colour=group)) +</span><br><span class="line">  geom_point(alpha=<span class="number">0.4</span>, size=<span class="number">3.5</span>) +</span><br><span class="line">  ggtitle( this_tile ) +</span><br><span class="line">  <span class="comment">#scale_fill_manual(values=c("#d2dae2","#546de5"))+</span></span><br><span class="line">  </span><br><span class="line">  <span class="comment"># 辅助线</span></span><br><span class="line">  geom_vline(xintercept=c(-<span class="number">1</span>,<span class="number">1</span>),lty=<span class="number">4</span>,col=<span class="string">"black"</span>,lwd=<span class="number">0.8</span>) +</span><br><span class="line">  geom_hline(yintercept = -log10(cut_off_pvalue),lty=<span class="number">4</span>,col=<span class="string">"black"</span>,lwd=<span class="number">0.8</span>) +</span><br><span class="line">  </span><br><span class="line">  <span class="comment"># 坐标轴</span></span><br><span class="line">  labs(x=<span class="string">"log2(fold change)"</span>,</span><br><span class="line">       y=<span class="string">"-log10 (p-value)"</span>)+scale_color_manual(values = c( <span class="string">'green'</span>,<span class="string">'red'</span>))+</span><br><span class="line">  theme_bw()+ </span><br><span class="line">  </span><br><span class="line">  <span class="comment">#theme(plot.title = element_text(vjust = -30,size=12), </span></span><br><span class="line">  <span class="comment">#      legend.position="right", </span></span><br><span class="line">  <span class="comment">#      legend.title = element_blank(),</span></span><br><span class="line">  <span class="comment">#)+</span></span><br><span class="line">  geom_text_repel(aes(x = log2FoldChange,                   <span class="comment"># geom_text_repel 标记函数</span></span><br><span class="line">                      y = -<span class="number">1</span>*log10(pvalue),          </span><br><span class="line">                      label=label),                       </span><br><span class="line">                  max.overlaps = <span class="number">10000</span>,                    <span class="comment"># 最大覆盖率，当点很多时，有些标记会被覆盖，调大该值则不被覆盖，反之。</span></span><br><span class="line">                  size=<span class="number">5</span>,                                  <span class="comment"># 字体大小</span></span><br><span class="line">                  box.padding=unit(<span class="number">0.5</span>,<span class="string">'lines'</span>),           <span class="comment"># 标记的边距</span></span><br><span class="line">                  point.padding=unit(<span class="number">0.1</span>, <span class="string">'lines'</span>), </span><br><span class="line">                  segment.color=<span class="string">'black'</span>,      </span><br><span class="line">                  show.legend=<span class="literal">FALSE</span>)   </span><br><span class="line"></span><br><span class="line"><span class="comment"># 图例</span></span><br><span class="line"><span class="comment">#p+ggtitle(this_tile)</span></span><br><span class="line">p</span><br><span class="line">ggsave(file=<span class="string">"/media/wvdon/sdata/atac-seq/before/vo_rna.svg"</span>, plot=p, width=<span class="number">8</span>, height=<span class="number">8</span>)</span><br><span class="line">write.csv(data,<span class="string">'/media/wvdon/sdata/atac-seq/before/p005_filter_rna_before.csv'</span>)</span><br><span class="line"></span><br><span class="line">human &lt;- useMart(<span class="string">'ensembl'</span>,dataset = <span class="string">"hsapiens_gene_ensembl"</span>)</span><br><span class="line">gene_id = row.names(res)</span><br><span class="line">gene_name&lt;-getBM(attributes=c(<span class="string">"ensembl_gene_id"</span>,<span class="string">"external_gene_name"</span>),filters = <span class="string">"ensembl_gene_id"</span>,values =gene_id , mart = human)</span><br><span class="line"></span><br><span class="line">res$log2FoldChange=-res$log2FoldChange</span><br><span class="line">rownames(gene_name)=gene_name$ensembl_gene_id</span><br><span class="line">all_before_rna = merge(gene_name,DataFrame(res), by = <span class="string">"row.names"</span>,all=<span class="literal">F</span>)</span><br><span class="line"></span><br><span class="line">write.csv(all_before_rna,<span class="string">'/media/wvdon/sdata/atac-seq/before/all_before_rna.csv'</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><img src="https://web.wvdon.com/image/conact.png" alt></p>
+<center>Fig. The Summary of ATAC & RNA-seq</center>
+
+<h2 id="参考"><a href="#参考" class="headerlink" title="参考"></a>参考</h2><ol>
+<li>Yan, Feng, et al. “From reads to insight: a hitchhiker’s guide to ATAC-seq data analysis.” <em>Genome biology</em> 21.1 (2020): 1-16.</li>
+<li>Krishnan, H. R. <em>et al.</em> Unraveling the epigenomic and transcriptomic interplay during alcohol-induced anxiolysis. <em>Mol. Psychiatry</em> (2022) doi:10.1038/s41380-022-01732-2.</li>
+<li>Mok, G. F. <em>et al.</em> Characterising open chromatin in chick embryos identifies cis-regulatory elements important for paraxial mesoderm formation and axis extension. <em>Nat. Commun.</em> <strong>12</strong>, 1157 (2021).</li>
+<li>RS ∗, GB †. DiffBind: Differential binding analysis of ChIP- Seq peak data. </li>
+<li>Li, Z., Schulz, M. H., Look, T., Begemann, M., Zenke, M., &amp; Costa, I. G. (2019). <a href="https://genomebiology.biomedcentral.com/articles/10.1186/s13059-019-1642-2" target="_blank" rel="noopener">Identification of transcription factor binding sites using ATAC-seq</a>. Genome Biology, 20(1), 45.</li>
+<li>Duren Z, Chen X, Xin J, et al. Time course regulatory analysis based on paired expression and chromatin accessibility data[J]. Genome research, 2020, 30(4): 622-634.</li>
+<li>Li, Lingjie, et al. “TFAP2C-and p63-dependent networks sequentially rearrange chromatin landscapes to drive human epidermal lineage commitment.” <em>Cell Stem Cell</em> 24.2 (2019): 271-284</li>
+<li>Quinlan, AR, Hall IM. BEDTools: a flexible suite of utilities for comparing genomic features. Bioinformatics 2010;26:841-842</li>
+<li>“肠化”到底是怎么回事？什么情况下会癌变？<a href="https://view.inews.qq.com/a/20210205A0CTTC00" target="_blank" rel="noopener">https://view.inews.qq.com/a/20210205A0CTTC00</a></li>
+</ol>
+<h2 id="Software-Version"><a href="#Software-Version" class="headerlink" title="Software Version"></a>Software Version</h2><table>
+<thead>
+<tr>
+<th>macs2 ==2.2.4</th>
+<th></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>bwa ==0.7.17</td>
+<td></td>
+</tr>
+<tr>
+<td>bowtie2 ==2.3.4.3</td>
+<td></td>
+</tr>
+<tr>
+<td>pipeline (v2.1.3)</td>
+<td></td>
+</tr>
+<tr>
+<td>Homer</td>
+<td></td>
+</tr>
+<tr>
+<td>HINT-ATAC</td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+<tr>
+<td></td>
+<td></td>
+</tr>
+</tbody></table>
+<p>所有的代码都被上传到GitHub，<a href="https://github.com/wvdon/BIO_ATAC" target="_blank" rel="noopener">https://github.com/wvdon/BIO_ATAC</a></p>
+<blockquote>
+<p>目前是个人私人仓库，后续会开放。</p>
+</blockquote>
+
+    </div>
+
+    
+    
+    
+        
+      
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>Weidong Wu</li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="http://wvdon.com/2022/12/19/paper/atac_bio/" title="生信数据挖掘：ATAC-seq,RNA-seq">http://wvdon.com/2022/12/19/paper/atac_bio/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.</li>
+</ul>
+</div>
+
+      
+		<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+</div>
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/bio/" rel="tag"># bio</a>
+            
+              <a href="/tags/atac/" rel="tag"># atac</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2022/08/19/mac/" rel="next" title="打造可以提升科研效率的工具">
+                  <i class="fa fa-chevron-left"></i> 打造可以提升科研效率的工具
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2023/02/08/machineLearning/diffusion/" rel="prev" title="Diffusion Models For Life Science">
+                  Diffusion Models For Life Science <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="comments"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc" data-target="post-toc-wrap">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#ATAC-seq"><span class="nav-text">ATAC-seq</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#背景"><span class="nav-text">背景</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#染色质开放性-Chromatin-Accessibility"><span class="nav-text">染色质开放性 Chromatin Accessibility</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#原理"><span class="nav-text">原理</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#研究内容"><span class="nav-text">研究内容</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#实验设计："><span class="nav-text">实验设计：</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#分析"><span class="nav-text">分析</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#标准"><span class="nav-text">标准</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#差异Peak分析"><span class="nav-text">差异Peak分析</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Peak-注释"><span class="nav-text">Peak 注释</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Motif"><span class="nav-text">Motif</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#TF-Footprints"><span class="nav-text">TF Footprints</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#RNA-seq-联合分析"><span class="nav-text">RNA-seq 联合分析</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#案例："><span class="nav-text">案例：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#1-PECA：转录因子TF，染色质调控因子CR和调控元件RE相互作用网络推断的新方法（Cell-Stem-Cell-2019-）"><span class="nav-text">1. PECA：转录因子TF，染色质调控因子CR和调控元件RE相互作用网络推断的新方法（Cell Stem Cell  2019 ）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#2-鸡胚的体节分化过程，挖掘关键的TF和Enhancer（nature-communications-2021）"><span class="nav-text">2. 鸡胚的体节分化过程，挖掘关键的TF和Enhancer（nature communications 2021）</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#3-揭示酒精诱导的抗焦虑过程中的表观基因组学和转录组学相互作用（Molecular-P-s-ychiatry-2022）"><span class="nav-text">3. 揭示酒精诱导的抗焦虑过程中的表观基因组学和转录组学相互作用（Molecular P s ychiatry 2022）</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#总结"><span class="nav-text">总结</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#参考"><span class="nav-text">参考</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#Software-Version"><span class="nav-text">Software Version</span></a></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/uploads/avatar.gif"
+      alt="Weidong Wu">
+  <p class="site-author-name" itemprop="name">Weidong Wu</p>
+  <div class="site-description" itemprop="description">a student who pay attention on Artificial Intelligence for Life Sciences (AILS)</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">categories</span>
+        
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">28</span>
+        <span class="site-state-item-name">tags</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/wvdon" title="GitHub &rarr; https://github.com/wvdon" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:weidongwu404@gmail.com" title="E-Mail &rarr; mailto:weidongwu404@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://ai.facebook.com/" title="https://ai.facebook.com/" rel="noopener" target="_blank">Facebook AI</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://space.bilibili.com/1567748478/?spm_id_from=333.999.0.0" title="https://space.bilibili.com/1567748478/?spm_id_from=333.999.0.0" rel="noopener" target="_blank">LiMu Bil</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://zh.d2l.ai/chapter_preface/index.html" title="https://zh.d2l.ai/chapter_preface/index.html" rel="noopener" target="_blank">Dive Into DL</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://mit6874.github.io/" title="https://mit6874.github.io/" rel="noopener" target="_blank">DP for life science mit</a>
+        </li>
+      
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2023</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Powered By Weidong Wu</span>
+</div>
+  <div class="powered-by"><a href='https://beian.miit.gov.cn'>豫ICP备18006395号-1</a></div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info"></div>
+<span id="busuanzi_container_site_uv">
+  本站访问次数：<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+</span>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="Total Visitors">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="Total Views">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.3.0"></script><script src="/js/motion.js?v=7.3.0"></script>
+<script src="/js/schemes/muse.js?v=7.3.0"></script>
+
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+    
+      
+<script type="text/x-mathjax-config">
+
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$', '$'], ['\\(', '\\)'] ],
+      processEscapes: true,
+      skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+      equationNumbers: {
+        autoNumber: 'AMS'
+      }
+    }
+  });
+
+  MathJax.Hub.Register.StartupHook('TeX Jax Ready', function() {
+    MathJax.InputJax.TeX.prefilterHooks.Add(function(data) {
+      if (data.display) {
+        var next = data.script.nextSibling;
+        while (next && next.nodeName.toLowerCase() === '#text') {
+          next = next.nextSibling;
+        }
+        if (next && next.nodeName.toLowerCase() === 'br') {
+          next.parentNode.removeChild(next);
+        }
+      }
+    });
+  });
+
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for (i = 0; i < all.length; i += 1) {
+      element = document.getElementById(all[i].inputID + '-Frame').parentNode;
+      if (element.nodeName.toLowerCase() == 'li') {
+        element = element.parentNode;
+      }
+      element.classList.add('has-jax');
+    }
+  });
+</script>
+<script>
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/mathjax@2/MathJax.js?config=TeX-AMS-MML_HTMLorMML', () => {
+    MathJax.Hub.Typeset();
+  }, window.MathJax);
+</script>
+
+    
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: true,
+    notify: true,
+    appId: 'KQU7yEE1PiNFHAyF8jwKYTkM-gzGzoHsz',
+    appKey: 'NmcJxL2vR7P6ipHDQtHJPpM6',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname
+  });
+}, window.Valine);
+</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+</body>
+</html>

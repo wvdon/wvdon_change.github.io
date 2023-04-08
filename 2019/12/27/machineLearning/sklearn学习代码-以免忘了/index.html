@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+
+
+
+
+
+<html lang="en">
+<head>
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=2">
+<meta name="theme-color" content="#222">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico?v=7.3.0">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon.ico?v=7.3.0">
+  <link rel="mask-icon" href="/images/logo.svg?v=7.3.0" color="#222">
+
+<link rel="stylesheet" href="/css/main.css?v=7.3.0">
+
+
+<link rel="stylesheet" href="/lib/font-awesome/css/font-awesome.min.css?v=4.7.0">
+
+
+<script id="hexo-configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    version: '7.3.0',
+    exturl: false,
+    sidebar: {"position":"left","display":"post","offset":12,"onmobile":false},
+    copycode: {"enable":true,"show_result":false,"style":null},
+    back2top: {"enable":true,"sidebar":false,"scrollpercent":false},
+    bookmark: {"enable":false,"color":"#222","save":"auto"},
+    fancybox: false,
+    mediumzoom: false,
+    lazyload: false,
+    pangu: false,
+    algolia: {
+      appID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    },
+    localsearch: {"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},
+    path: '',
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    translation: {
+      copy_button: 'Copy',
+      copy_success: 'Copied',
+      copy_failure: 'Copy failed'
+    }
+  };
+</script>
+
+  <meta name="description" content="Scikit-learn is an open source machine learning library that supports supervised and unsupervised learning. It also provides various tools for model fitting, data preprocessing, model selection, model">
+<meta name="keywords" content="sklearn">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Sklearn-记录">
+<meta property="og:url" content="http://wvdon.com/2019/12/27/machineLearning/sklearn学习代码-以免忘了/index.html">
+<meta property="og:site_name" content="AILS">
+<meta property="og:description" content="Scikit-learn is an open source machine learning library that supports supervised and unsupervised learning. It also provides various tools for model fitting, data preprocessing, model selection, model">
+<meta property="og:locale" content="en">
+<meta property="og:image" content="https://scikit-learn.org/stable/_images/grid_search_workflow.png">
+<meta property="og:updated_time" content="2023-04-08T07:47:32.627Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Sklearn-记录">
+<meta name="twitter:description" content="Scikit-learn is an open source machine learning library that supports supervised and unsupervised learning. It also provides various tools for model fitting, data preprocessing, model selection, model">
+<meta name="twitter:image" content="https://scikit-learn.org/stable/_images/grid_search_workflow.png">
+  <link rel="alternate" href="/atom.xml" title="AILS" type="application/atom+xml">
+  <link rel="canonical" href="http://wvdon.com/2019/12/27/machineLearning/sklearn学习代码-以免忘了/">
+
+
+<script id="page-configurations">
+  // https://hexo.io/docs/variables.html
+  CONFIG.page = {
+    sidebar: "",
+    isHome: false,
+    isPost: true,
+    isPage: false,
+    isArchive: false
+  };
+</script>
+
+  <title>Sklearn-记录 | AILS</title>
+  <meta name="generator" content="Hexo 3.9.0">
+  
+
+
+
+
+
+
+
+
+  <noscript>
+  <style>
+  .use-motion .brand,
+  .use-motion .menu-item,
+  .sidebar-inner,
+  .use-motion .post-block,
+  .use-motion .pagination,
+  .use-motion .comments,
+  .use-motion .post-header,
+  .use-motion .post-body,
+  .use-motion .collection-header { opacity: initial; }
+
+  .use-motion .logo,
+  .use-motion .site-title,
+  .use-motion .site-subtitle {
+    opacity: initial;
+    top: initial;
+  }
+
+  .use-motion .logo-line-before i { left: initial; }
+  .use-motion .logo-line-after i { right: initial; }
+  </style>
+</noscript><!-- hexo-inject:begin --><!-- hexo-inject:end -->
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="en">
+  <!-- hexo-inject:begin --><!-- hexo-inject:end --><div class="container use-motion">
+    <div class="headband"></div>
+	 <a href="https://github.com/wvdon" class="github-corner" aria-label="View source on GitHub"><svg width="80" height="80" viewBox="0 0 250 250" style="fill:#151513; color:#fff; position: absolute; top: 0; border: 0; right: 0;" aria-hidden="true"><path d="M0,0 L115,115 L130,115 L142,142 L250,250 L250,0 Z"></path><path d="M128.3,109.0 C113.8,99.7 119.0,89.6 119.0,89.6 C122.0,82.7 120.5,78.6 120.5,78.6 C119.2,72.0 123.4,76.3 123.4,76.3 C127.3,80.9 125.5,87.3 125.5,87.3 C122.9,97.6 130.6,101.9 134.4,103.2" fill="currentColor" style="transform-origin: 130px 106px;" class="octo-arm"></path><path d="M115.0,115.0 C114.9,115.1 118.7,116.5 119.8,115.4 L133.7,101.6 C136.9,99.2 139.9,98.4 142.2,98.6 C133.8,88.0 127.5,74.4 143.8,58.0 C148.5,53.4 154.0,51.2 159.7,51.0 C160.3,49.4 163.2,43.6 171.4,40.1 C171.4,40.1 176.1,42.5 178.8,56.2 C183.1,58.6 187.2,61.8 190.9,65.4 C194.5,69.0 197.7,73.2 200.1,77.6 C213.8,80.2 216.3,84.9 216.3,84.9 C212.7,93.1 206.9,96.0 205.4,96.6 C205.1,102.4 203.0,107.8 198.3,112.5 C181.9,128.9 168.3,122.5 157.7,114.1 C157.9,116.9 156.7,120.9 152.7,124.9 L141.0,136.5 C139.8,137.7 141.6,141.9 141.8,141.8 Z" fill="currentColor" class="octo-body"></path></svg></a><style>.github-corner:hover .octo-arm{animation:octocat-wave 560ms ease-in-out}@keyframes octocat-wave{0%,100%{transform:rotate(0)}20%,60%{transform:rotate(-25deg)}40%,80%{transform:rotate(10deg)}}@media (max-width:500px){.github-corner:hover .octo-arm{animation:none}.github-corner .octo-arm{animation:octocat-wave 560ms ease-in-out}}</style>
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-meta">
+
+    <div>
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">AILS</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+        <p class="site-subtitle">Focus on Artificial Intelligence for Life Sciences (AILS)</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button aria-label="Toggle navigation bar">
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+
+<nav class="site-nav">
+  
+  <ul id="menu" class="menu">
+      
+      
+      
+        
+        <li class="menu-item menu-item-home">
+      
+    
+
+    <a href="/" rel="section"><i class="menu-item-icon fa fa-fw fa-home"></i> <br>Home</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-machinelearnig">
+      
+    
+
+    <a href="/machineLearning" rel="section"><i class="menu-item-icon fa fa-fw fa-th"></i> <br>machineLearnig</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tools">
+      
+    
+
+    <a href="/tools" rel="section"><i class="menu-item-icon fa fa-fw fa-wrench"></i> <br>tools</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-archives">
+      
+    
+
+    <a href="/archives/" rel="section"><i class="menu-item-icon fa fa-fw fa-archive"></i> <br>Archives</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-tags">
+      
+    
+
+    <a href="/tags/" rel="section"><i class="menu-item-icon fa fa-fw fa-tags"></i> <br>Tags</a>
+
+  </li>
+      
+      
+      
+        
+        <li class="menu-item menu-item-aboutme">
+      
+    
+
+    <a href="/about/" rel="section"><i class="menu-item-icon fa fa-fw fa-user"></i> <br>aboutMe</a>
+
+  </li>
+  </ul>
+
+    
+
+</nav>
+</div>
+    </header>
+
+    
+  <div class="back-to-top">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+      <article itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block post">
+    <link itemprop="mainEntityOfPage" href="http://wvdon.com/2019/12/27/machineLearning/sklearn学习代码-以免忘了/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="Weidong Wu">
+      <meta itemprop="description" content="a student who pay attention on Artificial Intelligence for Life Sciences (AILS)">
+      <meta itemprop="image" content="/uploads/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="AILS">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">Sklearn-记录
+
+          
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              <span class="post-meta-item-text">Posted on</span>
+
+              
+                
+              
+
+              <time title="Created: 2019-12-27 20:12:51" itemprop="dateCreated datePublished" datetime="2019-12-27T20:12:51+08:00">2019-12-27</time>
+            </span>
+          
+            
+
+            
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="fa fa-calendar-check-o"></i>
+                </span>
+                <span class="post-meta-item-text">Edited on</span>
+                <time title="Modified: 2023-04-08 15:47:32" itemprop="dateModified" datetime="2023-04-08T15:47:32+08:00">2023-04-08</time>
+              </span>
+            
+          
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">In</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing"><a href="/categories/tools/" itemprop="url" rel="index"><span itemprop="name">tools</span></a></span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            <span class="post-meta-item" title="Views">
+              <span class="post-meta-item-icon">
+                <i class="fa fa-eye"></i>
+              </span>
+              <span class="post-meta-item-text">Views: </span>
+              <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+  
+  <span class="post-meta-item">
+    
+      <span class="post-meta-item-icon">
+        <i class="fa fa-comment-o"></i>
+      </span>
+        
+      
+      <span class="post-meta-item-text">Valine: </span>
+    
+    <a title="valine" href="/2019/12/27/machineLearning/sklearn学习代码-以免忘了/#comments" itemprop="discussionUrl"><span class="post-comments-count valine-comment-count" data-xid="/2019/12/27/machineLearning/sklearn学习代码-以免忘了/" itemprop="commentCount"></span></a>
+  </span>
+  
+  
+            <div class="post-description">Scikit-learn is an open source machine learning library that supports supervised and unsupervised learning. It also provides various tools for model fitting, data preprocessing, model selection, model evaluation, and many other utilities</div>
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+        <a id="more"></a><p>scikit-learn：</p><ul>
+<li>简单高效的数据挖掘和数据分析工具</li>
+</ul><h2 id="前言"><a href="#前言" class="headerlink" title="前言"></a>前言</h2><p><a href="https://scikit-learn.org/stable/user_guide.html" target="_blank" rel="noopener">scikit-learn 官方文档</a></p><h3 id="Getting-Started"><a href="#Getting-Started" class="headerlink" title="Getting Started"></a>Getting Started</h3><h4 id="Fitting-and-predicting-estimator-basics"><a href="#Fitting-and-predicting-estimator-basics" class="headerlink" title="Fitting and predicting: estimator basics"></a>Fitting and predicting: estimator basics</h4><a id="more"></a>
+
+
+
+
+<ul>
+<li><a href="https://scikit-learn.org/stable/glossary.html#term-estimators" target="_blank" rel="noopener">estimators</a> 提供一系列封装好的机器学习算法。</li>
+<li><a href="https://scikit-learn.org/stable/glossary.html#term-fit" target="_blank" rel="noopener">fit</a> ：fit到模型数据。</li>
+</ul>
+<p>Example:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestClassifier</span><br><span class="line"></span><br><span class="line">clf = RandomForestClassifier(random_state=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line">  <span class="comment"># 2 samples, 3 features</span></span><br><span class="line">X = [[ <span class="number">1</span>,  <span class="number">2</span>,  <span class="number">3</span>],[<span class="number">11</span>, <span class="number">12</span>, <span class="number">13</span>]]</span><br><span class="line">y = [<span class="number">0</span>, <span class="number">1</span>]  <span class="comment"># classes of each sample</span></span><br><span class="line">clf.fit(X, y)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Predict</span></span><br><span class="line">y_pred = clf.predict(X)</span><br></pre></td></tr></table></figure>
+
+<h4 id="Transformers-and-pre-processors"><a href="#Transformers-and-pre-processors" class="headerlink" title="Transformers and pre-processors"></a>Transformers and pre-processors</h4><ul>
+<li><a href="https://scikit-learn.org/stable/modules/compose.html#column-transformer" target="_blank" rel="noopener">ColumnTransformer</a> : 不同特征的转换处理</li>
+</ul>
+<p>sklearn.preprocessing 包含了比较多的数据预处理方法(放缩，编码)，能在pipeline应用的同时，也是安全的da ta leakage</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">StandardScaler</span><br><span class="line">OneHotEncoder</span><br><span class="line">CountVectorizer</span><br><span class="line">----</span><br></pre></td></tr></table></figure>
+
+<h4 id="Pipelines-chaining-pre-processors-and-estimators"><a href="#Pipelines-chaining-pre-processors-and-estimators" class="headerlink" title="Pipelines: chaining pre-processors and estimators"></a>Pipelines: chaining pre-processors and estimators</h4><p>整合数据预处理与模型评估到一个pipeline上。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.preprocessing <span class="keyword">import</span> StandardScaler</span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LogisticRegression</span><br><span class="line"><span class="keyword">from</span> sklearn.pipeline <span class="keyword">import</span> make_pipeline</span><br><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> load_iris</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"><span class="keyword">from</span> sklearn.metrics <span class="keyword">import</span> accuracy_score</span><br><span class="line"></span><br><span class="line"><span class="comment">#同过make_pipeline 把pre-processors 和 estimators整合到一块。</span></span><br><span class="line"><span class="comment"># create a pipeline object</span></span><br><span class="line">pipe = make_pipeline(</span><br><span class="line">    StandardScaler(),</span><br><span class="line">    LogisticRegression()</span><br><span class="line">)</span><br><span class="line"></span><br><span class="line"><span class="comment"># load the iris dataset and split it into train and test sets</span></span><br><span class="line">X, y = load_iris(return_X_y=<span class="literal">True</span>)</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># fit the whole pipeline</span></span><br><span class="line">pipe.fit(X_train, y_train)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># we can now use it like any other estimator</span></span><br><span class="line">accuracy_score(pipe.predict(X_test), y_test)</span><br></pre></td></tr></table></figure>
+
+<h4 id="Model-evaluation"><a href="#Model-evaluation" class="headerlink" title="Model evaluation"></a>Model evaluation</h4><ul>
+<li><p><a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.cross_validate.html#sklearn.model_selection.cross_validate" target="_blank" rel="noopener"><code>cross_validate</code></a> </p>
+</li>
+<li><p><a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.train_test_split.html#sklearn.model_selection.train_test_split" target="_blank" rel="noopener"><code>train_test_split</code></a></p>
+</li>
+</ul>
+<p>预测的数据，有时候不能很好的拟合到test数据，可能是泛化能力不好，也有可能是数据的split导致的train和test两部分数据的差异。可以利用交叉验证，在不同划分的数据上都进行拟合。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> make_regression</span><br><span class="line"><span class="keyword">from</span> sklearn.linear_model <span class="keyword">import</span> LinearRegression</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> cross_validate</span><br><span class="line"></span><br><span class="line">X, y = make_regression(n_samples=<span class="number">1000</span>, random_state=<span class="number">0</span>)</span><br><span class="line">lr = LinearRegression()</span><br><span class="line"></span><br><span class="line">result = cross_validate(lr, X, y)  <span class="comment"># defaults to 5-fold CV</span></span><br><span class="line">result[<span class="string">'test_score'</span>]  <span class="comment"># r_squa</span></span><br></pre></td></tr></table></figure>
+
+<p><img src="https://scikit-learn.org/stable/_images/grid_search_workflow.png" alt="Grid Search Workflow"></p>
+<h4 id="Automatic-parameter-searches"><a href="#Automatic-parameter-searches" class="headerlink" title="Automatic parameter searches"></a>Automatic parameter searches</h4><ul>
+<li><a href="https://scikit-learn.org/stable/modules/generated/sklearn.model_selection.RandomizedSearchCV.html#sklearn.model_selection.RandomizedSearchCV" target="_blank" rel="noopener"><code>RandomizedSearchCV</code></a></li>
+</ul>
+<p>Scikit-learn 提供了自动超参数的搜索工具。把最好的参数fit到模型上。</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.datasets <span class="keyword">import</span> fetch_california_housing</span><br><span class="line"><span class="keyword">from</span> sklearn.ensemble <span class="keyword">import</span> RandomForestRegressor</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> RandomizedSearchCV</span><br><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_split</span><br><span class="line"><span class="keyword">from</span> scipy.stats <span class="keyword">import</span> randint</span><br><span class="line"></span><br><span class="line">X, y = fetch_california_housing(return_X_y=<span class="literal">True</span>)</span><br><span class="line">X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># define the parameter space that will be searched over</span></span><br><span class="line">param_distributions = &#123;<span class="string">'n_estimators'</span>: randint(<span class="number">1</span>, <span class="number">5</span>),</span><br><span class="line">                       <span class="string">'max_depth'</span>: randint(<span class="number">5</span>, <span class="number">10</span>)&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment"># now create a searchCV object and fit it to the data</span></span><br><span class="line">search = RandomizedSearchCV(estimator=RandomForestRegressor(random_state=<span class="number">0</span>),</span><br><span class="line">                            n_iter=<span class="number">5</span>,</span><br><span class="line">                            param_distributions=param_distributions,</span><br><span class="line">                            random_state=<span class="number">0</span>)</span><br><span class="line">search.fit(X_train, y_train)</span><br><span class="line"></span><br><span class="line">search.best_params_</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="comment"># the search object now acts like a normal random forest estimator</span></span><br><span class="line"><span class="comment"># with max_depth=9 and n_estimators=4</span></span><br><span class="line">search.score(X_test, y_test)</span><br></pre></td></tr></table></figure>
+
+<h2 id="pre-processing"><a href="#pre-processing" class="headerlink" title="pre-processing"></a>pre-processing</h2><p><a href="https://www.kaggle.com/code/alexisbcook/data-leakage/tutorial" target="_blank" rel="noopener">Data Leakage</a><br>Why? :independence between training and testing data.</p>
+<p>how to prevent it:Using a pipeline for cross-validation and searching will largely keep you from this common pitfall</p>
+<h2 id="数据包"><a href="#数据包" class="headerlink" title="数据包"></a>数据包</h2><h3 id="sklearn-datasets"><a href="#sklearn-datasets" class="headerlink" title="sklearn datasets"></a>sklearn datasets</h3><p>提供一些导入，在线下载及本地生成数据集的方法。</p>
+<blockquote>
+<p>sklearn.datasets模块主要提供了一些导入、在线下载及本地生成数据集的方法，可以通过dir或help命令查看，我们会发现主要有三种形式：load_<dataset_name>、fetch_<dataset_name>及make_<dataset_name>的方法</dataset_name></dataset_name></dataset_name></p>
+</blockquote>
+<h3 id="train-test-split"><a href="#train-test-split" class="headerlink" title="train_test_split"></a>train_test_split</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.model_selection <span class="keyword">import</span> train_test_splitX_train,X_test,y_train,y_test = train_test_split(X,y,random_state = <span class="number">2003</span>)</span><br></pre></td></tr></table></figure>
+
+<h3 id="线性模型"><a href="#线性模型" class="headerlink" title="线性模型"></a>线性模型</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn <span class="keyword">import</span> datasets, linear_model <span class="comment"># 引用 sklearn库，主要为了使用其中的线性回归模块</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 创建数据集，把数据写入到numpy数组</span></span><br><span class="line"><span class="keyword">import</span> numpy <span class="keyword">as</span> np  <span class="comment"># 引用numpy库，主要用来做科学计算</span></span><br><span class="line"><span class="keyword">import</span> matplotlib.pyplot <span class="keyword">as</span> plt   <span class="comment"># 引用matplotlib库，主要用来画图</span></span><br><span class="line">data = np.array([[<span class="number">152</span>,<span class="number">51</span>],[<span class="number">156</span>,<span class="number">53</span>],[<span class="number">160</span>,<span class="number">54</span>],[<span class="number">164</span>,<span class="number">55</span>],</span><br><span class="line">                 [<span class="number">168</span>,<span class="number">57</span>],[<span class="number">172</span>,<span class="number">60</span>],[<span class="number">176</span>,<span class="number">62</span>],[<span class="number">180</span>,<span class="number">65</span>],</span><br><span class="line">                 [<span class="number">184</span>,<span class="number">69</span>],[<span class="number">188</span>,<span class="number">72</span>]])</span><br><span class="line"></span><br><span class="line"><span class="comment"># 打印出数组的大小</span></span><br><span class="line">print(data.shape)</span><br><span class="line">x = data[:,<span class="number">0</span>].reshape(<span class="number">-1</span>,<span class="number">1</span>)</span><br><span class="line">y  = data[:,<span class="number">1</span>]</span><br><span class="line"><span class="comment"># TODO 1. 实例化一个线性回归的模型</span></span><br><span class="line">regr = linear_model.LinearRegression()</span><br><span class="line"><span class="comment"># TODO 2. 在x,y上训练一个线性回归模型。 如果训练顺利，则regr会存储训练完成之后的结果模型</span></span><br><span class="line"><span class="comment"># TODO 3. 画出身高与体重之间的关系</span></span><br><span class="line">regr.fit(x,y)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 画出已训练</span></span><br><span class="line">plt.plot(x, regr.predict(x), color=<span class="string">'blue'</span>)<span class="comment"># 画x,y轴的标题</span></span><br><span class="line">plt.xlabel(<span class="string">'height (cm)'</span>)</span><br><span class="line">plt.ylabel(<span class="string">'weight (kg)'</span>)</span><br><span class="line">plt.show() <span class="comment"># 展示</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 利用已经训练好的模型去预测身高为163的人的体重</span></span><br><span class="line"><span class="keyword">print</span> (<span class="string">"Standard weight for person with 163 is %.2f"</span>% regr.predict([[<span class="number">163</span>]]))</span><br></pre></td></tr></table></figure>
+
+<h3 id="KNN"><a href="#KNN" class="headerlink" title="KNN"></a>KNN</h3><p>模型的泛化能力:它在新的环境中的适应能力</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> sklearn.neighbors <span class="keyword">import</span> KNeighborsClassifierclf = KNeighborsClassifier(n_neighbors=<span class="number">3</span>)clf.fit(X_train,y_train)correct = np.count_nonzero((clf.predict(X_test)==y_test==<span class="literal">True</span>)print(<span class="string">"auc is：%3.f"</span>%(corrrect/len(X_test))</span><br></pre></td></tr></table></figure>
+
+<h3 id="交叉验证"><a href="#交叉验证" class="headerlink" title="交叉验证"></a>交叉验证</h3><p>把数据集分为训练集和测试集</p>
+<blockquote>
+<p>常用的交叉验证技术叫做K折交叉验证(K-fold Cross Validation)。 我们先把训练数据再分成训练集和验证集，之后使用训练集来训练模型，然后再验证集上评估模型的准确率。举个例子，比如一个模型有个参数叫\alphaα，我们一开始不清楚要选择0.1还是1，所以这时候我们进行了交叉验证：把所有训练集分成K块，依次对每一个\alphaα值评估它的准确率。下面的动画讲述了如何使用K折交叉验证选出最合适的参数值。  </p>
+</blockquote>
+<blockquote>
+<p>leave_one_out交叉验证，也就是每次只把一个样本当做验证数据，剩下的其他数据都当做是训练样本。  </p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">form sklearn.model_selection import GirdSearchCVknn = KNeighborsClassifier()clf = GirdSearchCV(knn,parameters,cv=5)clf.fit(x,y)</span><br><span class="line">clf.best_score_clf.best_params_</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>绝对不能把测试数据用在交叉验证的过程中</li>
+</ul>
+<h3 id="特征缩放"><a href="#特征缩放" class="headerlink" title="特征缩放"></a>特征缩放</h3><p>目的是为了：消除有些变量变化的影响</p>
+<p>1 线性归一化（Min-max normalization）</p>
+<p>线性归一化指的是把特征值的范围映射到[0,1]区间</p>
+<p>x_new  = (x - min())/(max()-min())</p>
+<p>2 标准差标准化 （Z-score Normalization）</p>
+<p>特征值映射到均值为0，标准差为1的正态分布 x_new = (x-mean(x)/std(x)</p>
+<p>mean(x) x 的平均值 std(x) x的标注差</p>
+<h2 id="KNN总结："><a href="#KNN总结：" class="headerlink" title="KNN总结："></a>KNN总结：</h2><ul>
+<li>knn 是一个及其简单的算法</li>
+<li>算法比较适合低纬空间</li>
+<li>KNN 在训练过程中实质上不需要做任何事情，所以训练本身不产生任何时间上的消耗。</li>
+</ul>
+<p>merry-based  instance -based  (实际上没有训练学习的过程)</p>
+<ul>
+<li>KNN预测的时候要循环所以的样本数据，复杂度依赖于样本个数，达成KNN应用在大数据的瓶颈。。</li>
+</ul>
+<h3 id="结构化数据与非结构化数据"><a href="#结构化数据与非结构化数据" class="headerlink" title="结构化数据与非结构化数据"></a>结构化数据与非结构化数据</h3><p>非结构化数据：简单来讲，文本、图片、声音、视频这些都属于非结构化数据，需要做进一步的处理 结构化的数据指的是存放在数据库里的年龄，身高等这种信息</p>
+<h3 id="图像"><a href="#图像" class="headerlink" title="图像"></a>图像</h3><p>图像来说，此过程相对简单。一般可以通过Python自带的库来读取图片，并把图片数据存放在矩阵(Matrix)或者张量(Tensor)里  <strong>- 图片是由像素来构成的，比如256*256或者128*128。两个值分别代表长宽上的像素。这个值越大图片就会越清晰。另外，对于彩色的图片，一个像素点一般由三维数组来构成，分别代表的是R,G,B三种颜色。除了RGB，其实还有其他常用的色彩空间。如果使用RGB来表示每一个像素点，一个大小为128*128像素的图片实际大小为128*128*3，是一个三维张量的形式。</strong>  </p>
+<h4 id="图片特征"><a href="#图片特征" class="headerlink" title="图片特征"></a>图片特征</h4><ul>
+<li><p>颜色特征(color histigram)</p>
+</li>
+<li><p>SIFT (Scale-invariant feature transfarm)</p>
+<p>它是一个局部的特征，它会试图去寻找图片中的拐点这类的关键点，然后再通过一系列的处理最终得到一个SIFT向量</p>
+</li>
+<li><p>HOG (Histogram of Oriented Grandient) </p>
+<p>通过计算和统计图像局部区域的梯度方向直方图来构建特征.由于HOG是在图像的局部方格单元上操作，所以它对图像几何的和光学的形变都能保持很好的不变性   </p>
+</li>
+</ul>
+<h4 id="降维"><a href="#降维" class="headerlink" title="降维"></a>降维</h4><ul>
+<li><p>对于一个中小型图片，它的大小一般大于256<em>256</em>3。如果把它转换成向量，其实维度的大小已经几十万了。这会导致消耗非常大的计算资源，所以一般情况下我们都会尝试对图片做一些降维操作。其实特征提取过程我们自然地可以理解为是降维过程。</p>
+</li>
+<li><p>降维操作会更好地保留图片中重要的信息，同时也帮助过滤掉无用的噪声  </p>
+</li>
+<li><p><strong>PCA(Principal Component Analysis)</strong>， (常用的降维工具)</p>
+</li>
+<li><p>它是一种无监督的学习方法，可以把高维的向量映射到低维的空间里。它的核心思路是对数据做线性的变换，然后在空间里选择信息量最大的Top K维度作为新的特征值     </p>
+</li>
+</ul>
+<h3 id="matplotlib-pyplot（画图，展示图片）"><a href="#matplotlib-pyplot（画图，展示图片）" class="headerlink" title="matplotlib.pyplot（画图，展示图片）"></a>matplotlib.pyplot（画图，展示图片）</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">import matplotlib.pyplot as plt# 读取图片img = plt.imread(&apos;&apos;)print(img.shape)plt.imshow(im445555555555555g)</span><br></pre></td></tr></table></figure>
+
+<h3 id="缺失值次5"><a href="#缺失值次5" class="headerlink" title="缺失值次5"></a>缺失值次5</h3><p>删除缺失的行 或者缺失的列</p>
+<p>填补缺失值:</p>
+<ul>
+<li>均值，最小值，最大值，特殊值填充 ,中位值</li>
+</ul>
+<h3 id="特征编码"><a href="#特征编码" class="headerlink" title="特征编码"></a>特征编码</h3><p>把非数值型数据转为数值型</p>
+<p><strong>数据独热编码(one-hot encoding)</strong> 标签编码</p>
+<p>标签编码不能直接作为特征输入到模型中，</p>
+<p>因为1,2,3,,,,连续的特征标签，模型是会认为这些类别是有大小关系的。</p>
+<p>而独热编码是平行的。</p>
+<blockquote>
+<p>如果我们直接把类别特征看作是具体的数比如0，1，2… 那这时候，数与数之间是有大小关系的，比如2要大于1，1要大于0，而且这些大小相关的信息必然会用到模型当中  但这就跟原来特征的特点产生了矛盾，因为对于深度学习，数据分析来说它们之间并不存在所谓的“大小”，可以理解为平行关系。所以对于这类特征来说，直接用0，1，2.. 的方式来表示是存在问题的，所以结论是不能这么做。  </p>
+</blockquote>
+<p><strong>数值型的变量</strong> 可以当做特征直接输入，也可以进行离散化操作  </p>
+
+    </div>
+
+    
+    
+    
+        
+      
+        
+
+<div>
+<ul class="post-copyright">
+  <li class="post-copyright-author">
+    <strong>Post author:  </strong>Weidong Wu</li>
+  <li class="post-copyright-link">
+    <strong>Post link: </strong>
+    <a href="http://wvdon.com/2019/12/27/machineLearning/sklearn学习代码-以免忘了/" title="Sklearn-记录">http://wvdon.com/2019/12/27/machineLearning/sklearn学习代码-以免忘了/</a>
+  </li>
+  <li class="post-copyright-license">
+    <strong>Copyright Notice:  </strong>All articles in this blog are licensed under <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" rel="noopener" target="_blank"><i class="fa fa-fw fa-creative-commons"></i>BY-NC-SA</a> unless stating additionally.</li>
+</ul>
+</div>
+
+      
+		<div>
+  
+    <div>
+    
+        <div style="text-align:center;color: #ccc;font-size:14px;">-------------本文结束<i class="fa fa-paw"></i>感谢您的阅读-------------</div>
+    
+</div>
+  
+</div>
+      <footer class="post-footer">
+          
+            
+          
+          <div class="post-tags">
+            
+              <a href="/tags/sklearn/" rel="tag"># sklearn</a>
+            
+          </div>
+        
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-next post-nav-item">
+              
+                <a href="/2019/10/18/linux/2019-10-18-Linux/" rel="next" title="Linux">
+                  <i class="fa fa-chevron-left"></i> Linux
+                </a>
+              
+            </div>
+
+            <span class="post-nav-divider"></span>
+
+            <div class="post-nav-prev post-nav-item">
+              
+                <a href="/2020/02/27/文本特征提取/" rel="prev" title="文本特征处理">
+                  文本特征处理 <i class="fa fa-chevron-right"></i>
+                </a>
+              
+            </div>
+          </div>
+        
+      </footer>
+    
+  </div>
+  
+  
+  
+  </article>
+
+  </div>
+
+
+          </div>
+          
+    
+    <div class="comments" id="comments"></div>
+  
+
+        </div>
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside class="sidebar">
+    <div class="sidebar-inner">
+        
+        
+        
+        
+      
+
+      <ul class="sidebar-nav motion-element">
+        <li class="sidebar-nav-toc" data-target="post-toc-wrap">
+          Table of Contents
+        </li>
+        <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+          Overview
+        </li>
+      </ul>
+
+      <!--noindex-->
+      <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#前言"><span class="nav-text">前言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Getting-Started"><span class="nav-text">Getting Started</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Fitting-and-predicting-estimator-basics"><span class="nav-text">Fitting and predicting: estimator basics</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Transformers-and-pre-processors"><span class="nav-text">Transformers and pre-processors</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Pipelines-chaining-pre-processors-and-estimators"><span class="nav-text">Pipelines: chaining pre-processors and estimators</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Model-evaluation"><span class="nav-text">Model evaluation</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Automatic-parameter-searches"><span class="nav-text">Automatic parameter searches</span></a></li></ol></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#pre-processing"><span class="nav-text">pre-processing</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#数据包"><span class="nav-text">数据包</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#sklearn-datasets"><span class="nav-text">sklearn datasets</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#train-test-split"><span class="nav-text">train_test_split</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#线性模型"><span class="nav-text">线性模型</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#KNN"><span class="nav-text">KNN</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#交叉验证"><span class="nav-text">交叉验证</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#特征缩放"><span class="nav-text">特征缩放</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#KNN总结："><span class="nav-text">KNN总结：</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#结构化数据与非结构化数据"><span class="nav-text">结构化数据与非结构化数据</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图像"><span class="nav-text">图像</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#图片特征"><span class="nav-text">图片特征</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#降维"><span class="nav-text">降维</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#matplotlib-pyplot（画图，展示图片）"><span class="nav-text">matplotlib.pyplot（画图，展示图片）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#缺失值次5"><span class="nav-text">缺失值次5</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#特征编码"><span class="nav-text">特征编码</span></a></li></ol></li></ol></div>
+        
+      </div>
+      <!--/noindex-->
+
+      <div class="site-overview-wrap sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image"
+      src="/uploads/avatar.gif"
+      alt="Weidong Wu">
+  <p class="site-author-name" itemprop="name">Weidong Wu</p>
+  <div class="site-description" itemprop="description">a student who pay attention on Artificial Intelligence for Life Sciences (AILS)</div>
+</div>
+  <nav class="site-state motion-element">
+      <div class="site-state-item site-state-posts">
+        
+          <a href="/archives/">
+        
+          <span class="site-state-item-count">17</span>
+          <span class="site-state-item-name">posts</span>
+        </a>
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-categories">
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">categories</span>
+        
+      </div>
+    
+      
+      
+      <div class="site-state-item site-state-tags">
+        
+          
+            <a href="/tags/">
+          
+        
+        
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+          
+        
+        <span class="site-state-item-count">28</span>
+        <span class="site-state-item-name">tags</span>
+        </a>
+      </div>
+    
+  </nav>
+  <div class="feed-link motion-element">
+    <a href="/atom.xml" rel="alternate">
+      <i class="fa fa-rss"></i>RSS
+    </a>
+  </div>
+  <div class="links-of-author motion-element">
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="https://github.com/wvdon" title="GitHub &rarr; https://github.com/wvdon" rel="noopener" target="_blank"><i class="fa fa-fw fa-github"></i>GitHub</a>
+      </span>
+    
+      <span class="links-of-author-item">
+      
+      
+        
+      
+      
+        
+      
+        <a href="mailto:weidongwu404@gmail.com" title="E-Mail &rarr; mailto:weidongwu404@gmail.com" rel="noopener" target="_blank"><i class="fa fa-fw fa-envelope"></i>E-Mail</a>
+      </span>
+    
+  </div>
+
+
+  <div class="links-of-blogroll motion-element">
+    <div class="links-of-blogroll-title">
+      <i class="fa fa-fw fa-link"></i>
+      Links
+    </div>
+    <ul class="links-of-blogroll-list">
+        <li class="links-of-blogroll-item">
+          <a href="https://ai.facebook.com/" title="https://ai.facebook.com/" rel="noopener" target="_blank">Facebook AI</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://space.bilibili.com/1567748478/?spm_id_from=333.999.0.0" title="https://space.bilibili.com/1567748478/?spm_id_from=333.999.0.0" rel="noopener" target="_blank">LiMu Bil</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://zh.d2l.ai/chapter_preface/index.html" title="https://zh.d2l.ai/chapter_preface/index.html" rel="noopener" target="_blank">Dive Into DL</a>
+        </li>
+      
+        <li class="links-of-blogroll-item">
+          <a href="https://mit6874.github.io/" title="https://mit6874.github.io/" rel="noopener" target="_blank">DP for life science mit</a>
+        </li>
+      
+    </ul>
+  </div>
+
+      </div>
+
+    </div>
+  </aside>
+  <div id="sidebar-dimmer"></div>
+
+
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; 2018 – <span itemprop="copyrightYear">2023</span>
+  <span class="with-love" id="animate">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">Powered By Weidong Wu</span>
+</div>
+  <div class="powered-by"><a href='https://beian.miit.gov.cn'>豫ICP备18006395号-1</a></div>
+  <span class="post-meta-divider">|</span>
+  <div class="theme-info"></div>
+<span id="busuanzi_container_site_uv">
+  本站访问次数：<span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+</span>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+    <span class="post-meta-item-icon">
+      <i class="fa fa-user"></i>
+    </span>
+    <span class="site-uv" title="Total Visitors">
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+    </span>
+  
+    <span class="post-meta-divider">|</span>
+  
+    <span class="post-meta-item-icon">
+      <i class="fa fa-eye"></i>
+    </span>
+    <span class="site-pv" title="Total Views">
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+    </span>
+  
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+  </div>
+
+  
+  <script src="/lib/jquery/index.js?v=3.4.1"></script>
+  <script src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  <script src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+<script src="/js/utils.js?v=7.3.0"></script><script src="/js/motion.js?v=7.3.0"></script>
+<script src="/js/schemes/muse.js?v=7.3.0"></script>
+
+<script src="/js/next-boot.js?v=7.3.0"></script>
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+
+
+<script>
+NexT.utils.getScript('//unpkg.com/valine/dist/Valine.min.js', () => {
+  var GUEST = ['nick', 'mail', 'link'];
+  var guest = 'nick,mail,link';
+  guest = guest.split(',').filter(item => {
+    return GUEST.indexOf(item) > -1;
+  });
+  new Valine({
+    el: '#comments',
+    verify: true,
+    notify: true,
+    appId: 'KQU7yEE1PiNFHAyF8jwKYTkM-gzGzoHsz',
+    appKey: 'NmcJxL2vR7P6ipHDQtHJPpM6',
+    placeholder: 'Just go go',
+    avatar: 'mm',
+    meta: guest,
+    pageSize: '10' || 10,
+    visitor: false,
+    lang: '' || 'zh-cn',
+    path: location.pathname
+  });
+}, window.Valine);
+</script><!-- hexo-inject:begin --><!-- Begin: Injected MathJax -->
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Config({"tex2jax":{"inlineMath":[["$","$"],["\\(","\\)"]],"skipTags":["script","noscript","style","textarea","pre","code"],"processEscapes":true},"TeX":{"equationNumbers":{"autoNumber":"AMS"}}});
+</script>
+
+<script type="text/x-mathjax-config">
+  MathJax.Hub.Queue(function() {
+    var all = MathJax.Hub.getAllJax(), i;
+    for(i=0; i < all.length; i += 1) {
+      all[i].SourceElement().parentNode.className += ' has-jax';
+    }
+  });
+</script>
+
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js">
+</script>
+<!-- End: Injected MathJax -->
+<!-- hexo-inject:end -->
+
+</body>
+</html>
